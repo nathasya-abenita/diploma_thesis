@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "diploma-thesis"
+version = "0.1.0"
+description = ""
+authors = ["Nathasya Christien <nathasya.abenita@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+geopandas = "^1.1.3"
+xarray = "^2026.4.0"
+cartopy = "^0.25.0"
+matplotlib = "^3.10.9"
+numpy = "^2.4.4"
+ipykernel = "^7.2.0"
+netcdf4 = "^1.7.4"
+scipy = "^1.17.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
