@@ -2,10 +2,7 @@
 
 set -e
 
-# ==========================================
-# USER SETTINGS
-# ==========================================
-
+# User settings
 YEAR=2025
 MONTH=11
 
@@ -25,22 +22,11 @@ LAT_MAX=15
 START_DATE="2025-11-23"
 END_DATE="2025-11-29"
 
-# ==========================================
-# CREATE DIRECTORIES
-# ==========================================
-
+# Create output directory
 mkdir -p "${OUTPUT_DIR}"
 
-# ==========================================
-# LOOP OVER VARIABLES
-# ==========================================
-
 for VARNAME in "${VARS[@]}"; do
-
-    echo "======================================"
     echo "Processing variable: ${VARNAME}"
-    echo "======================================"
-
 
     INPUT_FILE="${INPUT_DIR}/${VARNAME}_${YEAR}_${MONTH}.nc"
     FINAL_FILE="${OUTPUT_DIR}/${VARNAME}_Senyar.nc"
@@ -62,10 +48,7 @@ ${LON_MIN},${LON_MAX},${LAT_MIN},${LAT_MAX} \
     
 done
 
-# ==========================================
 # OPTIONAL CLEANUP
-# ==========================================
-
 # rm -rf "${TMP_DIR}"
 
 echo "All processing completed."

@@ -504,9 +504,9 @@ if __name__ == "__main__":
     # Configuration
     experiments = []
     map_extent = [94, 107, 0, 8]    # Used for track detection
-    data_dir = f"/path/to/exp"
-    best_track_dir = r"data/IBTrACS.last3years.v04r01.nc"
-    roll = 1
+    data_dir = f"/leonardo/home/userexternal/nchristi/sumatra_work/exp2"
+    best_track_dir = r"./data/IBTrACS.last3years.v04r01.nc"
+    roll = 2
     
     # Initialize tracker with original map_extent for detection
     tracker = CycloneTracker(data_dir, experiments, map_extent)
