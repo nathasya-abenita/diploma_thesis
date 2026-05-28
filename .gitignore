@@ -1,6 +1,6 @@
 /data
 /refs
 /figs
-/logs
+logs
 /regcm
 .vscode
