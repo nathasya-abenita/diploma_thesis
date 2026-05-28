@@ -56,7 +56,7 @@ class CycloneTracker:
         self.ds_models = {}
         for exp in experiments:
             try:
-                self.ds_models[exp] = load_regcm5_multi_file(data_dir+exp)
+                self.ds_models[exp] = load_regcm5_multi_file(os.path.join(data_dir, exp))
             except FileNotFoundError:
                 print(f"Warning: Could not load data for experiment {exp}")
         
@@ -118,8 +118,14 @@ class CycloneTracker:
             last_lat, last_lon = None, None
 
             for time_val in ds[time_name].values:
-                ds_sel = ds.sel(**{lat_name: slice(self.map_extent[3], self.map_extent[2]) if exp_name == "ERA5" else slice(self.map_extent[2], self.map_extent[3]),
-                    lon_name: slice(self.map_extent[0], self.map_extent[1]), time_name: time_val})
+                ds_sel = ds.where(
+                                 (ds.lat >= min(self.map_extent[2], self.map_extent[3])) &
+                                 (ds.lat <= max(self.map_extent[2], self.map_extent[3])) &
+                                 (ds.lon >= self.map_extent[0]) &
+                                 (ds.lon <= self.map_extent[1]) &
+                                 (ds.time == time_val),
+                                 drop=True
+                            )
 
                 # Pressure in hPa
                 pressure = ds_sel['psl']
@@ -141,7 +147,7 @@ class CycloneTracker:
                     valid = False
                 if valid and last_lat is not None:
                     dist = haversine_distance(last_lat, last_lon, lat_center, lon_center)
-                    print(dist)
+        
                     if dist > max_jump_km:
                         valid = False
 
@@ -228,11 +234,14 @@ class CycloneTracker:
                 
                 # Select data around center
                 try:
-                    ds_area = ds.sel(
-                        lat=slice(lat_max, lat_min) if exp_name == "ERA5" else slice(lat_min, lat_max),
-                        lon=slice(lon_min, lon_max),
-                        time=center['time']
-                    )
+                    ds_area = ds.where(
+                                 (ds.lat >= min(lat_min, lat_max)) &
+                                 (ds.lat <= max(lat_min, lat_max)) &
+                                 (ds.lon >= lon_min) &
+                                 (ds.lon <= lon_max) &
+                                 (ds.time == center['time']),
+                                 drop=True
+                            )
                     
                     var_data = ds_area[var_name]
                     
@@ -468,6 +477,7 @@ def load_era5(era_dir, verbose=False):
     datasets = []
     for file in nc_files:
         ds_temp = xr.open_dataset(file)
+        ds_temp = ds_temp.sel(valid_time=slice("2025-11-25 12:00", "2025-11-28 12:00"))
         datasets.append(ds_temp)
     
     time_coords = [set(ds.valid_time.values) for ds in datasets]
@@ -476,7 +486,7 @@ def load_era5(era_dir, verbose=False):
     datasets_aligned = [ds.sel(valid_time=common_times) for ds in datasets]
     ds_merged = xr.merge(datasets_aligned, compat='override')
     
-    return ds_merged.sel(valid_time=slice("2025-11-25 12:00", "2025-11-28 12:00"))
+    return ds_merged
 
 def load_regcm5_multi_file(data_dir, verbose=False):
     nc_files = sorted(glob.glob(os.path.join(data_dir, '*.nc')))
@@ -488,22 +498,24 @@ def load_regcm5_multi_file(data_dir, verbose=False):
     
     datasets = []
     for file in nc_files:
-        ds_temp = xr.open_dataset(file)
+        ds_temp = xr.open_dataset(file).sel(time=slice("2025-11-25 12:00", "2025-11-28 12:00"))
         datasets.append(ds_temp)
     
-    time_coords = [set(ds.time.values) for ds in datasets]
-    common_times = sorted(time_coords[0].intersection(*time_coords[1:]))
+    #time_coords = [set(ds.time.values) for ds in datasets]
+    #common_times = sorted(time_coords[0].intersection(*time_coords[1:]))
     
-    datasets_aligned = [ds.sel(time=common_times) for ds in datasets]
-    ds_merged = xr.merge(datasets_aligned, compat='override')
+    #datasets_aligned = [ds.sel(time=common_times) for ds in datasets]
+    ds_merged = xr.merge(datasets, compat='override')
     
+    # Rename coordinates
+    ds_merged = ds_merged.rename({"xlon": "lon", "xlat": "lat"})
     return ds_merged
 
 
 if __name__ == "__main__":
     # Configuration
-    experiments = []
-    map_extent = [94, 107, 0, 8]    # Used for track detection
+    experiments = ['res4']
+    map_extent = [94, 107, 0, 5]    # Used for track detection
     data_dir = f"/leonardo/home/userexternal/nchristi/sumatra_work/exp2"
     best_track_dir = r"./data/IBTrACS.last3years.v04r01.nc"
     roll = 2
