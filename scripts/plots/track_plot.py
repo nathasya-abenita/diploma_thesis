@@ -514,11 +514,12 @@ def load_regcm5_multi_file(data_dir, verbose=False):
 
 if __name__ == "__main__":
     # Configuration
-    experiments = ['res4']
-    map_extent = [94, 107, 0, 5]    # Used for track detection
-    data_dir = f"/leonardo/home/userexternal/nchristi/sumatra_work/exp2"
+    experiments = ['exp12', 'exp25']
+    track_extent = [97, 105, 2, 5]    # Used for track detection
+    map_extent =[94, 107, 0, 8]
+    data_dir = f"/leonardo/home/userexternal/nchristi/sumatra_work/SEA"
     best_track_dir = r"./data/IBTrACS.last3years.v04r01.nc"
-    roll = 2
+    roll = 3
     
     # Initialize tracker with original map_extent for detection
     tracker = CycloneTracker(data_dir, experiments, map_extent)
@@ -546,8 +547,8 @@ if __name__ == "__main__":
     
     # Subplot (a) - Cyclone tracks 
     ax1 = fig.add_subplot(1, 3, 1, projection=ccrs.PlateCarree())
-    plot_cyclone_tracks(tracker, experiments, nhc_data, era5_included=True, 
-                       map_extent_plot=map_extent, ax=ax1)
+    plot_cyclone_tracks(tracker, experiments, nhc_data, era5_included=False, 
+                       map_extent_plot=track_extent, ax=ax1)
     # Add x and y labels (Longitude and Latitude)
     ax1.set_xlabel('Longitude')
     ax1.set_ylabel('Latitude')
@@ -563,5 +564,5 @@ if __name__ == "__main__":
     plot_max_sfc_wind(tracker, nhc_data, ax=ax3)
     
     plt.tight_layout()
-    plt.savefig(OUTPUT_PATH + f"era5_track_roll_{roll}.png", dpi=400, bbox_inches='tight')
+    plt.savefig(OUTPUT_PATH + f"track_roll_{roll}.png", dpi=400, bbox_inches='tight')
     plt.show()

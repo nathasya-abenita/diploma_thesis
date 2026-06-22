@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -A CMPNS_ictpclim
+#SBATCH -A ICT26_ESP
 #SBATCH -p dcgp_usr_prod
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=112
@@ -17,7 +17,7 @@ CDO(){
 }
 
 EXP_LIST="exp2 exp3 exp12 exp25"
-VAR_LIST="pr psl uas vas sfcWind"
+VAR_LIST="pr psl sfcWind"
 
 echo
 echo "--------------- INIT POSPROCESSING MODEL ----------------"
