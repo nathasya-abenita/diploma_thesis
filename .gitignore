@@ -4,3 +4,4 @@
 logs
 /regcm
 .vscode
+*__pycache__
