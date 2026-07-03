@@ -253,6 +253,7 @@ class CycloneTracker:
                     else:
                         raise ValueError(f"Unknown stat_type: {stat_type}")
                     
+
                     results.append({
                         'time': center['time'],
                         'lat': center['lat'],
@@ -396,12 +397,12 @@ def plot_cyclone_tracks(tracker, experiments=None, nhc_data=None, era5_included=
     gl.top_labels = False
     gl.right_labels = False
 
-    ax.legend(loc=3, fontsize=font_size)
+    # ax.legend(loc=3, fontsize=font_size)
     ax.set_title('(a)', loc='left', fontsize=font_size, fontweight='bold')
     
     return ax
 
-def plot_max_sfc_wind(tracker, nhc_data=None, ax=None):
+def plot_max_sfc_wind(tracker, nhc_data=None, ax=None, smooth_window=1):
     """Plot maximum surface wind speed."""
     if ax is None:
         fig, ax = plt.subplots()
@@ -409,6 +410,7 @@ def plot_max_sfc_wind(tracker, nhc_data=None, ax=None):
     for i, var in enumerate(tracker.variable_data.keys()):
         expname = var.split("-")[0]
         moist_data = tracker.variable_data[var]
+        moist_data['max_sfcWind'] = moist_data['max_sfcWind'].rolling(window=smooth_window, min_periods=1, center=True).mean()
         color = COLORS[i] if ('ERA5' not in var) else 'blue'
         ax.plot(moist_data['time'], moist_data['max_sfcWind'], 
                 'o-', label=expname, alpha=0.8, color=color)
@@ -444,7 +446,7 @@ def plot_max_sfc_wind(tracker, nhc_data=None, ax=None):
     ax.set_ylabel("Max wind speed (m/s)", fontsize=font_size, fontweight='bold')
     ax.set_title("(c)", loc='left', fontsize=font_size, fontweight='bold')
     ax.margins(x=0)
-    ax.legend(fontsize=font_size)
+    # ax.legend(fontsize=font_size)
     ax.tick_params(axis='x', rotation=45)
         
     return ax

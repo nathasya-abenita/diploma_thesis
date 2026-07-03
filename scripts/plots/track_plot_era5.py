@@ -53,7 +53,7 @@ if __name__ == "__main__":
     
     # Subplot (c) - Maximum Wind Speed
     ax3 = fig.add_subplot(1, 3, 3)
-    plot_max_sfc_wind(tracker, nhc_data, ax=ax3)
+    plot_max_sfc_wind(tracker, nhc_data, ax=ax3, smooth_window=1)
     
     plt.tight_layout()
     plt.savefig(output_path + f"era5_track_roll_{roll}.png", dpi=400, bbox_inches='tight')
