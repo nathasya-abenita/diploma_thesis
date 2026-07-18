@@ -53,7 +53,7 @@ if __name__ == '__main__':
         #%% Preparing data
 
         # Read files
-        data_dir    = r'./data/best_3km/ibltyp_2_iocnzoq_2'
+        data_dir    = r'./data/counterfactual/factual'
         ds_msl      = xr.open_dataset(os.path.join(data_dir, 'psl_SRF_daily.nc')).sel(time=selected_time).rename({"xlon": "lon", "xlat": "lat"})
         ds_tp       = xr.open_dataset(os.path.join(data_dir, 'pr_SRF_daily.nc')).sel(time=selected_time).rename({"xlon": "lon", "xlat": "lat"})
         ds_u10      = xr.open_dataset(os.path.join(data_dir, 'uas_SRF_daily.nc')).sel(time=selected_time).rename({"xlon": "lon", "xlat": "lat"})

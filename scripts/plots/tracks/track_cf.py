@@ -1,18 +1,20 @@
-from track_module import CycloneTracker, load_best_track_data, font_size, plot_cyclone_tracks, plot_time_series_comparison, plot_max_sfc_wind
+from scripts.plots.tracks.track_module import CycloneTracker, load_best_track_data, font_size, plot_cyclone_tracks, plot_time_series_comparison, plot_max_sfc_wind
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 
 if __name__ == "__main__":
     # Configuration
-    output_path = "./figs/"
+    output_path = "./figs/track/"
 
-    experiments = []
+    experiments = ['factual', 'tweak', 'EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
     track_extent = [97, 105, 2, 5]    # Used for track detection
     map_extent =[94, 107, 0, 8]
-    data_dir = f"./data/era5"
+    data_dir = f"./data/counterfactual"
     best_track_dir = r"./data/IBTrACS.last3years.v04r01.nc"
-    roll = 2
-    
+
+    roll = 3
+    outfile = f"regcm_track_cf_{roll}.png" # f'regcm_track_best_{roll}_new.png'
+
     # Initialize tracker
     tracker = CycloneTracker(data_dir, experiments, track_extent)
     
@@ -20,7 +22,7 @@ if __name__ == "__main__":
     tracker.find_cyclone_centers(smooth_window=roll)
     
     # Compute additional variables
-    tracker.compute_area_statistics('sfcWind', 'max', radius_deg=2)
+    tracker.compute_area_statistics('sfcWind', 'max', radius_deg=1)
     
     # Load best track data
     nhc_data = load_best_track_data(best_track_dir)
@@ -39,7 +41,7 @@ if __name__ == "__main__":
     
     # Subplot (a) - Cyclone tracks 
     ax1 = fig.add_subplot(1, 3, 1, projection=ccrs.PlateCarree())
-    plot_cyclone_tracks(tracker, experiments, nhc_data, era5_included=True, 
+    plot_cyclone_tracks(tracker, experiments, nhc_data, era5_included=False, 
                        map_extent_plot=map_extent, ax=ax1)
     # Add x and y labels (Longitude and Latitude)
     ax1.set_xlabel('Longitude')
@@ -47,14 +49,15 @@ if __name__ == "__main__":
 
     # Subplot (b) - Minimum Sea Level Pressure
     ax2 = fig.add_subplot(1, 3, 2)
-    plot_time_series_comparison(tracker, 'min_pressure', experiments, nhc_data, ax=ax2)
+    plot_time_series_comparison(tracker, 'min_pressure', experiments, nhc_data, ax=ax2,
+                                era5_included=False)
     ax2.set_title('(b)', loc='left', fontsize=font_size, fontweight='bold')
     ax2.set_ylabel('Mean sea level pressure (hPa)', fontsize=font_size, fontweight='bold')
     
     # Subplot (c) - Maximum Wind Speed
     ax3 = fig.add_subplot(1, 3, 3)
-    plot_max_sfc_wind(tracker, nhc_data, ax=ax3, smooth_window=1)
+    plot_max_sfc_wind(tracker, nhc_data, ax=ax3, smooth_window=1, era5_included=False)
     
     plt.tight_layout()
-    plt.savefig(output_path + f"era5_track_roll_{roll}.png", dpi=400, bbox_inches='tight')
+    plt.savefig(output_path + outfile, dpi=400, bbox_inches='tight')
     plt.show()

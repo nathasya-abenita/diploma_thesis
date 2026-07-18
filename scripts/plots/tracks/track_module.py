@@ -95,7 +95,7 @@ class CycloneTracker:
             ds = ds.sortby(ds[lon_var])
         return ds
     
-    def find_cyclone_centers(self, psl_threshold=1010.0, max_jump_km=300, smooth_window=None):
+    def find_cyclone_centers(self, psl_threshold=1010.0, max_jump_km=600, smooth_window=None):
         """
         Find cyclone centers based on minimum sea level pressure,
         with robustness checks for dissipation and spurious jumps.
@@ -402,18 +402,23 @@ def plot_cyclone_tracks(tracker, experiments=None, nhc_data=None, era5_included=
     
     return ax
 
-def plot_max_sfc_wind(tracker, nhc_data=None, ax=None, smooth_window=1):
+def plot_max_sfc_wind(tracker, nhc_data=None, ax=None, smooth_window=1, era5_included=True):
     """Plot maximum surface wind speed."""
     if ax is None:
         fig, ax = plt.subplots()
     
+    # Plot model experiments
     for i, var in enumerate(tracker.variable_data.keys()):
-        expname = var.split("-")[0]
-        moist_data = tracker.variable_data[var]
-        moist_data['max_sfcWind'] = moist_data['max_sfcWind'].rolling(window=smooth_window, min_periods=1, center=True).mean()
-        color = COLORS[i] if ('ERA5' not in var) else 'blue'
-        ax.plot(moist_data['time'], moist_data['max_sfcWind'], 
-                'o-', label=expname, alpha=0.8, color=color)
+        if (var == 'ERA5') and (era5_included == False):
+            continue
+        else:
+            expname = var.split("-")[0]
+            moist_data = tracker.variable_data[var]
+            moist_data['max_sfcWind'] = moist_data['max_sfcWind'].rolling(window=smooth_window, min_periods=1, center=True).mean()
+            color = COLORS[i] if ('ERA5' not in var) else 'blue'
+            ax.plot(moist_data['time'], moist_data['max_sfcWind'], 
+                    'o-', label=expname, alpha=0.8, color=color)
+            
     
     # Add NHC wind data
     if nhc_data is not None:
