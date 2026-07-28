@@ -7,15 +7,18 @@ df = pd.read_csv(filename, comment='#', sep=r",\s*", engine='python')
 # Define options
 ensemble = 'r1i1p1f1'
 scenario = 'ssp370'
-level = 3
+level = 3 # 1.5 for present, 3 for GWL+1.5
+models = ["MPI-ESM1-2-HR"] # ["EC-Earth3-Veg",  "MPI-ESM1-2-HR",  "NorESM2-MM"]
 
 # Find start and end years
 df_filt = df[
     (df['ensemble'] == ensemble) & \
     (df['exp'] == scenario) & \
-    (df['warming_level'] == level)
+    (df['warming_level'] == level) & \
+    (df['model'].isin(models))
 ]
 
 # Find midpoint year
 df_filt['mid_year'] = (df['start_year'] + df['end_year']) // 2 + 1
+print(df_filt)
 print(df_filt['mid_year'].mean())

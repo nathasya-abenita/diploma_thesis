@@ -495,7 +495,7 @@ def load_era5(era_dir, verbose=False):
     return ds_merged
 
 def load_regcm5_multi_file(data_dir, verbose=False):
-    nc_files = sorted(glob.glob(os.path.join(data_dir, '*.nc')))
+    nc_files = sorted(glob.glob(os.path.join(data_dir, '*_SRF.nc')))
     
     if not nc_files:
         raise ValueError(f"No NetCDF files found in {data_dir}")

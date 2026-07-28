@@ -1,7 +1,17 @@
 import pandas as pd
 
 # Define years of interest (ratio is year2 divided by year1)
-year1, year2 = 2031, 1875
+
+# [To pre-industrial]
+# year1, year2 = 2031, 1875 # ensemble
+# year1, year2 = 2012, 1875 # EC-Earth3-Veg
+# year1, year2 = 2035, 1875 # MPI-ESM1-2-HR
+# year1, year2 = 2047, 1875 # NorESM2-MM
+# [To warming]
+# year1, year2 = 2031, 2077 # ensemble
+# year1, year2 = 2012, 2058 # EC-Earth3-Veg
+year1, year2 = 2035, 2082 # MPI-ESM1-2-HR
+# year1, year2 = 2047, 2091 # NorESM2-MM
 
 # Read data
 df_hist = pd.read_excel('./data/SUPPLEMENT_DataTables_Meinshausen_6May2020.xlsx', 

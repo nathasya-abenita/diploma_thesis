@@ -55,14 +55,11 @@ time_end   = "2025-11-28"
 #%% OPEN DATA
 
 ds = xr.open_dataset(ncfile)
-
 tp = ds["tp"]
 
 # SELECT TIME ONLY
 
-tp_sel = tp.sel(
-    valid_time=slice(time_start, time_end)
-)
+tp_sel = tp.sel(valid_time=slice(time_start, time_end))
 print(tp_sel.valid_time)
 
 # Accumulated precipitation (mm)
@@ -74,104 +71,41 @@ fig = plt.figure(figsize=(7,7))
 ax = plt.axes(projection=ccrs.PlateCarree())
 
 # Plot extent
-ax.set_extent(
-    [plot_lon_min, plot_lon_max,
-     plot_lat_min, plot_lat_max],
-    crs=ccrs.PlateCarree()
-)
+ax.set_extent([plot_lon_min, plot_lon_max, plot_lat_min, plot_lat_max], crs=ccrs.PlateCarree())
 
 # PRECIPITATION
 
-pcm = ax.pcolormesh(
-    tp_acc.longitude,
-    tp_acc.latitude,
-    tp_acc,
-    cmap="Blues",
-    shading="auto",
-    transform=ccrs.PlateCarree(),
-    zorder=1,
-    vmin=100,
-    vmax=500
-)
+pcm = ax.pcolormesh(tp_acc.longitude, tp_acc.latitude, tp_acc, cmap="Blues", shading="auto",
+    transform=ccrs.PlateCarree(), zorder=1, vmin=100, vmax=500)
 
 
 # MASK OCEAN WITH WHITE
 
-ax.add_feature(
-    cfeature.OCEAN,
-    facecolor="white",
-    zorder=2
-)
+ax.add_feature(cfeature.OCEAN, facecolor="white", zorder=2)
 
 # Land + coastlines
-ax.add_feature(
-    cfeature.LAND,
-    facecolor="none",
-    edgecolor="none",
-    zorder=3
-)
-
-ax.add_feature(
-    cfeature.COASTLINE,
-    linewidth=1,
-    zorder=4
-)
-
-ax.add_feature(
-    cfeature.BORDERS,
-    linestyle=":",
-    zorder=4
-)
+ax.add_feature(cfeature.LAND, facecolor="none", edgecolor="none", zorder=3)
+ax.add_feature(cfeature.COASTLINE, linewidth=1, zorder=4)
+ax.add_feature(cfeature.BORDERS, linestyle=":", zorder=4)
 
 # CYCLONE TRACK
 ax.plot(df['lon'], df['lat'], color='tab:red', label='cyclone track')
 
-
 # EVENT BOX
-
-# ax.plot(
-#     [
-#         event_lon_min,
-#         event_lon_max,
-#         event_lon_max,
-#         event_lon_min,
-#         event_lon_min
-#     ],
-#     [
-#         event_lat_min,
-#         event_lat_min,
-#         event_lat_max,
-#         event_lat_max,
-#         event_lat_min
-#     ],
-#     color="red",
-#     linewidth=2.5,
-#     label="defined event",
-#     transform=ccrs.PlateCarree(),
-#     zorder=5
-# )
+ax.plot([event_lon_min, event_lon_max, event_lon_max, event_lon_min, event_lon_min],
+    [event_lat_min, event_lat_min, event_lat_max, event_lat_max, event_lat_min],
+    color="red", linewidth=2.5, label="defined event", transform=ccrs.PlateCarree(), zorder=5)
 
 # Legend
 ax.legend(loc='lower left')
 
 # Gridlines
-gl = ax.gridlines(
-    draw_labels=True,
-    linestyle="--",
-    alpha=0.5
-)
-
+gl = ax.gridlines(draw_labels=True, linestyle="--", alpha=0.5)
 gl.top_labels = False
 gl.right_labels = False
 
 # Colorbar
-cbar = plt.colorbar(
-    pcm,
-    ax=ax,
-    orientation="vertical",
-    pad=0.02
-)
-
+cbar = plt.colorbar(pcm,ax=ax,orientation="vertical",pad=0.02)
 cbar.set_label("Accumulated rainfall (mm)")
 
 # Title
