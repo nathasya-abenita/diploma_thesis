@@ -29,41 +29,37 @@ def setup(ax):
 
 if __name__ == '__main__':
     # Define paths
-    outfile = r'./figs/compare/ts.png'
-    basefile = r'./data/final_exp/counterfactual/GWL-1.5'
-    model_list = ['EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
+    outfile = r'./figs/compare/ts_complete.png'
+    basefile = lambda x : rf'./data/final_exp/counterfactual/GWL{x}1.5'
+    model_list = ['past -1.5K, EC-Earth3-Veg', 'past -1.5K, MPI-ESM1-2-HR', 'past -1.5K, NorESM2-MM',
+                  'fut. +1.5K, EC-Earth3-Veg', 'fut. +1.5K, MPI-ESM1-2-HR', 'fut. +1.5K, NorESM2-MM'] # for title
+    model_list_ori = ['EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
     varfile = r'delta_ts.nc'
-    filenames = [os.path.join(basefile, model, varfile) for model in model_list]
+    filenames = [os.path.join(basefile('-'), model, varfile) for model in model_list_ori]
+    filenames += [os.path.join(basefile('+'), model, varfile) for model in model_list_ori]
 
     # Read file
     ds_list = [xr.open_dataset(file) for file in filenames]
 
     # Set up plot
-    fig = plt.figure(figsize=(12, 4))
-    gs = GridSpec(1, 3, figure=fig)
-    axs = [fig.add_subplot(gs[i], projection=ccrs.PlateCarree()) for i in range(3)]
+    fig = plt.figure(figsize=(12, 8))
+    axs = [fig.add_subplot(2, 3, i, projection=ccrs.PlateCarree()) for i in range (1, 6+1)]
 
     # Color and variable setting
-    delta_level = np.arange(-3, 0.25, 0.5)  # K
+    delta_level = np.arange(-3, 3, 0.5)  # K
     varname = 'ts'
-    cmap = plt.get_cmap("viridis")
+    cmap = plt.get_cmap("RdBu_r")
     norm = mcolors.BoundaryNorm(delta_level, cmap.N)
-    # cmap = plt.get_cmap("RdBu_r")
-    # norm = mcolors.TwoSlopeNorm(
-    #     vmin=delta_level.min(),
-    #     vcenter=0,
-    #     vmax=delta_level.max()
-    # )
 
     # Iterate over each data
-    for i in range (len(ds_list)):
+    for i in range (6):
         ax = axs[i]
         ds = ds_list[i]
         model = model_list[i]
 
         # Plot variable
         cf = ax.contourf(ds['xlon'], ds['xlat'], ds[varname].mean(dim='time'), levels=delta_level, cmap=cmap, norm=norm,
-                         extend='both', transform=ccrs.PlateCarree())
+                        extend='both', transform=ccrs.PlateCarree())
         # ax.add_feature(cfeature.LAND, facecolor='lightgray', zorder=10)
         ax.set_title(model, loc='left', fontsize=font_size, fontweight='bold')
         setup(ax)

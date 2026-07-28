@@ -29,33 +29,29 @@ def setup(ax):
 
 if __name__ == '__main__':
     # Define paths
-    outfile = r'./figs/compare/tas.png'
-    basefile = r'./data/final_exp/counterfactual/GWL-1.5'
-    model_list = ['tweak', 'EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
+    outfile = r'./figs/compare/tas_complete.png'
+    basefile = lambda x : rf'./data/final_exp/counterfactual/GWL{x}1.5'
+    model_list = ['past -1.5K, tweak', 'past -1.5K, EC-Earth3-Veg', 'past -1.5K, MPI-ESM1-2-HR', 'past -1.5K, NorESM2-MM',
+                  'fut. +1.5K, tweak', 'fut. +1.5K, EC-Earth3-Veg', 'fut. +1.5K, MPI-ESM1-2-HR', 'fut. +1.5K, NorESM2-MM'] # for title
+    model_list_ori = ['tweak', 'EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
     varfile = r'tas_SRF.nc'
-    filenames = [os.path.join(basefile, model, varfile) for model in model_list]
+    filenames = [os.path.join(basefile('-'), model, varfile) for model in model_list_ori]
+    filenames += [os.path.join(basefile('+'), model, varfile) for model in model_list_ori]
 
     # Read file
     ds_list = [xr.open_dataset(file) for file in filenames]
     ds_fac = xr.open_dataset(os.path.join('./data/final_exp/factual/', varfile))
 
     # Set up plot
-    fig = plt.figure(figsize=(12, 4))
-    gs = GridSpec(1, 4, figure=fig)
-    axs = [fig.add_subplot(gs[i], projection=ccrs.PlateCarree()) for i in range(4)]
+    fig = plt.figure(figsize=(15, 8))
+    axs = [fig.add_subplot(2, 4, i, projection=ccrs.PlateCarree()) for i in range (1, 8+1)]
 
     # Color and variable setting
-    delta_level = np.arange(-3, 0.25, 0.5)  # K
+    delta_level = np.arange(-3, 3, 0.5)  # K
     varname = 'tas'
-    cmap = plt.get_cmap("viridis")
+    cmap = plt.get_cmap("RdBu_r")
     norm = mcolors.BoundaryNorm(delta_level, cmap.N)
-    # cmap = plt.get_cmap("RdBu_r")
-    # norm = mcolors.TwoSlopeNorm(
-    #     vmin=delta_level.min(),
-    #     vcenter=0,
-    #     vmax=delta_level.max()
-    # )
-    
+
     # Take factual simulation value
     var_fac = ds_fac[varname].squeeze().mean(dim='time')
     
