@@ -69,7 +69,7 @@ if __name__ == '__main__':
         setup(ax)
 
     # Add colorbar only to the last axis
-    cbar = plt.colorbar(cf, ax=axs, orientation='horizontal', pad=0.08, fraction=0.06, aspect=40)
+    cbar = plt.colorbar(cf, ax=axs, orientation='horizontal', pad=0.08, fraction=0.06, aspect=40, ticks=delta_level)
     cbar.set_label(r"$\Delta \overline{T_{\text{2m}}}$ (K)", fontsize=font_size, fontweight='bold')
     cbar.ax.tick_params(labelsize=font_size)
 
