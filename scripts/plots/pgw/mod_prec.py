@@ -102,15 +102,6 @@ def plot_hist_simple(ax, tp, pr_min, pr_max, bins=50, color=None, alpha=1, label
     ax.hist(values, bins=bins, range=(pr_min, pr_max),density=True,
         color=color,alpha=alpha, edgecolor="black", linewidth=0.5, label=label)
 
-    # counts, edges = np.histogram(
-    # values,
-    # bins=np.linspace(0, 20, bins),
-    # density=True
-    # )
-
-    # centers = 0.5*(edges[:-1] + edges[1:])
-
-    # ax.scatter(centers, counts, alpha=alpha, color=color, label=label)
     ax.set_xlim(pr_min, None)
 
 
