@@ -27,8 +27,10 @@ event_lat_min, event_lat_max = -1.5, 7.5
 
 #%% Data access
 
-def read_data(path, time1, time2):
+def read_data(path, time1, time2, rename=False):
     ds = xr.open_dataset(path).sel(time=slice(time1, time2))
+    if rename:
+        ds = ds.rename({'lon': 'xlon', 'lat': 'xlat'})
     ds = cut_area(ds)
     return ds
 
