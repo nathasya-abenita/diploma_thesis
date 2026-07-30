@@ -51,8 +51,6 @@ if __name__ == '__main__':
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(9, 6))
     lw = 2
 
-    
-
     # Compute counterfactual (past)
     pr_cfac_list = []
     for exp in exp_list:

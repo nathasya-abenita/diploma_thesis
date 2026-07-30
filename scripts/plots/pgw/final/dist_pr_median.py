@@ -1,7 +1,7 @@
 '''
 pct=99
-p90:  27.8,  30.4,  32.8
-p90_change:  6.5,  5.2
+pct:  27.8,  30.4,  31.6
+pct_change:  6.5,  2.6
 '''
 
 from mod_pgw import *
@@ -40,10 +40,9 @@ def compute_cfac_exceedance_prob(cfac_path, values_fac, case):
     stacked_val = np.stack(values_cfac_list)      # shape: (n_ens, n_points)
     stacked_change = np.stack(change_list)
 
-    # ens_mean = np.median(stacked, axis=0)
-    ens_val_mean = stacked_val.mean(axis=0)
+    ens_val_mean = np.median(stacked_val, axis=0) # stacked_val.mean(axis=0)
     ens_val_std  = stacked_val.std(axis=0)
-    ens_change_mean = stacked_change.mean(axis=0)
+    ens_change_mean = np.median(stacked_change, axis=0) # stacked_change.mean(axis=0)
     ens_change_std = stacked_change.std(axis=0)
     return excd_prob, ens_val_mean, ens_val_std, ens_change_mean, ens_change_std
 
@@ -62,7 +61,7 @@ if __name__ == '__main__':
     time1, time2 = '2025-11-25', '2025-11-26'
 
     # Define paths
-    outpath = './figs/compare/finals/dist_pr.png'
+    outpath = './figs/compare/finals/dist_pr_median.png'
 
     path_fac = r'./data/final_exp/factual/pr_SRF.nc'
     path_mask = r'./data/shp/mask_aceh.nc' #r'./data/counterfactual/mask_SRF.nc'
