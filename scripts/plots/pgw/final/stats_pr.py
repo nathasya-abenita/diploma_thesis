@@ -7,7 +7,11 @@ present to the future: -8.97%
 
 2) median change of rainfall area (pct 90)
 past to present (area of precipitation): 78.13
-present to future (area of precipitation): -13.40
+past to present (area of precipitation): 63.89
+
+median change of rainfall area (300 mm / 2 day)
+past to present (area of precipitation): 78.13
+present to future (area of precipitation): -14.62
 
 '''
 
@@ -78,7 +82,7 @@ if __name__ == '__main__':
     ds_fac = mask_data(ds_fac, ds_mask)
     tp_fac = ds_fac['pr'].sum(dim="time", skipna=False) * 3600
     # Compute extremes
-    pct_fac = compute_pct(tp_fac.values, 90)
+    pct_fac = 300 # compute_pct(tp_fac.values, 99)
     n_fac = compute_grids_above_thr(tp_fac.values, pct_fac)
     print(pct_fac)
 
