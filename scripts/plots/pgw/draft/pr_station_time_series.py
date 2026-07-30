@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-from mod_prec import read_data, cut_area, load_sat
-from mod_prec import event_lat_max, event_lon_max, event_lat_min, event_lon_min
+from scripts.plots.pgw.draft.mod_prec import read_data, cut_area, load_sat
+from scripts.plots.pgw.draft.mod_prec import event_lat_max, event_lon_max, event_lat_min, event_lon_min
 import matplotlib.dates as mdates
 
 def extract_pr_model(pr : xr.DataArray, lon, lat):

@@ -1,4 +1,4 @@
-from mod_prec import *
+from scripts.plots.pgw.draft.mod_prec import *
 
 def cfac_path(exp : str):
     return rf'./data/final_exp/counterfactual/GWL-1.5/{exp}/pr_SRF.nc'

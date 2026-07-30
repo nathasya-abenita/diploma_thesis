@@ -1,15 +1,15 @@
-from mod_prec import *
+from scripts.plots.pgw.draft.mod_prec import *
 
 def cfac_path(exp):
     return rf'./data/final_exp/counterfactual/GWL-1.5/{exp}/pr_SRF.nc'
 
 if __name__ == '__main__':
     # Parameters
-    outfile = rf'./figs/compare/pr_maximum_map.png'
+    outfile = rf'./figs/compare/pr_mean_map.png'
     time1, time2 = "2025-11-25", "2025-11-26"
-    pr_max = 80
+    pr_max = 15
     pr_min = 0 # pr_max / 15 # divided by nlevel
-    unit = r"Maximum intensity (mm h$^{-1}$)"
+    unit = r"Average Intensity (mm h$^{-1}$)"
 
     # Colormap control
     nlevel = 15
@@ -30,9 +30,9 @@ if __name__ == '__main__':
     ds_fac = read_data(path_fac, ds_mask, time1, time2, mask_val)
     ds_cfac = read_data(path_cfac, ds_mask, time1, time2, mask_val)
 
-    # Max rainfall
-    tp_fac = ds_fac['pr'].max(dim="time") * 3600
-    tp_cfac = ds_cfac['pr'].max(dim="time") * 3600
+    # Mean rainfall
+    tp_fac = ds_fac['pr'].mean(dim="time") * 3600
+    tp_cfac = ds_cfac['pr'].mean(dim="time") * 3600
 
     # Plot
     fig = plt.figure(figsize=(12, 4))
@@ -74,7 +74,7 @@ if __name__ == '__main__':
         ds_cfac = read_data(path_cfac, ds_mask, time1, time2, mask_val)
 
         # Max rainfall
-        tp_cfac = ds_cfac['pr'].max(dim="time") * 3600
+        tp_cfac = ds_cfac['pr'].mean(dim="time") * 3600
 
         # Histogram
         plot_density_simple(axs[2], tp_cfac, pr_min, pr_max, color='k', alpha=0.5)

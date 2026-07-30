@@ -1,12 +1,11 @@
 import xarray as xr
-import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-from mod_prec import read_data, cut_area, activate_geo, load_sat, set_extent
-from mod_prec import event_lat_max, event_lon_max, event_lat_min, event_lon_min
+from scripts.plots.pgw.draft.mod_prec import read_data, cut_area, activate_geo, load_sat, set_extent
+from scripts.plots.pgw.draft.mod_prec import event_lat_max, event_lon_max, event_lat_min, event_lon_min
 
 if __name__ == '__main__':
     # Variables
@@ -46,11 +45,15 @@ if __name__ == '__main__':
     # Slice time and take sum (ERA5)
     pr_era5 = ds_era5['tp'].sel(valid_time=slice(time1, time2))
     pr_era5 = pr_era5.sum(dim='valid_time', skipna=False) * 1_000
+
     
     # Set up plot
     vmin, vmax = 0, 720
-    fig = plt.figure(figsize=(6, 6))
-    ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+    fig = plt.figure(figsize=(12, 6))
+    ax1 = fig.add_subplot(1, 3, 1, projection=ccrs.PlateCarree())
+    ax2 = fig.add_subplot(1, 3, 2, projection=ccrs.PlateCarree())
+    ax3 = fig.add_subplot(1, 3, 3, projection=ccrs.PlateCarree())
+    axs = [ax1, ax2, ax3]
 
     # Set up colormap
     levels = np.arange(vmin, vmax, 10)
@@ -59,44 +62,33 @@ if __name__ == '__main__':
     cmap = mcolors.ListedColormap(base)
     norm = mcolors.BoundaryNorm(levels, ncolors=cmap.N + 1, extend='max')
 
-    # Add satellite data
-    cf = ax.contourf(pr_sat.lon, pr_sat.lat, pr_sat.values, cmap=cmap, levels=levels,
+
+    # Add factual precipitation map
+    pcm = ax1.contourf(pr_fac.xlon, pr_fac.xlat, pr_fac.values.squeeze(), cmap=cmap, levels=levels, 
                         vmin=vmin, vmax=vmax, transform=ccrs.PlateCarree(), extend='max')
-    ax.set_title('MSWEP')
+    ax1.set_title('Factual')
+
+    # Add satellite data
+    ax2.contourf(pr_sat.lon, pr_sat.lat, pr_sat.values, cmap=cmap, levels=levels,
+                        vmin=vmin, vmax=vmax, transform=ccrs.PlateCarree(), extend='max')
+    ax2.set_title('MSWEP')
+
+    # Add ERA5 data
+    ax3.contourf(pr_era5.longitude, pr_era5.latitude, 
+                 pr_era5.values, cmap=cmap, levels=levels, 
+                        vmin=vmin, vmax=vmax, transform=ccrs.PlateCarree(), extend='max')
+    ax3.set_title('ERA5')
 
     # Decorate plot
-    activate_geo(ax, mask_ocean=False)
-    set_extent(ax)
-
-    # Add station plots
-    ax.scatter(df_stat['longitude'], df_stat['latitude'], c=df_stat['RR'],
-                vmin=vmin, vmax=vmax, cmap=cmap, edgecolors='k')
-
-    # Add station codes
-    
-    # df_info = df_stat.copy().drop(columns=['station_name', 'latitude', 'longitude', 'RR'])
-    # df_info['color'] = ['white' for _ in range (len(df_info))]
-    # df_info['ha'] = ['left' for _ in range (len(df_info))]
-    # df_info = df_info.drop(columns=['elevation'])
-    # df_info.to_csv('./data/stat_info.csv')
-
-    df_info = pd.read_csv('./data/stat_info.csv')
-    df_info = df_info.set_index(keys='station')
-    print(df_info.index)
-    
-    for code, row in df_stat.iterrows():
-        ha = df_info.loc[int(code)]['ha']
-        va = df_info.loc[int(code)]['va']
-        color = df_info.loc[int(code)]['color']
-
-        if va == np.nan:
-            va = 'top'
-
-        ax.text(row['longitude'], row['latitude'], int(code), fontsize=9, color=color, ha=ha, zorder=10,
-                fontweight='bold', va=va)
+    for ax in axs:
+        activate_geo(ax, mask_ocean=False)
+        set_extent(ax)
+        # Add station plots
+        ax.scatter(df_stat['longitude'], df_stat['latitude'], c=df_stat['RR'],
+                    vmin=vmin, vmax=vmax, cmap=cmap, edgecolors='k')
 
     # Shared horizontal colorbar
-    cbar = fig.colorbar(cf, ax=ax, orientation="horizontal", pad=0.08, fraction=0.06, aspect=40)
+    cbar = fig.colorbar(pcm, ax=axs, orientation="horizontal", pad=0.08, fraction=0.06, aspect=40)
     cbar.set_label('Accumulated precipitation 25-28Nov2025 (mm)')
 
     plt.show()

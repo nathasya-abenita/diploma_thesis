@@ -1,4 +1,4 @@
-from mod_prec import *
+from scripts.plots.pgw.draft.mod_prec import *
 
 def plot_hyetograph (ax, pr : xr.DataArray,
                      color=None, alpha=1, linewidth=None, label=None, linestyle=None):
