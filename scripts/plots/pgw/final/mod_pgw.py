@@ -101,6 +101,12 @@ def compute_exceedance_prob(tp : xr.DataArray):
     excd_prob = 1-cdf
     return excd_prob, values
 
+def compute_ens_mean_std (val_list):
+    stacked_val = np.stack(val_list)
+    ens_val_mean = stacked_val.mean(axis=0)
+    ens_val_std  = stacked_val.std(axis=0)
+    return ens_val_mean, ens_val_std
+
 def plot_density_simple(ax, tp : np.array, pr_min : float, pr_max : float, color=None, alpha=1, linewidth=None, label=None):
     values = tp.flatten()
     values = values[~np.isnan(values)]
