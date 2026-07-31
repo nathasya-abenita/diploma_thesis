@@ -74,4 +74,4 @@ if __name__ == '__main__':
     cbar.ax.tick_params(labelsize=font_size)
 
     # View/save plot
-    plt.savefig(outfile)
+    plt.savefig(outfile, bbox_inches='tight')

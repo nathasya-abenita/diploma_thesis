@@ -56,7 +56,6 @@ def plot_cfac_normal_plot(ax, values, ens_mean, ens_std, linewidth=None, color=N
     ax.fill_between(values, ens_mean - ens_std, ens_mean + ens_std, 
                     color=color, alpha=0.2, edgecolor=None)
 
-
 if __name__ == '__main__':
     time1, time2 = '2025-11-25', '2025-11-26'
 

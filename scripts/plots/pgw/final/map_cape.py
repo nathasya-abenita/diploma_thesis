@@ -39,7 +39,7 @@ if __name__ == '__main__':
     time1, time2 = "2025-11-25", "2025-11-26"
     pr_max = 3_000
     pr_min = 0 # pr_max / 15 # divided by nlevel
-    unit = r"Average CAPE 25-26Nov2025 (J kg$^{-1}$)"
+    unit = r"CAPE 25-26Nov2025 (J kg$^{-1}$)"
 
     # Colormap control
     nlevel = 15
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     # Add title
     axs[1].set_title('present')
     axs[0].set_title('past -1.5K')
-    axs[2].set_title('fut. -1.5K')
+    axs[2].set_title('fut. +1.5K')
 
     # Activate boundaries and set extent
     for ax in axs:
@@ -80,4 +80,4 @@ if __name__ == '__main__':
     # Shared horizontal colorbar
     cbar = fig.colorbar(pcm, ax=axs, orientation="horizontal", pad=0.04, fraction=0.06, aspect=40)
     cbar.set_label(unit)
-    plt.savefig(outfile)
+    plt.savefig(outfile, bbox_inches='tight')

@@ -33,8 +33,8 @@ def plot_cfac(ax, path_func, stat):
     
 if __name__ == '__main__':
     # Parameters
-    outfile = rf'./figs/compare/finals/map_pr_ens_mean.png'
-    stat = 'mean'
+    outfile = rf'./figs/compare/finals/map_pr_ens_max.png'
+    stat = 'max'
 
     time1, time2 = "2025-11-25", "2025-11-26"
     pr_max = 180 * 4
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     # Add title
     axs[1].set_title('present')
     axs[0].set_title('past -1.5K')
-    axs[2].set_title('fut. -1.5K')
+    axs[2].set_title('fut. +1.5K')
 
     # Add region of interest and set extent
     for ax in axs:
@@ -86,4 +86,4 @@ if __name__ == '__main__':
     cbar.set_label(unit)
 
     fig.subplots_adjust(bottom=0.25, wspace=0.05)
-    plt.savefig(outfile)
+    plt.savefig(outfile, bbox_inches='tight')
