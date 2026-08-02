@@ -13,6 +13,7 @@ import xarray as xr
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, BoundaryNorm
 from matplotlib.gridspec import GridSpec
+import matplotlib.colors as mcolors
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from scipy.stats import gaussian_kde
@@ -106,15 +107,15 @@ def plot_density_simple(ax, tp : np.array, pr_min : float, pr_max : float,
     x = np.linspace(pr_min, pr_max, 800)
     ax.plot(x, kde(x), color=color, alpha=alpha, label=label, linewidth=linewidth, linestyle=linestyle)
 
-def plot_hist_simple(ax, tp : np.array, pr_min, pr_max, bins=25, color=None, alpha=1, label=None):
-    values = tp.flatten()
+def plot_hist_simple(ax, da : np.array, val_min, val_max, bins=25, color=None, alpha=1, label=None):
+    values = da.flatten()
     values = values[~np.isnan(values)]
-    values = values[values > pr_min]
+    values = values[values > val_min]
 
-    ax.hist(values, bins=bins, range=(pr_min, pr_max),density=True,
+    ax.hist(values, bins=bins, range=(val_min, val_max),density=True,
         color=color,alpha=alpha, edgecolor="black", linewidth=0.5, label=label)
 
-    ax.set_xlim(pr_min, None)
+    ax.set_xlim(val_min, val_max)
 
 def plot_density(ax, tp_fac, tp_cfac, pr_max, pr_min, unit):
     values_fac = tp_fac.values.flatten()
@@ -167,7 +168,7 @@ def plot_cum_hyetograph (ax, pr : xr.DataArray,
     pr_array = np.nanmean(pr.values, axis=(1, 2))
     ax.plot(pr.time, np.cumsum(pr_array), color=color, alpha=alpha, linewidth=linewidth, label=label)
 
-def plot_exceedance_prob(ax, excd_prob, values, color=None, alpha=1, linewidth=None, label=None, linestyle=None):
+def plot_exceedance_prob_simple(ax, excd_prob, values, color=None, alpha=1, linewidth=None, label=None, linestyle=None):
     ax.semilogx(excd_prob, values, color=color, alpha=alpha, linewidth=linewidth, label=label, linestyle=linestyle)
     ax.set_xlim(1, 1e-6)   # reversed
 
@@ -181,11 +182,11 @@ def activate_geo (ax, mask_ocean=True):
     ax.add_feature(cfeature.COASTLINE, linewidth=1, zorder=4)
     ax.add_feature(cfeature.BORDERS, linestyle=":", zorder=4)
 
-#%% Map Class: Spatial change
+#%% Main class for PGW change analysis (spatial map and distribution graph)
 
-class SpatialMap:
+class PGW:
     def __init__ (self, filename, val_min, val_max, unit, var_name, time_start, time_end, 
-                  cmap=None, time_stat='mean', ens_stat='mean', rename=False, val_modify_func=None):
+                  time_stat=None, ens_stat='mean', rename=False, val_modify_func=None):
         self.filename = filename
         self.time_start = time_start
         self.time_end = time_end
@@ -199,16 +200,6 @@ class SpatialMap:
         self.unit = unit
         self.var_name = var_name
         self.val_modify_func = val_modify_func
-    
-        # Colormap control
-        if cmap is None:
-            nlevel = 10
-            turbo = plt.cm.turbo(np.linspace(0, 1, nlevel-1))  # 7 colors from turbo
-            transparent = np.array([[0, 0, 0, 0]])      # RGBA fully transparent
-            colors = np.vstack([transparent, turbo])    # stack into 8-color colormap
-            self.cmap = ListedColormap(colors)
-        else:
-            self.cmap = cmap
 
     def cfac_past_path(self, exp):
         return rf'./data/final_exp/counterfactual/GWL-1.5/{exp}/{self.filename}'
@@ -216,7 +207,7 @@ class SpatialMap:
     def cfac_fut_path(self, exp):
         return rf'./data/final_exp/counterfactual/GWL+1.5/{exp}/{self.filename}'
 
-    def prepare_cfac(self, scenario):
+    def compute_ens(self, scenario):
         model_list_ori = ['tweak', 'EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
         tp_cfac_list = []
         for exp in model_list_ori:
@@ -250,23 +241,42 @@ class SpatialMap:
             ds[self.var_name] = self.val_modify_func(ds[self.val_name])
 
         # Compute statistics in time
-        if self.time_stat == 'mean':
-            val = ds[self.var_name].mean(dim='time')
-        elif self.time_stat == 'max':
-            val = ds[self.var_name].max(dim='time')
-        elif self.time_stat == 'median':
-            val = ds[self.var_name].median(dim='time')
+        if self.time_stat is not None:
+            if self.time_stat == 'mean':
+                val = ds[self.var_name].mean(dim='time')
+            elif self.time_stat == 'max':
+                val = ds[self.var_name].max(dim='time')
+            elif self.time_stat == 'median':
+                val = ds[self.var_name].median(dim='time')
+            else:
+                raise ValueError ('check `time_stat` options!')
         else:
-            raise ValueError ('check `time_stat` options!')
+            val = ds[self.var_name]
         return val
 
-    def plot_colormesh (self, ax, lon, lat, val):
-        pcm = ax.pcolormesh(lon, lat, val, cmap=self.cmap, shading="auto",
-                            transform=ccrs.PlateCarree(), zorder=1, vmin=self.val_min, vmax=self.val_max)
+    def plot_colormesh (self, ax, lon, lat, val, cmap, norm):
+        pcm = ax.pcolormesh(lon, lat, val, cmap=cmap, norm=norm, shading="auto",
+                            transform=ccrs.PlateCarree(), zorder=1,)
         return pcm
         
-    def plot_map (self, outfile, polygon_path=None):
-    
+    def plot_map (self, outfile=None, polygon_path=None, cbar_n_level=10):
+
+        # Colormap control
+        colors = [
+            (1.0, 1.0, 1.0, 1.0),   # white
+            (0.6, 0.8, 1.0, 1.0),   # light blue (soft, pastel)
+            (0.0, 0.7, 0.0, 1.0),   # green
+            (1.0, 1.0, 0.0, 1.0),   # yellow
+            (1.0, 0.0, 0.0, 1.0),   # red
+        ]
+
+        cmap = mcolors.LinearSegmentedColormap.from_list(
+            "custom", colors, N=cbar_n_level
+        )
+
+        bounds = np.linspace(self.val_min, self.val_max, cbar_n_level)   # 10 intervals
+        norm = mcolors.BoundaryNorm(boundaries=bounds, ncolors=cmap.N)
+
         # Prepare plot
         fig = plt.figure(figsize=(12, 5))
         axs =[fig.add_subplot(1, 3, 1, projection=ccrs.PlateCarree()),
@@ -277,13 +287,13 @@ class SpatialMap:
         path_fac = rf'./data/final_exp/factual/{self.filename}'
         tp_fac = self.prepare_data(path_fac)
 
-        pcm = self.plot_colormesh(axs[0], tp_fac.xlon, tp_fac.xlat, tp_fac)
+        pcm = self.plot_colormesh(axs[1], tp_fac.xlon, tp_fac.xlat, tp_fac, cmap, norm)
 
         # Plot for other scenarios
-        ens_val = self.prepare_cfac(scenario='past')
-        self.plot_colormesh(axs[1], ens_val.xlon, ens_val.xlat, ens_val)
-        ens_val = self.prepare_cfac(scenario='fut.')
-        self.plot_colormesh(axs[2], ens_val.xlon, ens_val.xlat, ens_val)
+        ens_val = self.compute_ens(scenario='past')
+        self.plot_colormesh(axs[0], ens_val.xlon, ens_val.xlat, ens_val, cmap, norm)
+        ens_val = self.compute_ens(scenario='fut.')
+        self.plot_colormesh(axs[2], ens_val.xlon, ens_val.xlat, ens_val, cmap, norm)
 
         # Add title
         axs[1].set_title('present')
@@ -300,6 +310,142 @@ class SpatialMap:
         # Shared horizontal colorbar
         cbar = fig.colorbar(pcm, ax=axs, orientation="horizontal", pad=0.04, extend='both', fraction=0.06, aspect=40)
         cbar.set_label(self.unit)
-        return plt.savefig(outfile, bbox_inches='tight')
+        cbar.set_ticks(bounds)
+        if outfile is not None:
+            plt.savefig(outfile, bbox_inches='tight')
+        return fig, axs
 
-#%% Distribution Class
+    def plot_exceedance_prob(self, ax, excd_prob, ens_mean, ens_std, linewidth=None, color=None, label=None):
+        plot_exceedance_prob_simple(ax, excd_prob, ens_mean, linewidth=linewidth, color=color, label=label)
+        ax.fill_between(excd_prob, ens_mean - ens_std, ens_mean + ens_std, 
+                        color=color, alpha=0.2, edgecolor=None)
+
+    def plot_normal(self, ax, values, ens_mean, ens_std, linewidth=None, color=None, label=None):
+        ax.plot(values, ens_mean, linewidth=linewidth, color=color, label=label)
+        ax.fill_between(values, ens_mean - ens_std, ens_mean + ens_std, 
+                        color=color, alpha=0.2, edgecolor=None)
+
+    def compute_exceedance_prob_ens(self, values_fac, scenario):
+        model_list = ['tweak', 'EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
+        values_cfac_list = []
+        change_list = []
+        
+        # Plot members of counterfactual
+        for exp in model_list:
+            
+            # Read data
+            if scenario == 'past':
+                path_cfac = self.cfac_past_path(exp)
+            elif scenario == 'fut.':
+                path_cfac = self.cfac_fut_path(exp)
+            else:
+                raise ValueError (r'check scenario input (choices: "past" or "fut.")')
+            val_cfac = self.prepare_data(path_cfac)
+            excd_prob, values = compute_exceedance_prob(val_cfac.values)
+            values_cfac_list.append(values)
+
+            if scenario == 'past':
+                change = (values_fac - values) / values * 100
+            elif scenario == 'fut.':
+                change = (values - values_fac) / values_fac * 100
+            else:
+                raise ValueError (r'check scenario input (choices: "past" or "fut.")')
+            change_list.append(change / 1.5) # convert unit to % per degree
+    
+        # Compute ensemble stats
+        stacked_val = np.stack(values_cfac_list)      # shape: (n_ens, n_points)
+        stacked_change = np.stack(change_list)
+
+        if self.ens_stat == 'mean':
+            ens_val_mean = stacked_val.mean(axis=0)        
+            ens_change_mean = stacked_change.mean(axis=0)
+        elif self.ens_stat == 'median':
+            ens_val_mean = np.median(stacked_val, axis=0)
+            ens_change_mean = np.median(stacked_change, axis=0)
+        elif self.ens_stat == 'max':
+            ens_val_mean = stacked_val.max(axis=0)        
+            ens_change_mean = stacked_change.max(axis=0)
+
+        # Compute spread
+        ens_val_std  = stacked_val.std(axis=0)
+        ens_change_std = stacked_change.std(axis=0)
+        return excd_prob, ens_val_mean, ens_val_std, ens_change_mean, ens_change_std
+
+    def plot_dist_change(self, change_min=0, change_max=20, outfile=None):
+        # Set up plot
+        lw = 3
+        fig, axs = plt.subplots(1, 3, figsize=(12, 4))
+
+        # Compute factual
+        path_fac = rf'./data/final_exp/factual/{self.filename}'
+        val_fac = self.prepare_data(path_fac)
+        excd_prob, values_fac = compute_exceedance_prob(val_fac.values)
+
+        # Plot counterfactuals (past)
+        excd_prob, ens_val_mean1, ens_val_std1, ens_change_mean1, ens_change_std1 = self.compute_exceedance_prob_ens(values_fac, scenario='past')
+        self.plot_exceedance_prob(axs[0], excd_prob, ens_val_mean1, ens_val_std1,
+                                  linewidth=lw, color='tab:blue', label='past -1.5K')
+        self.plot_normal(axs[1], ens_val_mean1, ens_change_mean1, ens_change_std1,
+                                      linewidth=lw, color='tab:blue', label='past to present')
+        # plot_density_simple(axs[2], ens_val_mean, pr_min=pr_min, pr_max=pr_max, color='tab:blue', linewidth=lw/2, label='past -1.5K')
+        plot_hist_simple(axs[2], ens_val_mean1, val_min=self.val_min, val_max=self.val_max, color='tab:blue', alpha=0.25, label='past -1.5K')
+    
+        # Plot factual
+        plot_exceedance_prob_simple(axs[0], excd_prob, values_fac, linewidth=lw, color='k', label='present')
+        # plot_density_simple(axs[2], values_fac, pr_min=pr_min, pr_max=pr_max, color='k', linestyle='--', linewidth=lw/2, label='present')
+        plot_hist_simple(axs[2], values_fac, val_min=self.val_min, val_max=self.val_max, color='k', alpha=0.25, label='present')
+    
+        # Plot counterfactuals (future)
+        excd_prob, ens_val_mean2, ens_val_std2, ens_change_mean2, ens_change_std2 = self.compute_exceedance_prob_ens(values_fac, scenario='fut.')
+        self.plot_exceedance_prob(axs[0], excd_prob, ens_val_mean2, ens_val_std2,
+                                    linewidth=lw, color='tab:red', label='fut. +1.5K')
+        self.plot_normal(axs[1], values_fac, ens_change_mean2, ens_change_std2,
+                                        linewidth=lw, color='tab:red', label='present to fut.')
+        # plot_density_simple(axs[2], ens_val_mean, pr_min=pr_min, pr_max=pr_max, color='tab:red', linestyle=':', linewidth=lw/2, label='fut. +1.5K')
+        plot_hist_simple(axs[2], ens_val_mean2, val_min=self.val_min, val_max=self.val_max, color='tab:red', alpha=0.25, label='fut. +1.5K')
+    
+        # Change per degree warming plot
+        # # combined mean
+        # ens_change_mean = (ens_change_mean1 + ens_change_mean2) / 2
+        # # combined variance
+        # ens_change_var = (
+        #     (ens_change_std1**2 + ens_change_mean1**2) + (ens_change_std2**2 + ens_change_mean2**2)
+        # ) / 2 - ens_change_mean**2
+        # ens_change_std = ens_change_var ** 0.5
+        # plot_cfac_normal_plot(axs[1], ens_val_mean, ens_change_mean, ens_change_std, linewidth=lw, color='k', label='all')
+    
+        # Setting axis
+        axs[1].set_xlim(self.val_min, self.val_max)
+        axs[1].set_ylim(change_min, change_max)
+    
+        # Decorate plots
+        axs[0].set_ylabel(self.unit)
+        axs[0].set_xlabel('Exceedance Probability')
+        axs[0].legend()
+        
+        axs[1].legend(ncols=1)
+        axs[1].set_ylabel('Change per degree global\nwarming (% K$^{-1}$)')
+        axs[1].set_xlabel(self.unit)
+    
+        axs[2].legend()
+        axs[2].set_ylabel('Density')
+        axs[2].set_xlabel(self.unit)
+
+        plt.tight_layout()
+        if outfile is not None:
+            plt.savefig(outfile)
+    
+        # Extract percentile
+        pct = 0.99
+        idx = np.searchsorted(excd_prob[::-1], 1-pct)
+        pct_present = values_fac[-idx-1]
+        pct_past = ens_val_mean1[-idx-1]
+        pct_fut = ens_val_mean2[-idx-1]
+        pct_past_present_change = ens_change_mean1[-idx-1]
+        pct_present_fut_change = ens_change_mean2[-idx-1]
+
+        with open(f"{outfile}.txt", "w") as f:
+            f.write(f"pct: {pct}\n")
+            f.write(f"pct: {pct_past: .3f}, {pct_present: .3f}, {pct_fut: .3f}\n")
+            f.write(f"pct_change: {pct_past_present_change: .1f}, {pct_present_fut_change: .1f}\n")
+        return fig, axs
