@@ -444,8 +444,13 @@ class PGW:
         pct_past_present_change = ens_change_mean1[-idx-1]
         pct_present_fut_change = ens_change_mean2[-idx-1]
 
+        # Extract median change
+        med_past_present_change = np.nanmedian(ens_change_mean1)
+        med_present_fut_change = np.nanmedian(ens_change_mean2)
+
         with open(f"{outfile}.txt", "w") as f:
             f.write(f"pct: {pct}\n")
             f.write(f"pct: {pct_past: .3f}, {pct_present: .3f}, {pct_fut: .3f}\n")
             f.write(f"pct_change: {pct_past_present_change: .1f}, {pct_present_fut_change: .1f}\n")
+            f.write(f"med_change: {med_past_present_change: .1f}, {med_present_fut_change: .1f}\n")
         return fig, axs

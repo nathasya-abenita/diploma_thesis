@@ -13,5 +13,5 @@ if __name__ == '__main__':
                         unit=r"CAPE (J kg$^{-1}$)",
                         var_name='cape', time_start="2025-11-25", time_end="2025-11-26",
                         time_stat=None, ens_stat='mean')
-    # pgw.plot_dist_change(change_val_min=100, change_val_max=3_000,
-    #                      change_min=0, change_max=20, outfile=r'./figs/compare/finals/dist_cape.png')
+    pgw.plot_dist_change(change_val_min=100, change_val_max=3_000,
+                         change_min=0, change_max=20, outfile=r'./figs/compare/finals/dist_cape.png')
