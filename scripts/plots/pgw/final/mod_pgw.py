@@ -259,7 +259,7 @@ class PGW:
                             transform=ccrs.PlateCarree(), zorder=1,)
         return pcm
         
-    def plot_map (self, outfile=None, polygon_path=None, cbar_n_level=10):
+    def plot_map (self, outfile=None, polygon_path=None, cbar_n_level=20):
 
         # Colormap control
         colors = [
@@ -310,7 +310,7 @@ class PGW:
         # Shared horizontal colorbar
         cbar = fig.colorbar(pcm, ax=axs, orientation="horizontal", pad=0.04, extend='both', fraction=0.06, aspect=40)
         cbar.set_label(self.unit)
-        cbar.set_ticks(bounds)
+        cbar.set_ticks(bounds[::2])
         if outfile is not None:
             plt.savefig(outfile, bbox_inches='tight')
         return fig, axs
