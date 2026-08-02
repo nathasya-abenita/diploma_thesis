@@ -371,7 +371,7 @@ class PGW:
         ens_change_std = stacked_change.std(axis=0)
         return excd_prob, ens_val_mean, ens_val_std, ens_change_mean, ens_change_std
 
-    def plot_dist_change(self, change_min=0, change_max=20, outfile=None):
+    def plot_dist_change(self, change_val_min, change_val_max, change_min=0, change_max=20, outfile=None):
         # Set up plot
         lw = 3
         fig, axs = plt.subplots(1, 3, figsize=(12, 4))
@@ -415,7 +415,7 @@ class PGW:
         # plot_cfac_normal_plot(axs[1], ens_val_mean, ens_change_mean, ens_change_std, linewidth=lw, color='k', label='all')
     
         # Setting axis
-        axs[1].set_xlim(self.val_min, self.val_max)
+        axs[1].set_xlim(change_val_min, change_val_max)
         axs[1].set_ylim(change_min, change_max)
     
         # Decorate plots
