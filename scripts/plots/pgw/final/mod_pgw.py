@@ -28,7 +28,11 @@ event_lat_min, event_lat_max = -1.5, 7.5
 #%% Data access
 
 def read_data(path, time1, time2, rename=False):
+    spin_up_time = [f"2025-11-25T{h:02d}:00:00" for h in range(1, 12)]
+    
     ds = xr.open_dataset(path).sel(time=slice(time1, time2))
+    ds = ds.sel(time=~ds.time.isin(spin_up_time)) # delete spin up time
+
     if rename:
         ds = ds.rename({'lon': 'xlon', 'lat': 'xlat'})
     ds = cut_area(ds)
@@ -52,7 +56,7 @@ def fix_longitude(ds):
 
     return ds
 
-def add_polygon(ax, polygon_path='./data/shp/Aceh.geojson'):
+def plot_polygon(ax, polygon_path='./data/shp/Aceh.geojson'):
     gdf = gpd.read_file(polygon_path)
     gdf = gdf.to_crs(epsg=4326)
     gdf.boundary.plot(ax=ax, linestyle='-', color='tab:orange', zorder=10)
@@ -176,3 +180,126 @@ def activate_geo (ax, mask_ocean=True):
     ax.add_feature(cfeature.LAND, facecolor="none", edgecolor="none", zorder=3)
     ax.add_feature(cfeature.COASTLINE, linewidth=1, zorder=4)
     ax.add_feature(cfeature.BORDERS, linestyle=":", zorder=4)
+
+#%% Map Class: Spatial change
+
+class SpatialMap:
+    def __init__ (self, filename, val_min, val_max, unit, var_name, time_start, time_end, 
+                  cmap=None, time_stat='mean', ens_stat='mean', rename=False, val_modify_func=None):
+        self.filename = filename
+        self.time_start = time_start
+        self.time_end = time_end
+        self.time_stat = time_stat
+        self.ens_stat = ens_stat
+
+        self.rename = rename # if True, rename lon to xlon; lat to xlat
+
+        # Values
+        self.val_min, self.val_max = val_min, val_max
+        self.unit = unit
+        self.var_name = var_name
+        self.val_modify_func = val_modify_func
+    
+        # Colormap control
+        if cmap is None:
+            nlevel = 10
+            turbo = plt.cm.turbo(np.linspace(0, 1, nlevel-1))  # 7 colors from turbo
+            transparent = np.array([[0, 0, 0, 0]])      # RGBA fully transparent
+            colors = np.vstack([transparent, turbo])    # stack into 8-color colormap
+            self.cmap = ListedColormap(colors)
+        else:
+            self.cmap = cmap
+
+    def cfac_past_path(self, exp):
+        return rf'./data/final_exp/counterfactual/GWL-1.5/{exp}/{self.filename}'
+
+    def cfac_fut_path(self, exp):
+        return rf'./data/final_exp/counterfactual/GWL+1.5/{exp}/{self.filename}'
+
+    def prepare_cfac(self, scenario):
+        model_list_ori = ['tweak', 'EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
+        tp_cfac_list = []
+        for exp in model_list_ori:
+            # Define path
+            if scenario == 'past':
+                path_cfac = self.cfac_past_path(exp)
+            elif scenario == 'fut.':
+                path_cfac = self.cfac_fut_path(exp)
+            else:
+                raise ValueError (r'check scenario input (choices: "past" or "fut.")')
+            # Read file
+            tp_cfac = self.prepare_data(path_cfac)
+            tp_cfac_list.append(tp_cfac)
+
+        # Concatenate along a new dimension
+        ds_ens = xr.concat(tp_cfac_list, dim="ensemble")
+        if self.ens_stat == 'max':
+            ens_val = ds_ens.max(dim="ensemble")
+        elif self.ens_stat == 'mean':
+            ens_val = ds_ens.mean(dim='ensemble')
+        elif self.ens_stat == 'median':
+            ens_val = ds_ens.median(dim='ensemble')
+        else:
+            raise ValueError ('check stat options again!')
+        return ens_val
+
+    def prepare_data (self, path) -> xr.DataArray:
+        # Read data and modify if wanted
+        ds = read_data(path, self.time_start, self.time_end, rename=self.rename)
+        if self.val_modify_func is not None:
+            ds[self.var_name] = self.val_modify_func(ds[self.val_name])
+
+        # Compute statistics in time
+        if self.time_stat == 'mean':
+            val = ds[self.var_name].mean(dim='time')
+        elif self.time_stat == 'max':
+            val = ds[self.var_name].max(dim='time')
+        elif self.time_stat == 'median':
+            val = ds[self.var_name].median(dim='time')
+        else:
+            raise ValueError ('check `time_stat` options!')
+        return val
+
+    def plot_colormesh (self, ax, lon, lat, val):
+        pcm = ax.pcolormesh(lon, lat, val, cmap=self.cmap, shading="auto",
+                            transform=ccrs.PlateCarree(), zorder=1, vmin=self.val_min, vmax=self.val_max)
+        return pcm
+        
+    def plot_map (self, outfile, polygon_path=None):
+    
+        # Prepare plot
+        fig = plt.figure(figsize=(12, 5))
+        axs =[fig.add_subplot(1, 3, 1, projection=ccrs.PlateCarree()),
+            fig.add_subplot(1, 3, 2, projection=ccrs.PlateCarree()),
+            fig.add_subplot(1, 3, 3, projection=ccrs.PlateCarree())]
+        
+        # Plot for factual
+        path_fac = rf'./data/final_exp/factual/{self.filename}'
+        tp_fac = self.prepare_data(path_fac)
+
+        pcm = self.plot_colormesh(axs[0], tp_fac.xlon, tp_fac.xlat, tp_fac)
+
+        # Plot for other scenarios
+        ens_val = self.prepare_cfac(scenario='past')
+        self.plot_colormesh(axs[1], ens_val.xlon, ens_val.xlat, ens_val)
+        ens_val = self.prepare_cfac(scenario='fut.')
+        self.plot_colormesh(axs[2], ens_val.xlon, ens_val.xlat, ens_val)
+
+        # Add title
+        axs[1].set_title('present')
+        axs[0].set_title('past -1.5K')
+        axs[2].set_title('fut. +1.5K')
+
+        # Activate boundaries and set extent
+        for ax in axs:
+            activate_geo(ax, mask_ocean=False)
+            set_extent(ax)
+            if polygon_path is not None:
+                plot_polygon(ax, polygon_path=polygon_path)
+
+        # Shared horizontal colorbar
+        cbar = fig.colorbar(pcm, ax=axs, orientation="horizontal", pad=0.04, extend='both', fraction=0.06, aspect=40)
+        cbar.set_label(self.unit)
+        return plt.savefig(outfile, bbox_inches='tight')
+
+#%% Distribution Class
