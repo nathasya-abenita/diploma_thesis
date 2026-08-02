@@ -30,10 +30,11 @@ if __name__ == '__main__':
     time1, time2 = '2025-11-25', '2025-11-26'
 
     # Define paths
-    outpath = './figs/compare/finals/hyetograph_event.png'
+    outpath = './figs/compare/finals/hyetograph_event_ensmedian.png'
     path_fac = r'./data/final_exp/factual/pr_SRF.nc'
     path_mask = r'./data/shp/mask_aceh.nc' #r'./data/counterfactual/mask_SRF.nc'
     unit = r'Precipitation (mm h$^{-1}$)'
+    ens_stat = 'median' # 'median' or 'mean'
 
     # Read file
     ds_mask = cut_area(xr.open_dataset(path_mask))
@@ -59,7 +60,12 @@ if __name__ == '__main__':
         ds_cfac = mask_data(ds_cfac, ds_mask)
         pr_cfac = ds_cfac['pr'] * 3600
         pr_cfac_list.append(compute_fldmean(pr_cfac))
-    ens_pr_mean, ens_pr_std = compute_ens_mean_std(pr_cfac_list)
+    if ens_stat == 'mean':
+        ens_pr_mean, ens_pr_std = compute_ens_mean_std(pr_cfac_list)
+    elif ens_stat == 'median':
+        ens_pr_mean, ens_pr_std = compute_ens_med_std(pr_cfac_list)
+    else:
+        raise ValueError ('check `ens_stat` option!')
 
     plot_hyetograph(axs[0], pr_cfac.time, ens_pr_mean,
                     color='tab:blue', label='past -1.5K')
