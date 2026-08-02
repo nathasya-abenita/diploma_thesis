@@ -94,6 +94,12 @@ def compute_ens_mean_std (val_list):
     ens_val_std  = stacked_val.std(axis=0)
     return ens_val_mean, ens_val_std
 
+def compute_ens_med_std (val_list):
+    stacked_val = np.stack(val_list)
+    ens_val_mean = np.median(stacked_val, axis=0)
+    ens_val_std  = stacked_val.std(axis=0)
+    return ens_val_mean, ens_val_std
+
 #%% Plotting functions
 
 def plot_density_simple(ax, tp : np.array, pr_min : float, pr_max : float, 
@@ -186,7 +192,7 @@ def activate_geo (ax, mask_ocean=True):
 
 class PGW:
     def __init__ (self, filename, val_min, val_max, unit, var_name, time_start, time_end, 
-                  time_stat=None, ens_stat='mean', rename=False, val_modify_func=None):
+                  time_stat=None, ens_stat='mean', rename=False, val_modify_func=None, mask=False):
         self.filename = filename
         self.time_start = time_start
         self.time_end = time_end
@@ -200,6 +206,11 @@ class PGW:
         self.unit = unit
         self.var_name = var_name
         self.val_modify_func = val_modify_func
+
+        self.mask = mask
+        if mask == True:
+            path_mask = r'./data/shp/mask_aceh.nc'
+            self.ds_mask = cut_area(xr.open_dataset(path_mask))
 
     def cfac_past_path(self, exp):
         return rf'./data/final_exp/counterfactual/GWL-1.5/{exp}/{self.filename}'
@@ -237,8 +248,12 @@ class PGW:
     def prepare_data (self, path) -> xr.DataArray:
         # Read data and modify if wanted
         ds = read_data(path, self.time_start, self.time_end, rename=self.rename)
+
         if self.val_modify_func is not None:
-            ds[self.var_name] = self.val_modify_func(ds[self.val_name])
+            ds[self.var_name] = self.val_modify_func(ds[self.var_name])
+
+        if self.mask == True:
+            ds = mask_data(ds, self.ds_mask)
 
         # Compute statistics in time
         if self.time_stat is not None:
@@ -248,10 +263,13 @@ class PGW:
                 val = ds[self.var_name].max(dim='time')
             elif self.time_stat == 'median':
                 val = ds[self.var_name].median(dim='time')
+            elif self.time_stat == 'sum':
+                val = ds[self.var_name].sum(dim='time')
             else:
                 raise ValueError ('check `time_stat` options!')
         else:
             val = ds[self.var_name]
+
         return val
 
     def plot_colormesh (self, ax, lon, lat, val, cmap, norm):
@@ -371,7 +389,7 @@ class PGW:
         ens_change_std = stacked_change.std(axis=0)
         return excd_prob, ens_val_mean, ens_val_std, ens_change_mean, ens_change_std
 
-    def plot_dist_change(self, change_val_min, change_val_max, change_min=0, change_max=20, outfile=None):
+    def plot_dist_change(self, change_val_min, change_val_max, change_min=0, change_max=20, outfile=None, add_cc_limit=False):
         # Set up plot
         lw = 3
         fig, axs = plt.subplots(1, 3, figsize=(12, 4))
@@ -417,13 +435,18 @@ class PGW:
         # Setting axis
         axs[1].set_xlim(change_val_min, change_val_max)
         axs[1].set_ylim(change_min, change_max)
+        if add_cc_limit:
+            plot_limit_change(axs[1], x1=change_val_min, x2=change_val_max)
     
         # Decorate plots
         axs[0].set_ylabel(self.unit)
         axs[0].set_xlabel('Exceedance Probability')
         axs[0].legend()
-        
-        axs[1].legend(ncols=1)
+
+        if add_cc_limit:
+            axs[1].legend(ncols=2)
+        else:
+            axs[1].legend(ncols=1)
         axs[1].set_ylabel('Change per degree global\nwarming (% K$^{-1}$)')
         axs[1].set_xlabel(self.unit)
     
@@ -433,7 +456,7 @@ class PGW:
 
         plt.tight_layout()
         if outfile is not None:
-            plt.savefig(outfile)
+            plt.savefig(outfile + '.png')
     
         # Extract percentile
         pct = 0.99
