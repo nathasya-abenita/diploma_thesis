@@ -4,11 +4,11 @@ import numpy as np
 from shapely.geometry import Point
 
 # Extract polygon from geojson
-gdf = gpd.read_file('./data/shp/Aceh.geojson')
+gdf = gpd.read_file('./data/shp/Sumatra_Affected_Provinces.geojson')
 polygon = gdf.geometry.iloc[0] 
 
 # Read grid example
-ds = xr.open_dataset("./data/final_exp/mask_SRF.nc")
+ds = xr.open_dataset("./data/final_exp_old/mask_SRF.nc")
 lon = ds["xlon"] # lon[iy, jx]
 lat = ds["xlat"] # lat[iy, jx]
 
@@ -22,4 +22,4 @@ for i in range(lon.shape[0]):
 # Finalized new NC file
 ds_ = ds.copy()
 ds_.mask.values = mask
-ds_.to_netcdf("mask_aceh.nc")
+ds_.to_netcdf("mask_sumatra.nc")
