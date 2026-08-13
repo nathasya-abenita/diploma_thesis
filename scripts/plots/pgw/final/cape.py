@@ -6,7 +6,7 @@ if __name__ == '__main__':
                         unit=r"CAPE (J kg$^{-1}$)",
                         var_name='cape', time_start="2025-11-25", time_end="2025-11-26",
                         time_stat='mean', ens_stat='mean')
-    # pgw.plot_map(outfile=r'./figs/compare/finals/map_cape.png', cbar_n_level=20)
+    pgw.plot_map(outfile=r'./figs/compare/finals/map_cape.png', cbar_n_level=20)
 
     # Create distribution change graph
     pgw = PGW(filename='cape_SRF.nc', val_min=0, val_max=3_000,

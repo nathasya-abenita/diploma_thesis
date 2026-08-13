@@ -83,6 +83,7 @@ if __name__ == '__main__':
     tp_fac = ds_fac['pr'].sum(dim="time", skipna=False) * 3600
     # Compute extremes
     pct_fac = 300 # compute_pct(tp_fac.values, 99)
+    print('pct_fac', pct_fac)
     n_fac = compute_grids_above_thr(tp_fac.values, pct_fac)
     print(pct_fac)
 

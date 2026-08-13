@@ -7,7 +7,7 @@ if __name__ == '__main__':
                         unit=r"Evaporation Flux (mm s$^{-1}$)",
                         var_name='evspsbl', time_start="2025-11-25", time_end="2025-11-26",
                         time_stat='mean', ens_stat='mean')
-    # pgw.plot_map(outfile=r'./figs/compare/finals/map_evs.png')
+    pgw.plot_map(outfile=r'./figs/compare/finals/map_evs.png')
 
     # Create distribution change graph
     pgw = PGW(filename='evspsbl_SRF.nc', val_min=0.02, val_max=0.2, val_modify_func=fun,

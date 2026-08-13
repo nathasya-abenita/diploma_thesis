@@ -71,8 +71,7 @@ if __name__ == '__main__':
     ds_fac = read_data(path_fac, time1, time2, rename=True)
     tp_fac = ds_fac['ivt'].mean(dim="time", skipna=False)
     # Compute extremes
-    pct_fac = 787 
-    # pct0.99 787, pct0.9 597
+    pct_fac = 792
     n_fac = compute_grids_above_thr(tp_fac.values, pct_fac)
     print(pct_fac, n_fac)
 
