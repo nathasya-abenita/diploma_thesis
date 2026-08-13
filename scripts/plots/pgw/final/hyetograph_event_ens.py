@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     # Read file
     ds_mask = cut_area(xr.open_dataset(path_mask))
-    ds_fac = read_data(path_fac, time1, time2)
+    ds_fac = read_data(path_fac, time1, time2, print_time=True)
     ds_fac = mask_data(ds_fac, ds_mask)
 
     # Read precipitation value (mm/s) to (mm/hr) 

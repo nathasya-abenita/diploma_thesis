@@ -28,12 +28,17 @@ event_lat_min, event_lat_max = -1.5, 7.5
 
 #%% Data access
 
-def read_data(path, time1, time2, rename=False):
-    spin_up_time = [f"2025-11-25T{h:02d}:00:00" for h in range(1, 12)]
-    
+def read_data(path, time1, time2, rename=False, print_time=False): 
     ds = xr.open_dataset(path).sel(time=slice(time1, time2))
-    ds = ds.sel(time=~ds.time.isin(spin_up_time)) # delete spin up time
+    ds = ds.sel(time=~(
+        (ds.time.dt.date == np.datetime64("2025-11-25")) &
+        (ds.time.dt.hour >= 1) &
+        (ds.time.dt.hour <= 11)
+    ))
 
+    if print_time:
+        print(ds.time)
+        
     if rename:
         ds = ds.rename({'lon': 'xlon', 'lat': 'xlat'})
     ds = cut_area(ds)
