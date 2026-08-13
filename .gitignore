@@ -8,7 +8,8 @@ logs
 download.sh
 
 # LaTeX auxiliary files
-/manuscript
+/manuscript/figs
+*.pdf
 *.aux
 *.log
 *.out

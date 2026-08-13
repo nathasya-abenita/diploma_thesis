@@ -1,0 +1,66 @@
+\appendix
+
+\chapter{Code and Data Availability} 
+\label{appendix:code_and_data}
+
+ERA5 data can be accessed through \url{https://10.24381/cds.adbb2d47} and \url{https://doi.org/10.24381/cds.bd0915c6}. RegCM namelists and Python scripts are stored in \url{https://github.com/nathasya-abenita/diploma_thesis}.
+
+\chapter{RegCM Experiments for Tropical Cyclone Senyar}
+\label{appendix:exp}
+
+In this appendix, findings from different configurations of the model are summarized. The aim of these experiments are to find the best configuration to perform hindcast or factual simulation of Tropical Cyclone (TC) Senyar.
+
+\section*{Different intialization time and domain center}
+
+We first focus on using the same physical schemes as CORDEX SEA-25 simulation \citep{coppola20255th}, but with different domain center and extent (Figure \ref{fig:domain}). Different centers and initialization dates are done to find the best choice to perform convection-permitting simulation of the event. The findings are summarized in the Table \ref{table:diff_init} in which we conclude to use "South-to-Center" domain and initialization date of 25 November 2025 00:00 UTC, which gives spin-up time of 12 hours. This best experiment result can be seen in Figure \ref{fig:track_base}. The main weakness of this experiment is the fact that the low-pressure system weakens too quickly after the landfall in Sumatra, unable to represent the tropical depression track towards Malay Peninsula.
+
+\begin{table}[h] 
+\centering
+\begin{tabular}{p{3cm} p{2cm} p{2cm} p{7cm}}
+\hline
+\textbf{Domain Center} & \textbf{Resolution (km)} & \textbf{Initial Date} & \textbf{Findings} \\
+\hline
+South-to-Center & 12  & 21, 22, 23, 24, 25 & Weak intensity in general (but still comparable with ERA5 intensity) with better track with less spin-up time. Intensity is increased (closed vortex is more observed) as more spin-up time is given, but the track is highly off. \\
+South-to-Center & 3 & 22, 23, 24, 25 & Track and intensity are better with less spin-up time. TC is not represented at all with longer spin-up time. With the best experiment with 12-hour spin-up time, low pressure system dies too quickly after hitting land for the first time. \\
+Centered & 3 & 24, 25 & Similar result to the other 3 km domain, but the system dies even earlier. It might be caused by other stronger low pressure system in the South China Sea\\
+\hline
+\end{tabular}
+\caption{Different experiments by varying initialization date. South-to-Center domain is centered at (100°E, 6°S), while Centered domain is centered at (100°E, 1°S) which is around the Malacca Strait. Initial date is always on November 2025.}
+\label{table:diff_init}
+\end{table}
+
+\section*{Different physical schemes}
+
+Different physical schemes are tested, especially for planetary boundary layer (PBL) and parameters for Zeng ocean flux scheme, summarized in Table \ref{table:scheme_exp}. By switching from Holstag to UW PBL, it is found that the system is better represented after landfall, improving the previous stated problem (Figure \ref{fig:track_different_schemes}, experiment 0, color green). Different parameters for Zeng ocean flux scheme are checked, that is the roughness and factors, while keeping PBL scheme to UW. The best configuration that represents the most accurate track, with realistic tropical depression after the first landfall, is to keep the default schemes while setting \texttt{iocnrough=2} and \texttt{iocnzoq=2} (Figure \ref{fig:track_different_schemes}, experiment 3, color brown). Furthermore, for this experiment, the maximum near-surface wind speed downgrades to tropical depression reasonably, while others stay longer as tropical storm.
+
+\begin{table}[h] 
+\centering
+\begin{tabular}{m{3cm} m{3cm} m{3cm} m{3cm}} 
+\hline
+Experiment	&PBL ({\texttt{ibltyp}})&	Ocean roughness model (\texttt{iocnrough}) & Ocean roughness factor (\texttt{iocnzoq}) \\
+\hline
+0	&2	&3	&1 \\
+1	&2	&3	&2 \\
+2	&2	&2	&1 \\
+3	&2	&2	&2 \\
+\hline
+\end{tabular}
+\caption{Experiments to test different ocean roughness models}
+\label{table:scheme_exp}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../figs/track/regcm_track_base_2.png}
+\caption{Track for best experiment with default physical schemes, also best spin-up time and domain}
+\label{fig:track_base}.
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../figs/track/regcm_track_roll_3.png}
+\caption{Tracks for different physical schemes}
+\label{fig:track_different_schemes}.
+\end{figure}
+
+\endappendix
