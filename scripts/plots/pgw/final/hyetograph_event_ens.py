@@ -30,11 +30,11 @@ if __name__ == '__main__':
     time1, time2 = '2025-11-25', '2025-11-26'
 
     # Define paths
-    outpath = './figs/compare/finals/hyetograph_event_ensmedian.png'
+    outpath = './figs/compare/finals/hyetograph_event.png'
     path_fac = r'./data/final_exp/factual/pr_SRF.nc'
-    path_mask = r'./data/shp/mask_aceh.nc' #r'./data/counterfactual/mask_SRF.nc'
+    path_mask = r'./data/shp/mask_aceh.nc' 
     unit = r'Precipitation (mm h$^{-1}$)'
-    ens_stat = 'median' # 'median' or 'mean'
+    ens_stat = 'mean' # 'median' or 'mean'
 
     # Read file
     ds_mask = cut_area(xr.open_dataset(path_mask))
@@ -79,9 +79,9 @@ if __name__ == '__main__':
 
     # Plot factual and ensemble of counterfactual
     plot_hyetograph(axs[0], pr_fac.time, compute_fldmean(pr_fac), 
-                    linewidth=lw, color='k', label='factual')
+                    linewidth=lw, color='k', label='present')
     plot_cum_hyetograph(axs[1], pr_fac.time, compute_fldmean(pr_fac), 
-                        linewidth=lw, color='k', label='factual')
+                        linewidth=lw, color='k', label='present')
 
     # Compute counterfactual (future)
     pr_cfac_list = []
@@ -107,6 +107,10 @@ if __name__ == '__main__':
     axs[0].set_ylabel(unit)
     leg = axs[0].legend()
     # leg.get_frame().set_alpha(0.3)
+
+    # Add title
+    axs[0].set_title('(a)', loc='left')
+    axs[1].set_title('(b)', loc='left')
     
     axs[1].legend()
     axs[1].set_xlabel('Time')

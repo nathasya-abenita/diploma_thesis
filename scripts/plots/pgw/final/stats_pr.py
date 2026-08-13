@@ -29,7 +29,7 @@ def compute_fldmean(da : xr.DataArray):
 def compute_grids_above_thr (values : np.array , thr : float):
     values = values.flatten()
     values = values[~np.isnan(values)]
-    return (values > thr).mean()
+    return (values > thr).sum()
 
 def compute_pct(values, pct):
     values = values.flatten()

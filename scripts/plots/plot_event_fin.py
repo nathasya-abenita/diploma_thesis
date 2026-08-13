@@ -71,9 +71,9 @@ for name, label in zip(province_names, province_labels):
     gdf = gpd.read_file(f'./data/shp/{name}.geojson')
     gdf = gdf.to_crs(epsg=4326)
     if name == 'Aceh':
-        gdf.boundary.plot(ax=ax, linestyle='-', color='tab:orange', label='Province Boundaries')
+        gdf.boundary.plot(ax=ax, linestyle='-', color='gray', label='Province Boundaries')
     else:
-        gdf.boundary.plot(ax=ax, linestyle='-', color='tab:orange')
+        gdf.boundary.plot(ax=ax, linestyle='-', color='gray')
 
     # Compute a good label position
     rep_point = gdf.geometry.representative_point().iloc[0]
@@ -105,7 +105,7 @@ ax.plot([], [],'^', color='tab:red', label=f'Flood Sites') # legend
 
 # Cyclone track
 df_cy = load_best_track_data('./data/IBTrACS.last3years.v04r01.nc')
-ax.scatter(df_cy['lon'].iloc[0], df_cy['lat'].iloc[0], s=60, marker='*', color='tab:red', label='TC start', zorder=10, edgecolors='k')
+ax.scatter(df_cy['lon'].iloc[0], df_cy['lat'].iloc[0], s=80, marker='*', color='tab:red', label='TC start', zorder=10, edgecolors='k')
 ax.plot(df_cy['lon'], df_cy['lat'], '-', color='tab:red', linewidth=2, label='TC track')
 
 # Gridlines

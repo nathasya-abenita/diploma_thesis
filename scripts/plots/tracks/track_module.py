@@ -294,6 +294,12 @@ def plot_time_series_comparison(tracker, var_name, experiments=None, nhc_data=No
     
     if ax is None:
         fig, ax = plt.subplots()
+
+    # Plot NHC data if provided
+    if nhc_data is not None and var_name in nhc_data.columns:
+        ax.plot(nhc_data['time'], nhc_data[var_name], 'o-', 
+                label='IBTrACS', color="tab:orange", linewidth=2)
+    
     
     if experiments is None:
         experiments = list(tracker.cyclone_centers.keys())
@@ -336,10 +342,6 @@ def plot_time_series_comparison(tracker, var_name, experiments=None, nhc_data=No
             ax.plot(df_era5['time'], df_era5[var_name], 'o-', 
                    label='ERA5', color='blue', alpha=0.8)
     
-    # Plot NHC data if provided
-    if nhc_data is not None and var_name in nhc_data.columns:
-        ax.plot(nhc_data['time'], nhc_data[var_name], 'o-', 
-               label='IBTrACS', color="tab:orange", linewidth=2)
     
     ax.set_ylabel(var_name)
     ax.legend()
@@ -391,6 +393,15 @@ def plot_cyclone_tracks(tracker, experiments=None, nhc_data=None, era5_included=
     
     if experiments is None:
         experiments = [exp for exp in tracker.cyclone_centers.keys() if exp != 'ERA5']
+
+    # Plot best track
+    if nhc_data is not None:
+        print(nhc_data)
+        ax.plot(nhc_data['lon'], nhc_data['lat'], 's-', color="tab:orange",
+                linewidth=1, markersize=3, label='IBTrACS', alpha=0.8)
+        ax.scatter(nhc_data['lon'].iloc[0], nhc_data['lat'].iloc[0],
+                    marker='*', s=75, color="r", edgecolor='black', zorder=5)
+    
     
     # Plot model tracks
     if not clean:
@@ -438,14 +449,6 @@ def plot_cyclone_tracks(tracker, experiments=None, nhc_data=None, era5_included=
         ax.scatter(df_era5['lon'].iloc[0], df_era5['lat'].iloc[0],
                   marker='*', s=75, color='blue', edgecolor='black', zorder=5)
     
-    # Plot best track
-    if nhc_data is not None:
-        print(nhc_data)
-        ax.plot(nhc_data['lon'], nhc_data['lat'], 's-', color="tab:orange",
-               linewidth=1, markersize=3, label='IBTrACS', alpha=0.8)
-        ax.scatter(nhc_data['lon'].iloc[0], nhc_data['lat'].iloc[0],
-                  marker='*', s=75, color="r", edgecolor='black', zorder=5)
-    
     # Add x and y labels (Longitude and Latitude)
     ax.set_xlabel('Longitude')
     ax.set_ylabel('Latitude')
@@ -473,6 +476,12 @@ def plot_max_sfc_wind(tracker, nhc_data=None, ax=None, smooth_window=1, era5_inc
     """Plot maximum surface wind speed."""
     if ax is None:
         fig, ax = plt.subplots()
+
+    # Add NHC wind data
+    if nhc_data is not None:
+        ax.plot(nhc_data['time'], nhc_data['wind'] * 0.514444, 
+                'o-', label='IBTrACS', color="tab:orange", linewidth=2)
+
 
     if not clean:
         # Plot model experiments
@@ -506,11 +515,7 @@ def plot_max_sfc_wind(tracker, nhc_data=None, ax=None, smooth_window=1, era5_inc
         ax.fill_between(moist_data['time'], ens_wind_mean - ens_wind_std, ens_wind_mean + ens_wind_std,
                 color=color, alpha=0.25, edgecolor=None)
     
-    # Add NHC wind data
-    if nhc_data is not None:
-        ax.plot(nhc_data['time'], nhc_data['wind'] * 0.514444, 
-                'o-', label='IBTrACS', color="tab:orange", linewidth=2)
-
+    
     # Define bounds    
     x_min, x_max = ax.get_xlim()
     y_top = 32.7

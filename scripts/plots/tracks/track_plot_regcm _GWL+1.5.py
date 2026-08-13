@@ -20,7 +20,7 @@ if __name__ == "__main__":
     outfile = f"regcm_track_cf+1.5_{roll}.png" # f'regcm_track_best_{roll}_new.png'
 
     # Initialize tracker
-    tracker = CycloneTracker(data_dir, experiments, track_extent, load_era5=False)
+    tracker = CycloneTracker(data_dir, experiments, track_extent, era5=False)
     
     # Find cyclone centers
     tracker.find_cyclone_centers(smooth_window=roll)

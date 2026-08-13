@@ -59,7 +59,7 @@ if __name__ == '__main__':
     path_in = './data/final_exp'
 
     # Set up figure
-    fig = plt.figure(figsize=(12, 9))
+    fig = plt.figure(figsize=(9,8))
     axs = [
         fig.add_subplot(2, 2, 1, projection=ccrs.PlateCarree()),
         fig.add_subplot(2, 2, 2, projection=ccrs.PlateCarree()),
@@ -84,7 +84,7 @@ if __name__ == '__main__':
         lon, lat, zg = read_data(os.path.join(path_in, name_in, file_name), selected_time)
         cf = plot_zg(ax, lon, lat, zg, zg_levels, title)
 
-    cbar = fig.colorbar(cf, ax=axs, pad=0.08, orientation='horizontal', fraction=0.05, )
+    cbar = fig.colorbar(cf, ax=axs, orientation='horizontal', pad=0.08, fraction=0.06)
     cbar.set_label("500 hPa Geopotential Height (m)", fontsize=fontsize, fontweight='bold')
     cbar.ax.tick_params(labelsize=fontsize)
 

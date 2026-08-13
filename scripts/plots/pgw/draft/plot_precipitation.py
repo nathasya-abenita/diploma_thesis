@@ -15,11 +15,21 @@ warnings.filterwarnings('ignore')
 MAP_EXTENT =  [94, 108, -2, 7.5]
 
 # Titles should be in respect with experiments name, excludin
-EXPERIMENTS = ['factual', 'counterfactual/GWL-1.5/tweak',
-               'counterfactual/GWL-1.5/EC-Earth3-Veg', 
-               'counterfactual/GWL-1.5/MPI-ESM1-2-HR',
-               'counterfactual/GWL-1.5/NorESM2-MM']
-titles = ['MSWEP', 'factual', 'counterfactual/tweak', 'counterfactual/EC-Earth3-Veg', 'counterfactual/MPI-ESM1-2-HR', 'counterfactual/NorESM2-MM']
+# EXPERIMENTS = ['factual', 'counterfactual/GWL-1.5/tweak',
+#                'counterfactual/GWL-1.5/EC-Earth3-Veg', 
+#                'counterfactual/GWL-1.5/MPI-ESM1-2-HR',
+#                'counterfactual/GWL-1.5/NorESM2-MM']
+# titles = ['MSWEP', 'present', 'past -1.5K, tweak', 
+#           'past -1.5, EC-Earth3-Veg', 'past -1.5K, MPI-ESM1-2-HR', 
+#           'past -1.5, NorESM2-MM']
+
+EXPERIMENTS = ['factual', 'counterfactual/GWL+1.5/tweak',
+               'counterfactual/GWL+1.5/EC-Earth3-Veg', 
+               'counterfactual/GWL+1.5/MPI-ESM1-2-HR',
+               'counterfactual/GWL+1.5/NorESM2-MM']
+titles = ['MSWEP', 'present', 'fut. +1.5K, tweak', 
+          'fut. +1.5, EC-Earth3-Veg', 'fut. +1.5K, MPI-ESM1-2-HR', 
+          'fut. +1.5, NorESM2-MM']
 
 START_DATE = "2025-11-25 00:00:00"
 END_DATE   = "2025-11-28 23:00:00"
@@ -27,8 +37,10 @@ END_DATE   = "2025-11-28 23:00:00"
 # Paths
 DATA_DIR_MODELS = ('./data/final_exp')
 DATA_DIR_SAT = ('./data/sat/MSWEP/daily')
-OUTPUT_PATH = ('./figs/compare')
+OUTPUT_PATH = ('./figs/compare/finals')
 os.makedirs(OUTPUT_PATH, exist_ok=True)
+
+outfile = os.path.join(OUTPUT_PATH, f"precip_accum_gwl+1.5.png")
 
 # Functions
 def fix_longitude(ds):
@@ -147,7 +159,6 @@ if __name__ == '__main__':
     # Save figure
     print("Save figure")
     plt.tight_layout()
-    outfile = os.path.join(OUTPUT_PATH, f"precip_accum.png")
     plt.savefig(outfile, dpi=400, bbox_inches='tight')
     plt.show()
 

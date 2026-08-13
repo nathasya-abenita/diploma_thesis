@@ -60,7 +60,7 @@ def fix_longitude(ds):
 def plot_polygon(ax, polygon_path='./data/shp/Aceh.geojson'):
     gdf = gpd.read_file(polygon_path)
     gdf = gdf.to_crs(epsg=4326)
-    gdf.boundary.plot(ax=ax, linestyle='-', color='tab:orange', zorder=10)
+    gdf.boundary.plot(ax=ax, linestyle='-', color='tab:orange', zorder=5)
 
 def mask_data(ds, ds_mask, mask_val=1):
     ds = ds.where(ds_mask.mask == mask_val, drop=True)
@@ -116,7 +116,7 @@ def plot_density_simple(ax, tp : np.array, pr_min : float, pr_max : float,
 def plot_hist_simple(ax, da : np.array, val_min, val_max, bins=25, color=None, alpha=1, label=None):
     values = da.flatten()
     values = values[~np.isnan(values)]
-    values = values[values > val_min]
+    # values = values[values > val_min]
 
     ax.hist(values, bins=bins, range=(val_min, val_max),density=True,
         color=color,alpha=alpha, edgecolor="black", linewidth=0.5, label=label)
@@ -188,11 +188,49 @@ def activate_geo (ax, mask_ocean=True):
     ax.add_feature(cfeature.COASTLINE, linewidth=1, zorder=4)
     ax.add_feature(cfeature.BORDERS, linestyle=":", zorder=4)
 
+def plot_impact_markers(ax):
+
+    # 1. Define specific coordinates from the sources
+    # S1: Malalak, West Sumatra (Village destroyed by flood) [2]
+    # S2: Bener Meriah, Aceh (Multiple shallow landslides) [2]
+    sites = {
+        'S1': (100.278, 0.3897), # 100°16'41"E, 0°23'23"N
+        'S2': (97.204, 4.665),   # 97°12'15"E, 4°39'54"N
+    }
+
+    # A1-A4: Remote-Sensing Sites in Aceh (Bukit Barisan mountains) [4, 5]
+    remote_sites = {
+        'A1 (Burlah)': (96.67, 4.71),
+        'A2 (Blangpanu)': (97.25, 4.68),
+        'A3 (Uningmas)': (96.82, 4.86),
+        'A4 (Perhutani)': (97.27, 4.61),
+    }
+
+    flood_hotspots = {
+        'Idi Town (Aceh Timur)': (97.77, 4.95), # Approx coords
+        'Lhokseumawe': (97.14, 5.18),
+        'Sibolga': (98.78, 1.74),
+        'Tarutung': (98.97, 2.01),
+    }
+
+    # 5. Plotting Disaster Points
+    for name, (lon, lat) in sites.items():
+        ax.plot(lon, lat, '^', color='k', markersize=2.5, zorder=10)
+    # ax.plot([], [], 'o', color='k', label=f'Landslide Sites') # legend
+
+    # Remote Sensing Sites A1-A4
+    for name, (lon, lat) in remote_sites.items():
+        ax.plot(lon, lat, '^', color='k', markersize=2.5, zorder=10)
+
+    for name, (lon, lat) in flood_hotspots.items():
+        ax.plot(lon, lat, '^', color='tab:red', markersize=2.5, zorder=10)
+    # ax.plot([], [],'o', color='tab:red', label=f'Flood Sites') # legend
+
 #%% Main class for PGW change analysis (spatial map and distribution graph)
 
 class PGW:
     def __init__ (self, filename, val_min, val_max, unit, var_name, time_start, time_end, 
-                  time_stat=None, ens_stat='mean', rename=False, val_modify_func=None, mask=False):
+                  time_stat=None, ens_stat='mean', rename=False, val_modify_func=None, path_mask=None):
         self.filename = filename
         self.time_start = time_start
         self.time_end = time_end
@@ -207,10 +245,11 @@ class PGW:
         self.var_name = var_name
         self.val_modify_func = val_modify_func
 
-        self.mask = mask
-        if mask == True:
-            path_mask = r'./data/shp/mask_aceh.nc'
+        if path_mask is not None:
+            self.mask = True
             self.ds_mask = cut_area(xr.open_dataset(path_mask))
+        else:
+            self.mask = False
 
     def cfac_past_path(self, exp):
         return rf'./data/final_exp/counterfactual/GWL-1.5/{exp}/{self.filename}'
@@ -277,7 +316,7 @@ class PGW:
                             transform=ccrs.PlateCarree(), zorder=1,)
         return pcm
         
-    def plot_map (self, outfile=None, polygon_path=None, cbar_n_level=20):
+    def plot_map (self, outfile=None, polygon_path=None, cbar_n_level=20, add_impact_markers=False):
 
         # Colormap control
         colors = [
@@ -324,6 +363,8 @@ class PGW:
             set_extent(ax)
             if polygon_path is not None:
                 plot_polygon(ax, polygon_path=polygon_path)
+            if add_impact_markers:
+                plot_impact_markers(ax)
 
         # Shared horizontal colorbar
         cbar = fig.colorbar(pcm, ax=axs, orientation="horizontal", pad=0.04, extend='both', fraction=0.06, aspect=40)
@@ -389,7 +430,7 @@ class PGW:
         ens_change_std = stacked_change.std(axis=0)
         return excd_prob, ens_val_mean, ens_val_std, ens_change_mean, ens_change_std
 
-    def plot_dist_change(self, change_val_min, change_val_max, change_min=0, change_max=20, outfile=None, add_cc_limit=False):
+    def plot_dist_change(self, change_val_min, change_val_max, change_min=0, change_max=20, outfile=None, add_cc_limit=False, pct=0.99):
         # Set up plot
         lw = 3
         fig, axs = plt.subplots(1, 3, figsize=(12, 4))
@@ -456,10 +497,9 @@ class PGW:
 
         plt.tight_layout()
         if outfile is not None:
-            plt.savefig(outfile + '.png')
+            plt.savefig(outfile + '.png', bbox_inches='tight')
     
         # Extract percentile
-        pct = 0.99
         idx = np.searchsorted(excd_prob[::-1], 1-pct)
         pct_present = values_fac[-idx-1]
         pct_past = ens_val_mean1[-idx-1]
@@ -474,6 +514,6 @@ class PGW:
         with open(f"{outfile}.txt", "w") as f:
             f.write(f"pct: {pct}\n")
             f.write(f"pct: {pct_past: .3f}, {pct_present: .3f}, {pct_fut: .3f}\n")
-            f.write(f"pct_change: {pct_past_present_change: .1f}, {pct_present_fut_change: .1f}\n")
-            f.write(f"med_change: {med_past_present_change: .1f}, {med_present_fut_change: .1f}\n")
+            f.write(f"pct_change: {pct_past_present_change * 1.5: .1f}, {pct_present_fut_change * 1.5: .1f}\n")
+            f.write(f"med_change: {med_past_present_change * 1.5: .1f}, {med_present_fut_change * 1.5: .1f}\n")
         return fig, axs
