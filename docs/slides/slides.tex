@@ -1,0 +1,238 @@
+% Copyright (c) 2022 by Lars Spreng
+% This work is licensed under the Creative Commons Attribution 4.0 International License. 
+% To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% You can add your packages and commands to the loadslides.tex file. 
+% The files in the folder "styles" can be modified to change the layout and design of your slides.
+% I have included examples on how to use the template below. 
+% Some of these examples are taken from the Metropolis template.
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+\documentclass[
+11pt,notheorems,hyperref={pdfauthor=whatever}
+]{beamer}
+
+\input{loadslides.tex} % Loads packages and some defined commands
+
+\title[
+
+]{Anthropogenic Influences on the 2025 Sumatra Flash Floods\\and Tropical Cyclone Senyar}
+\subtitle{}
+
+\author[
+% Text entered here will appear in the bottom left corner
+]{
+    Nathasya Abenita Christien 
+}
+
+\institute{
+    Earth System Physics \\
+    ICTP}
+\date{August 21, 2026}
+
+\begin{document}
+
+% Generate title page
+{
+\setbeamertemplate{footline}{} 
+\begin{frame}
+  \titlepage
+\end{frame}
+}
+\addtocounter{framenumber}{-1}
+
+% \begin{frame}{Outline}
+%     \tableofcontents
+% \end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+    \begin{columns}[T,onlytextwidth]
+    \column{0.45\textwidth}
+        \centering
+        {
+        \includegraphics[width=1.0\textwidth]{../../figs/event_view.png}
+        \vspace{-0.1cm}
+        {
+            \scriptsize 
+            Accumulated rainfall during TC Senyar lifetime from MSWEP\\and the cyclone track from IBTrACS with impact markers
+        }
+        }
+    \column{0.55\textwidth}
+    
+    \begin{itemize}
+        \item At the end of November 2025, Sumatra was devastated by exceptional monsoon rains and a rare equatorial tropical storm, Tropical Cyclone (TC) Senyar.
+        \item This triggered massive flooding, flash floods, and widespread landslides that affected more than 3 million people \citep{wu2026analysis, wwa, climameter}.
+    \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \begin{columns}[T,onlytextwidth]
+    \column{0.45\textwidth}
+        \centering
+        {
+        \includegraphics[width=1.0\textwidth]{../../figs/event_view.png}
+        \vspace{-0.1cm}
+        {
+            \scriptsize 
+            Accumulated rainfall during TC Senyar lifetime from MSWEP\\and the cyclone track from IBTrACS with impact markers
+        }
+        }
+    \column{0.55\textwidth}
+    
+    \begin{block}{Findings from rapid attribution studies}
+        \begin{itemize}
+            \item Meteorological conditions causing the floods are up to 10\% wetter in the present compared to the past \citep{climameter}.
+            \item An increase in extreme rainfall associated with global warming is detected to be 9--50\% \citep{wwa}.
+            \item These rapid studies are limited by treating an extreme event as part of a broad class of similar events.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Storyline attribution study}
+        \begin{itemize}
+            \item Conditional approaches offer another perspective by fixing the large-scale meteorological conditions.
+            \item Pseudo-global warming (PGW) approach lets us study the event in both past cooler and future warmer climates.
+        \end{itemize}
+    \end{block}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \vspace{1cm}
+    \centering{
+        Under the PGW approach, we are asking: 
+        
+        \textit{"If an event like the 2025 Sumatra floods had occurred under a pre-industrial (cooler) or future (warmer) climate, how would it have changed?"}
+    }
+    \column{0.5\textwidth}
+    \begin{block}{Research Objectives}   
+        \begin{enumerate}
+            \item Event reconstruction
+            \item Historical attribution
+            \item Future projection
+            \item Physical mechanism identification
+        \end{enumerate}
+    \end{block}
+    \end{columns}
+\end{frame}
+
+\section{Methodology and Data}
+
+\begin{frame}
+    \begin{block}{Methods}
+        \begin{itemize}
+            \item Convection-permitting model with RegCM5 forced by ERA5
+            \item Pseudo-global warming approach
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Dataset}
+        \begin{itemize}
+            \item CMIP6 models under SSP3-7.0 scenario
+            \item ERA5 reanalysis data
+            \item Observed TC track from IBTrACS
+            \item Gridded precipitation data, MSWEP v2
+            \item Daily rainfall from local stations
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\subsection{Convection-permitting simulation with RegCM5}
+\begin{frame}
+    \begin{columns}[T,onlytextwidth]
+    \column{0.45\textwidth}
+        \centering
+        {
+        \includegraphics[width=1.0\textwidth]{./../../figs/domain_elev.png}
+        \vspace{-0.1cm}
+        {
+            \scriptsize 
+            Simulation domain with Tropical Cyclone Senyar track from IBTrACS and elevation from GMTED2010
+        }
+        }
+    \column{0.55\textwidth}
+    
+    \begin{block}{Simulation set up}
+        \begin{itemize}
+            \item Horizontal resolution of 3 km with 50 levels of vertical height
+            \item Time initialization of 25 November 2025 00:00 UTC
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Physical schemes}
+        \begin{itemize}
+            \item MOLOCH non-hydrostatic dynamical core
+            \item UW planetary boundary layer scheme
+            \item RRTM radiation scheme
+            \item CLM4.5 land surface scheme
+            \item Explicit moisture Nogherotto/Tompkins scheme
+            \item Zeng ocean flux scheme
+        \end{itemize}
+    \end{block}
+    \end{columns}
+\end{frame}
+
+\subsection{Simulation in different climate with PGW}
+
+\begin{frame}
+    \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \begin{table}[h] 
+        \centering
+        \begin{tabular}{ccc} 
+        \hline
+        \textbf{Type} & \textbf{Variable} \\
+        \hline
+        3D	&Specific humidity \\
+        2D	&Surface pressure \\
+        2D	&Surface temperature \\
+        3D	&Air temperature \\
+        3D	&Horizontal wind \\
+        3D	&Geopotential height \\
+        \hline
+        \end{tabular}
+        \caption{List of required variables from CMIP6 models}
+        \label{table:cmip6_vars}
+    \end{table}
+
+    \column{0.5\textwidth}
+        The ICBC for the counterfactuals are generated by adding perturbations to the ICBC of the control simulation, defined as
+        \begin{equation*}
+            X^{\text{PGW}}_m = X^{\text{CTRL}}_m + \Delta X_m
+        \end{equation*}
+        with $X^{\text{CTRL}}_m$ is the ICBC of control simulation for month $m$.
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \begin{table}[h] 
+        \centering
+        \begin{tabular}{ccc} 
+        \hline
+        \textbf{Model} & \textbf{20-year period for GWL 1.5$^\circ$} & \textbf{20-year period for GWL 3.0$^\circ$} \\
+        \hline
+        EC-Earth3-Veg & 2002--2021 & 2012--2058 \\
+        MPI-ESM1-2-HR & 2025--2044 & 2035--2082 \\
+        NorESM2-MM & 2037--2056 & 2047--2091 \\
+
+        \hline
+        \end{tabular}
+        \caption{List of CMIP6 models used to perturb simulation ICBC with the corresponding period of certain global warming level (GWL) compared to 1850--1900 baseline under SSP3-7.0 scenario \citep{hauser2022transient}}
+        \label{table:cmip6}
+    \end{table}
+\end{frame}
+
+\section{Results}
+
+\section{Concluding Remarks}
+
+\begin{frame}[allowframebreaks]{References}
+    \printbibliography
+\end{frame}
+\end{document}

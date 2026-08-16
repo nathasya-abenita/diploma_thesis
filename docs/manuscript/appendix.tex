@@ -3,7 +3,7 @@
 \chapter{Code and Data Availability} 
 \label{appendix:code_and_data}
 
-ERA5 data can be accessed through \url{https://10.24381/cds.adbb2d47} and \url{https://doi.org/10.24381/cds.bd0915c6}. RegCM namelists and Python scripts are stored in \url{https://github.com/nathasya-abenita/diploma_thesis}.
+ERA5 data can be accessed through \url{https://10.24381/cds.adbb2d47} and \url{https://doi.org/10.24381/cds.bd0915c6}. RegCM namelists and Python scripts are stored in \url{https://github.com/nathasya-abenita/diploma_thesis}. Daily rainfall from local stations can be accessed through \url{https://dataonline.bmkg.go.id/}, a website managed by Indonesian Meteorology, Climatology, and Geophysical Agency (BMKG). 
 
 \chapter{RegCM Experiments for Tropical Cyclone Senyar}
 \label{appendix:exp}
@@ -51,16 +51,37 @@ Experiment	&PBL ({\texttt{ibltyp}})&	Ocean roughness model (\texttt{iocnrough}) 
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{../figs/track/regcm_track_base_2.png}
+\includegraphics[width=\linewidth]{../../figs/track/regcm_track_base_2.png}
 \caption{Track for best experiment with default physical schemes, also best spin-up time and domain}
 \label{fig:track_base}.
 \end{figure}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{../figs/track/regcm_track_roll_3.png}
+\includegraphics[width=\linewidth]{../../figs/track/regcm_track_roll_3.png}
 \caption{Tracks for different physical schemes}
 \label{fig:track_different_schemes}.
+\end{figure}
+
+\chapter{Comparison of Simulated and Observed Daily Rainfall}
+\label{appendix:daily_evolution}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../../figs/station_codes.png}
+        % \caption{}
+    \end{subfigure}
+    % \vspace{1em} % optional spacing
+    \begin{subfigure}{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../../figs/daily_pr_with_station.png}
+        % \caption{}
+    \end{subfigure}
+
+    \caption{(Top) Accumulated rainfall from MSWEP and local stations with station codes. (Bottom) Comparison of daily precipitation between local station, MSWEP, and factual simulation. Total precipitation of four days are labelled in legend. Factual simulation could not represent observed daily rainfall evolution very well. Note that there are time zone difference between local station and both MSWEP and factual (UTC).}
+    \label{fig:daily_evolution}
 \end{figure}
 
 \endappendix
