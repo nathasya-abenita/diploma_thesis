@@ -71,7 +71,7 @@ for name, label in zip(province_names, province_labels):
     gdf = gpd.read_file(f'./data/shp/{name}.geojson')
     gdf = gdf.to_crs(epsg=4326)
     if name == 'Aceh':
-        gdf.boundary.plot(ax=ax, linestyle='-', color='gray', label='Province Boundaries')
+        gdf.boundary.plot(ax=ax, linestyle='-', color='gray', label='Province boundaries')
     else:
         gdf.boundary.plot(ax=ax, linestyle='-', color='gray')
 
@@ -93,7 +93,7 @@ for name, label in zip(province_names, province_labels):
 # 5. Plotting Disaster Points
 for name, (lon, lat) in sites.items():
     ax.plot(lon, lat, '^', color='k', markersize=6)
-ax.plot([], [], '^', color='k', label=f'Landslide Sites') # legend
+ax.plot([], [], '^', color='k', label=f'Landslide sites') # legend
 
 # Remote Sensing Sites A1-A4
 for name, (lon, lat) in remote_sites.items():
@@ -101,7 +101,7 @@ for name, (lon, lat) in remote_sites.items():
 
 for name, (lon, lat) in flood_hotspots.items():
     ax.plot(lon, lat, '^', color='tab:red', markersize=6)
-ax.plot([], [],'^', color='tab:red', label=f'Flood Sites') # legend
+ax.plot([], [],'^', color='tab:red', label=f'Flood sites') # legend
 
 # Cyclone track
 df_cy = load_best_track_data('./data/IBTrACS.last3years.v04r01.nc')

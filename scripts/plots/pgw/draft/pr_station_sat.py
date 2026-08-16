@@ -5,8 +5,8 @@ import matplotlib.colors as mcolors
 import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-from scripts.plots.pgw.draft.mod_prec import read_data, cut_area, activate_geo, load_sat, set_extent
-from scripts.plots.pgw.draft.mod_prec import event_lat_max, event_lon_max, event_lat_min, event_lon_min
+from mod_prec import read_data, cut_area, activate_geo, load_sat, set_extent
+from mod_prec import event_lat_max, event_lon_max, event_lat_min, event_lon_min
 
 if __name__ == '__main__':
     # Variables
@@ -62,7 +62,6 @@ if __name__ == '__main__':
     # Add satellite data
     cf = ax.contourf(pr_sat.lon, pr_sat.lat, pr_sat.values, cmap=cmap, levels=levels,
                         vmin=vmin, vmax=vmax, transform=ccrs.PlateCarree(), extend='max')
-    ax.set_title('MSWEP')
 
     # Decorate plot
     activate_geo(ax, mask_ocean=False)
@@ -97,6 +96,7 @@ if __name__ == '__main__':
 
     # Shared horizontal colorbar
     cbar = fig.colorbar(cf, ax=ax, orientation="horizontal", pad=0.08, fraction=0.06, aspect=40)
-    cbar.set_label('Accumulated precipitation 25-28Nov2025 (mm)')
+    cbar.set_label('Accumulated rainfall 25-28Nov2025 (mm) from MSWEP')
 
+    plt.savefig('./figs/station_codes.png', bbox_inches='tight')
     plt.show()
