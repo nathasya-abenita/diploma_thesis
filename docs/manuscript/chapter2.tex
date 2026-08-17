@@ -5,7 +5,7 @@ This study consists of two stages. First, control or factual simulation of Tropi
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.6\linewidth]{./../../figs/domain_elev.png}
-\caption{Simulation domain with Tropical Cyclone Senyar track from IBTrACS and elevation from GMTED2010 \citep{danielson2011global}}
+\caption{Simulation domain with TC Senyar track from IBTrACS and elevation from GMTED2010 \citep{danielson2011global}}
 \label{fig:domain}.
 \end{figure}
 
@@ -14,11 +14,11 @@ This study consists of two stages. First, control or factual simulation of Tropi
 
 Factual simulation of the event is performed using the regional climate model RegCM, developed by the National Center for Atmospheric Research (NCAR) at first, and then at the Abdus Salam International Centre for Theoretical Physics (ICTP). The latest version of RegCM, RegCM5, features a non-hydrostatic dynamical core from the weather prediction MOLOCH. With the new core, RegCM5 has been improved to provide better statistics, including hourly precipitation intensities, especially at convection-permitting resolutions \citep{giorgi2023fifth, coppola20255th}. %Additionally, the use of regional climate model over a global model to perform this hindcast is beneficial in constraining the large-scale circulation of the tropical cyclone hindcast \cite{patricola2018anthropogenic}, such that observed tracks are represented well.
 
-The model is run at resolution of 3 km over region of 80°E--120°E and 26°S--14°N, as seen in Figure \ref{fig:domain}, with 50 levels of vertical height (30 km). This region is chosen to be centered around the Malacca Strait which is the domain of TC genesis and main track. The center is intentionally shifted slightly southward to avoid biasing the model toward another strong low-pressure system located at South China Sea. The region also encloses Sumatra Island and Malay Peninsula which are the most impacted regions from this event.
+The model is run at resolution of 3 km over region of 80°E--120°E and 26°S--14°N, as seen in Figure \ref{fig:domain}, with 50 levels of vertical height spanning 30 km. This region is chosen to be centered around the Malacca Strait which is the domain of TC genesis and main track. The center is intentionally shifted slightly southward to avoid biasing the model toward another strong low-pressure system located at South China Sea. The region also encloses Sumatra Island and Malay Peninsula which are the most impacted regions from this event.
 
 The simulations in this study use the following physical schemes: UW planetary boundary layer scheme (PBL), RRTM radiation scheme, CLM4.5 land surface scheme, explicit moisture Nogherotto/Tompkins scheme, and Zeng ocean flux scheme. As mentioned, the latest version of RegCM features the MOLOCH non-hydrostatic dynamical core that resolves convection. Most of these schemes, except the PBL, are chosen to follow the CORDEX-CORE simulation for Southeast Asia region, where details of the schemes are summarized in \citet{coppola20255th}. However, modification is done to obtain the best representation of the cyclone track, done by different experiments summarized in Appendix \ref{appendix:exp}.
 
-All simulations use ERA5 reanalysis fields \citep{hersbach2020era5} as initial and lateral boundary conditions (ICBC), which includes sea surface temperature, surface air pressure, surface temperature, and atmospheric variables, such as horizontal wind speed, air temperature, and humidity mixing ratio. ERA5 reanalysis has been shown to represent TC Senyar during its lifetime with weaker intensity as discussed in Chapter \ref{ch:synoptic_evolution}. Simulations are initialized at 25 November 2025 00:00 UTC such that 12-hour of spin-up time is given. Generally, an earlier initialization time fails to capture the genesis of the cyclone. This is also in agreement with a similar study in hindcasting TC \citep{patricola2018anthropogenic} using a convection-permitting model where tropical cyclone intensity within the model adjusts from its initial condition within hours.
+All simulations use ERA5 reanalysis fields \citep{hersbach2020era5} as initial and lateral boundary conditions (ICBC), which includes sea surface temperature, surface air pressure, surface temperature, and atmospheric variables, such as horizontal wind speed, air temperature, and humidity mixing ratio. ERA5 reanalysis has been shown to represent TC Senyar during its lifetime with weaker intensity as discussed in Chapter \ref{ch:synoptic_evolution}. Simulations are initialized at 25 November 2025 00:00 UTC such that some hours of spin-up time is given. Generally, an earlier initialization time fails to capture the genesis of the cyclone. This is also in agreement with a similar study in hindcasting TC using a convection-permitting model where tropical cyclone intensity within the model adjusts from its initial condition within hours \citep{patricola2018anthropogenic}.
 
 Center of the tropical cyclone is defined as the coordinate with the lowest sea level pressure. To validate the simulation, we compare both coordinates and intensity of the center with ERA5 reanalysis data and observation from the International Best Track Archive for Climate Stewardship (IBTrACS) \citep{knapp2010international, IBTrACS_data}. IBTrACS collects observed tropical cyclone data from agencies around the world and provides 6-hourly data of TCs tracks. Lastly, we use MSWEP v2 \citep{beck2019mswep} to verify the simulated precipitation by noting that it is known as the most reliable dataset for Indonesia \citep{wati2022statistics}.
 
@@ -62,7 +62,7 @@ NorESM2-MM & 2037--2056 & 2047--2091 \\
 \label{table:cmip6_vars}
 \end{table}
 
-The perturbation is quantified by computing the difference between two long-term monthly mean climate periods: 1850--1900 as pre-industrial climate and another 20-year period corresponding to 1.5$^\circ$ of global warming level (GWL), seen in Table \ref{table:cmip6}. By choosing a long climatic period, we also reduce effects from internal variability as a common strategy in PGW method \citep{brogli2023pseudo}. Furthermore, the CMIP6 historical experiment is concatenated with the SSP3-7.0 scenario if needed to construct the period for GWL 1.5$^\circ$. By this, we define the perturbation as
+The perturbation is quantified by computing the difference between two long-term monthly mean climate periods: (i) 1850--1900 as pre-industrial climate and a 20-year period corresponding to 1.5$^\circ$ as present climate or (ii) present climate and the future climate with 3$^\circ$ of global warming level (GWL). A summary of these periods can be seen in Table \ref{table:cmip6}. By choosing a long climatic period, we also reduce effects from internal variability as a common strategy in PGW method \citep{brogli2023pseudo}. Furthermore, the CMIP6 historical experiment is concatenated with the SSP3-7.0 scenario when needed to construct the period for GWL 1.5$^\circ$ or $3^\circ$. By this, we define the perturbation as
 \begin{equation} \label{eq:delta}
     \Delta X_m = \overline{X_{\text{counterfactual}, m}} - \overline{X_{\text{factual}, m}}
 \end{equation}
@@ -86,7 +86,7 @@ We present an example of the perturbation from the three CMIP6 models for surfac
 \begin{figure}[h]
 \centering
 \includegraphics[width=\linewidth]{../../figs/compare/finals/ts_complete.png}
-\caption{Difference of time-mean (25--28 November 2025) near-surface temperature between counterfactual and factual simulation}
+\caption{Time-mean (25--28 November 2025) of surface temperature perturbation applied to control simulation}
 \label{fig:surface_temperature_perturbation}.
 \end{figure}
 
