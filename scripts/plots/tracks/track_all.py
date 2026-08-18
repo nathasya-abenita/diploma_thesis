@@ -39,11 +39,11 @@ if __name__ == '__main__':
     # Configuration
     output_path = "./figs/track/"
     roll = 0 # no roll apply to keep all timestep complete
-    outfile = f"regcm_track_final_{roll}.png" # f'regcm_track_best_{roll}_new.png'
+    outfile = f"regcm_track_final_{roll}_3hr.png" # f'regcm_track_best_{roll}_new.png'
 
     # Load best track data
     best_track_dir = r"./data/IBTrACS.last3years.v04r01.nc"
-    nhc_data = load_best_track_data(best_track_dir)
+    nhc_data = load_best_track_data(best_track_dir, time_res='3hr')
 
     # Create figure with 1 row and 3 columns
     plt.rcParams.update({

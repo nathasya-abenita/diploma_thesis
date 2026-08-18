@@ -47,7 +47,7 @@ if __name__ == '__main__':
     axs = [fig.add_subplot(2, 4, i, projection=ccrs.PlateCarree()) for i in range (1, 8+1)]
 
     # Color and variable setting
-    delta_level = np.arange(-3, 3, 0.5)  # K
+    delta_level = np.arange(-3, 3.5, 0.5)  # K
     varname = 'tas'
     cmap = plt.get_cmap("RdBu_r")
     norm = mcolors.BoundaryNorm(delta_level, cmap.N)

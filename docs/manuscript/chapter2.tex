@@ -78,14 +78,14 @@ with $X^{\text{CTRL}}_m$ is the ICBC of control simulation for month $m$.
 
 Additionally, greenhouse gases (GHG) are perturbed to reflect pre-industrial conditions. The quantity of the perturbation is quantified by comparing global GHG values between two years \citep{meinshausen2017historical, meinshausen2020ssp}. We choose 1875 as the year to represent pre-industrial climate, while for present or future climate, we take the midpoint of the 20-year period in Table \ref{table:cmip6}. The ratio values are used to tweak the RegCM simulation.
 
-As an idealized experiment, PGW method is applied with uniform cooling or warming of 1.5$^\circ$ everywhere. This is done by the tweak feature in RegCM experiment and the perturbation is applied on all temperature variables, including surface and air temperature at all vertical levels. Hereinafter, we label this as the tweak experiment.
+As an idealized experiment, PGW method is applied with uniform cooling or warming of 1.5$^\circ$ everywhere. This is done by the tweak feature in RegCM experiment and the perturbation is applied on all temperature variables, including surface and air temperature at all vertical levels. Moisture content in the atmosphere is adjusted accordingly under assumption of constant relative humidity. Hereinafter, we label this experiment as the tweak experiment.
 
 We present an example of the perturbation from the three CMIP6 models for surface temperature variable in Figure \ref{fig:surface_temperature_perturbation}. Note that while there is no plot for the tweak experiment given it is designed as uniform cooling or warming. 
 
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{../../figs/compare/finals/ts_complete.png}
+\includegraphics[width=\linewidth]{../../figs/compare/ts_complete.png}
 \caption{Time-mean (25--28 November 2025) of surface temperature perturbation applied to control simulation}
 \label{fig:surface_temperature_perturbation}.
 \end{figure}

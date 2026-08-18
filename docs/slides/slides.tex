@@ -62,10 +62,10 @@
         }
         }
     \column{0.55\textwidth}
-    
+    \vfill
     \begin{itemize}
         \item At the end of November 2025, Sumatra was devastated by exceptional monsoon rains and a rare equatorial tropical storm, Tropical Cyclone (TC) Senyar.
-        \item This triggered massive flooding, flash floods, and widespread landslides that affected more than 3 million people \citep{wu2026analysis, wwa, climameter}.
+        \item This triggered massive flooding, flash floods, and widespread landslides that affected more than 3 million people, across three provinces \citep{wu2026analysis, wwa, climameter}.
     \end{itemize}
     \end{columns}
 \end{frame}
@@ -83,11 +83,11 @@
         }
         }
     \column{0.55\textwidth}
-    
+    \vspace{-0.5cm}
     \begin{block}{Findings from rapid attribution studies}
         \begin{itemize}
-            \item Meteorological conditions causing the floods are up to 10\% wetter in the present compared to the past \citep{climameter}.
-            \item An increase in extreme rainfall associated with global warming is detected to be 9--50\% \citep{wwa}.
+            \item \textbf{Analogue-based approach:} Meteorological conditions causing the floods are up to 10\% wetter in the present compared to the past \citep{climameter}.
+            \item \textbf{Probabilistic approach:} An increase in extreme rainfall associated with global warming is detected to be 9--50\% \citep{wwa}.
             \item These rapid studies are limited by treating an extreme event as part of a broad class of similar events.
         \end{itemize}
     \end{block}
@@ -102,24 +102,20 @@
 \end{frame}
 
 \begin{frame}
-    \begin{columns}[T,onlytextwidth]
-    \column{0.5\textwidth}
-    \vspace{1cm}
-    \centering{
-        Under the PGW approach, we are asking: 
-        
-        \textit{"If an event like the 2025 Sumatra floods had occurred under a pre-industrial (cooler) or future (warmer) climate, how would it have changed?"}
-    }
-    \column{0.5\textwidth}
-    \begin{block}{Research Objectives}   
+    \begin{block}{Research objectives}
         \begin{enumerate}
-            \item Event reconstruction
-            \item Historical attribution
-            \item Future projection
-            \item Physical mechanism identification
+            \item \textbf{Event reconstruction:} Simulate the 2025 extreme rainfall and cyclone dynamics associated with TC Senyar in Sumatra with high resolution RegCM5 model under present climate.
+            \item \textbf{Historical attribution:} Simulate a counterfactual model where the warming signal is removed from the boundary conditions to represent a pre-industrial climate.
+            \item \textbf{Future projection:} Simulate a future projection by adding a +1.5$^\circ$ warming signal to the boundary conditions to assess the hazard's evolution in a warmer world.
+            \item Quantify the physical changes between the models.
         \end{enumerate}
     \end{block}
-    \end{columns}
+
+    \centering{
+    Under the PGW approach, we are asking: 
+    
+    \textit{"If an event like the 2025 Sumatra floods had occurred under a pre-industrial (cooler) or future (warmer) climate, how would it have changed?"}
+    }
 \end{frame}
 
 \section{Methodology and Data}
@@ -134,11 +130,11 @@
 
     \begin{block}{Dataset}
         \begin{itemize}
-            \item CMIP6 models under SSP3-7.0 scenario
             \item ERA5 reanalysis data
+            \item Three CMIP6 models under SSP3-7.0 scenario
             \item Observed TC track from IBTrACS
-            \item Gridded precipitation data, MSWEP v2
-            \item Daily rainfall from local stations
+            \item Gridded precipitation data, MSWEP v2 (Best for Indonesia according to \citet{wati2022statistics})
+            \item Daily rainfall from local stations (Source: BMKG)
         \end{itemize}
     \end{block}
 \end{frame}
@@ -157,10 +153,10 @@
         }
         }
     \column{0.55\textwidth}
-    
+    \vspace{-0.5cm}
     \begin{block}{Simulation set up}
         \begin{itemize}
-            \item Horizontal resolution of 3 km with 50 levels of vertical height
+            \item Horizontal resolution of 3 km with 50 levels of 30 km vertical height
             \item Time initialization of 25 November 2025 00:00 UTC
         \end{itemize}
     \end{block}
@@ -175,62 +171,383 @@
             \item Zeng ocean flux scheme
         \end{itemize}
     \end{block}
+
+    \begin{block}{Track definition}
+        At each time step, the track is defined at a coordinate with the lowest sea level pressure.
+    \end{block}
     \end{columns}
 \end{frame}
 
 \subsection{Simulation in different climate with PGW}
 
 \begin{frame}
-    \begin{columns}[T,onlytextwidth]
-    \column{0.5\textwidth}
-    \begin{table}[h] 
-        \centering
-        \begin{tabular}{ccc} 
-        \hline
-        \textbf{Type} & \textbf{Variable} \\
-        \hline
-        3D	&Specific humidity \\
-        2D	&Surface pressure \\
-        2D	&Surface temperature \\
-        3D	&Air temperature \\
-        3D	&Horizontal wind \\
-        3D	&Geopotential height \\
-        \hline
-        \end{tabular}
-        \caption{List of required variables from CMIP6 models}
-        \label{table:cmip6_vars}
-    \end{table}
+    \begin{block}{Idealized experiment (tweak)}
+        \begin{itemize}
+            \item PGW method is applied by uniform cooling or warming of 1.5$^\circ$ for both \textbf{surface and air temperature} at all vertical levels.
+            \item Moisture content is adjusted under the assumption of constant relative humidity.
+            \item Greenhouse gases are perturbed to reflect the counterfactual climate based on \citet{meinshausen2017historical,meinshausen2020ssp}.
+        \end{itemize}
+         
+    \end{block}
 
-    \column{0.5\textwidth}
-        The ICBC for the counterfactuals are generated by adding perturbations to the ICBC of the control simulation, defined as
-        \begin{equation*}
-            X^{\text{PGW}}_m = X^{\text{CTRL}}_m + \Delta X_m
-        \end{equation*}
-        with $X^{\text{CTRL}}_m$ is the ICBC of control simulation for month $m$.
-    \end{columns}
+    \begin{block}{Generalized PGW approach}
+        \begin{columns}[T,onlytextwidth]
+        \column{0.5\textwidth}
+        \begin{table}[h] 
+            \centering
+            \begin{tabular}{ccc} 
+            \hline
+            \textbf{Type} & \textbf{Variable} \\
+            \hline
+            3D	&Specific humidity \\
+            2D	&Surface pressure \\
+            2D	&Surface temperature \\
+            3D	&Air temperature \\
+            3D	&Horizontal wind \\
+            3D	&Geopotential height \\
+            \hline
+            \end{tabular}
+            \caption*{Perturbed variables}
+            \label{table:cmip6_vars}
+        \end{table}
+
+        \column{0.5\textwidth}
+            The ICBC for the counterfactuals are generated by adding perturbations to the ICBC of the control simulation, defined as
+            \begin{equation*}
+                X^{\text{PGW}}_m = X^{\text{CTRL}}_m + \Delta X_m
+            \end{equation*}
+            with $X^{\text{CTRL}}_m$ is the ICBC of control simulation for month $m$.
+        \end{columns}
+    \end{block}
 \end{frame}
 
 \begin{frame}
     \begin{table}[h] 
         \centering
-        \begin{tabular}{ccc} 
+        \begin{tabular}{cc} 
         \hline
-        \textbf{Model} & \textbf{20-year period for GWL 1.5$^\circ$} & \textbf{20-year period for GWL 3.0$^\circ$} \\
+        \textbf{Model} & \textbf{20-year period for GWL 1.5$^\circ$}  \\
         \hline
-        EC-Earth3-Veg & 2002--2021 & 2012--2058 \\
-        MPI-ESM1-2-HR & 2025--2044 & 2035--2082 \\
-        NorESM2-MM & 2037--2056 & 2047--2091 \\
+        EC-Earth3-Veg & 2002--2021  \\
+        MPI-ESM1-2-HR & 2025--2044 \\
+        NorESM2-MM & 2037--2056 \\
 
         \hline
         \end{tabular}
-        \caption{List of CMIP6 models used to perturb simulation ICBC with the corresponding period of certain global warming level (GWL) compared to 1850--1900 baseline under SSP3-7.0 scenario \citep{hauser2022transient}}
+        \caption*{List of CMIP6 models used to perturb simulation ICBC with the corresponding period of global warming level (GWL) compared to 1850--1900 baseline under SSP3-7.0 scenario \citep{hauser2022transient}}
         \label{table:cmip6}
     \end{table}
+
+    \begin{block}{Steps in applying PGW}
+        \begin{enumerate}
+            \item Prepare monthly mean perturbation from different periods of CMIP6 data.
+            \item Compute perturbation. For example, "cooling" perturbation for EC-Earth3-Veg is 
+            \[ \Delta X_m = \overline{X_{\text{2002--2021}, m}} - \overline{X_{\text{1850--1900}, m}}. \]
+            \item Apply interpolation (vertical, horizontal, and time) to the perturbation to match control simulation's resolution.
+            \item Apply perturbation to control simulation: $X^{\text{PGW}}_m = X^{\text{CTRL}}_m + \Delta X_m$
+            \item Greenhouse gases are also perturbed to reflect the counterfactual climate.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \centering
+    {
+    \includegraphics[width=0.8\textwidth]{../../figs/compare/ts_complete.png}
+
+    \vspace{-0.1cm}
+    {
+    \scriptsize 
+    Time-mean (25--28 November 2025) of surface temperature perturbation applied to control simulation
+    }
+    }
+\end{frame}
+
+\subsection{Assessment Metrics}
+\begin{frame}
+    \begin{itemize}
+        \item We focus on observed peak days, between 25 November 2025 01:00 UTC and 26 November 2025 23:00 UTC.
+        \item To evaluate anthropogenic influence, the rate of increase from \textbf{past to present} is computed by
+        \begin{equation} \label{eq:increase-1}
+            \%_{\text{increase},m} = \frac{\text{factual} - \text{counterfactual}_m}{\text{counterfactual}_m} \cdot 100
+        \end{equation} 
+        with $m$ represents each experiment with the corresponding $m$-th perturbation or climate model forcing. 
+        \item Similarly, the rate of increase from \textbf{present to future} is computed by
+        \begin{equation} \label{eq:increase-2}
+            \%_{\text{increase},m} = \frac{\text{counterfactual}_m - \text{factual}}{\text{factual}} \cdot 100.
+        \end{equation}
+        \item The Clausius-Clapeyron scaling analysis is done to study the response of the variables to global warming level change between the factual and counterfactual simulation. We divide $\%_{\text{increase}}$ in Eq. \eqref{eq:increase-1} and \eqref{eq:increase-2} with 1.5$^\circ$ which corresponds to the experiment design.
+    \end{itemize}
+\end{frame}
+
+\section{Synoptic Evolution from Reanalysis Data (ERA5)}
+
+\begin{frame}
+    \begin{columns}[T,onlytextwidth]
+    \column{0.7\textwidth}
+    \centering
+    {
+    \vspace{-0.5cm}
+    \includegraphics[width=0.9\textwidth]{../../figs/synoptic_era5/synoptic.png}
+    }
+    
+    \column{0.3\textwidth}
+    \begin{itemize}
+        \item We first assess whether ERA5 could represent TC Senyar well, before using it as experiment's initial and boundary conditions.
+    \end{itemize}
+    {
+    \vfill
+    \scriptsize 
+    \textbf{Synoptic evolution of Tropical Cyclone Senyar from ERA5 on 24 November 2025 (1--4), 25 November 2025 (5--8), and 28 November 2025 (9--12)}. Panels (1, 5, 9) show sea surface temperature with mean sea level pressure as contour lines. Panels (2, 6, 10) show wind shear magnitude and speed by comparing height of 200 hPa and 850 hPa. Panels (3, 7, 11) show 850 hPa specific humidity with 10-m wind speed as stream plot. Panels (4, 8, 12) show daily rainfall over the area.
+    }
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \centering
+    {
+    \includegraphics[width=\textwidth]{../../figs/track/era5_track_roll_2.png}
+
+    \vspace{-0.1cm}
+    {
+    \scriptsize Track comparison between ERA5 and observation from IBTrACS
+    }
+    }
+    \newline
+    \begin{itemize}
+        \item  ERA5 is able to represent the big pattern of the event evolution with weaker intensities. This is consistent with past study on ERA5 performance representing TCs \citep{dulac2024assessing}.
+    \end{itemize}
 \end{frame}
 
 \section{Results}
 
+\subsection{Counterfactuals' Response}
+
+\begin{frame}
+    \centering
+    {
+    % \vspace{-0.5cm}
+    \includegraphics[width=0.9\textwidth]{../../figs/compare/tas_complete.png}
+
+    {
+    \scriptsize Difference of time-mean (25--28 November 2025) near-surface temperature between counterfactual and factual simulation
+    }
+    }
+\end{frame}
+
+\begin{frame}
+    \centering
+    {
+    % \vspace{-0.5cm}
+    \includegraphics[width=0.5\textwidth]{../../figs/dynamical/zg500_all_model.png}
+
+    {
+    \scriptsize Time-mean of 500 hPa geopotential height at 25 November 2025. Ensemble mean is used for counterfactuals.
+    }
+    }
+\end{frame}
+
+\subsection{Anthropogenic influences on TC Senyar}
+
+\begin{frame}
+    \centering
+    {
+    \includegraphics[width=\textwidth]{../../figs/track/regcm_track_final_0_3hr.png}
+
+    \vspace{-0.1cm}
+    {
+    \scriptsize 
+    Simulated TC Senyar track and intensity. (a) For track, ensemble median of counterfactuals track is used. Tracks from each experiment are plotted as shaded lines. (b, c) For intensity, ensemble mean $\pm$ standard deviation of the counterfactuals is used.
+    }
+    }
+    \newline \centering{
+    \begin{itemize}
+        \item In general, there’s no significant change in TC track and intensity with warming.
+        \item In future climate, peak wind intensity consistently increases.
+    \end{itemize}
+    }
+\end{frame}
+
+\subsection{Anthropogenic influences on rainfall associated with TC Senyar}
+
+\begin{frame}
+    \centering
+    {
+    \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/observed_pr.png}
+
+    \vspace{-0.1cm}
+    {
+    \scriptsize 
+    Comparison of accumulated precipitation during TC Senyar lifetime between factual (present), MSWEP, and ERA5. Corresponding values from local stations are plotted as scatter points.
+    }
+    \newline
+    \begin{itemize}
+        \item Factual simulation with RegCM improves spatial distribution of extremes compared to ERA5.
+    \end{itemize}
+    }
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[ht]
+        \centering
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../../figs/compare/finals/map_pr_mean_with_impact.png}
+            % \caption{}
+        \end{subfigure}
+        % \vspace{1em} % optional spacing
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_pr_mean.png}
+            % \caption{}
+        \end{subfigure}
+        \caption*{\scriptsize (Top) Spatial map of accumulated precipitation between peak days. Ensemble mean is used for counterfactuals. Triangles are impact markers. (Bottom) Distribution change based on pooled hourly intensity from Aceh Province during peak days (orange line).}
+        \label{fig:compare_pr}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.7\linewidth]{../../figs/compare/finals/hyetograph_event.png}
+        \caption*{\scriptsize (a) Evolution of area-averaged hourly rainfall in Aceh Province with its ensemble mean $\pm$ standard deviation for counterfactuals, while (b) shows the corresponding cumulative rainfall.}
+        \label{fig:hyetograph}
+    \end{figure}
+\end{frame}
+
+\subsection{Anthropogenic influences on physical drivers controlling extreme rainfall}
+
+\begin{frame}
+    \begin{figure}[ht]
+        \centering
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../../figs/compare/finals/map_evs.png}
+            % \caption{}
+        \end{subfigure}
+        % \vspace{1em} % optional spacing
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_evs.png}
+            % \caption{}
+        \end{subfigure}
+        \caption*{\scriptsize (Top) Spatial map of time-mean evaporation flux during peak days. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled hourly values from whole shown domain.}
+        \label{fig:compare_evaporation}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[ht]
+        \centering
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../../figs/compare/finals/map_ivt.png}
+            % \caption{}
+        \end{subfigure}
+        % \vspace{1em} % optional spacing
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_ivt.png}
+            % \caption{}
+        \end{subfigure}
+        \caption*{\scriptsize (Top) Spatial map of time-mean low-level IVT during peak days. Low-level IVT is obtained by integration between surface and 700 hPa. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled six-hourly values from whole shown domain.}
+        \label{fig:compare_ivt}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[ht]
+        \centering
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../../figs/compare/finals/map_cape.png}
+            % \caption{}
+        \end{subfigure}
+        % \vspace{1em} % optional spacing
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_cape.png}
+            % \caption{}
+        \end{subfigure}
+        \caption*{\scriptsize (Top) Spatial map of time-mean CAPE during peak days. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled hourly values from whole shown domain.}
+        \label{fig:compare_cape}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[ht]
+        \centering
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../../figs/compare/finals/map_diab.png}
+            % \caption{}
+        \end{subfigure}
+        % \vspace{1em} % optional spacing
+        \begin{subfigure}{0.7\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_diab.png}
+            % \caption{}
+        \end{subfigure}
+
+        \caption{\scriptsize (Top) Spatial map of time-maximum of maximum temperature tendency due to latent heat exchange during peak days. Maximum temperature tendency is obtained by taking vertical maxima over each time step. Ensemble mean is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
+        \label{fig:compare_diab}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../../figs/compare/finals/map_wa.png}
+        % \caption{}
+    \end{subfigure}
+    % \vspace{1em} % optional spacing
+    \begin{subfigure}{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_wa.png}
+        % \caption{}
+    \end{subfigure}
+
+    \caption*{\scriptsize (Top) Spatial map of time-maximum of maximum vertical velocity during peak days. Maximum vertical velocity is obtained by taking vertical maxima over each time step. Ensemble mean is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
+    \label{fig:compare_wa}
+\end{figure}
+\end{frame}
+
 \section{Concluding Remarks}
+
+\begin{frame}
+    \vspace{-0.5cm}
+    \centering
+    {
+    \includegraphics[width=0.8\textwidth]{../figs/schematic.png} 
+    \vspace{-0.5cm}\newline
+    \vspace{-0.1cm}
+    {
+    \scriptsize 
+    Values indicate the median relative change for the historical attribution (past-to-present) and future projection (present-to-future) scenarios. Blue boxes highlight localized impacts within the Aceh Province, while gray boxes show regional changes.
+    }
+    }
+    \newline
+    \begin{itemize}
+            \item Historical warming has intensified the 2025 event.
+            \item In a warmer world, the hazard may become more spatially concentrated, but more violent.
+            \item These changes are supported by a robust increase in atmospheric energy and moisture transport.
+            \item Sumatra may face an emerging threat of compounding wind and hydrological hazards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Future directions}
+        \begin{itemize}
+            \item Verifying simulated rainfall with hourly observation data once it becomes available
+            \item Integration of rainfall and wind intensity projections with land-use change
+            \item Expanding the storyline approach to a larger ensemble of CMIP6 models
+            \item Extending the study to an extreme case, e.g +3.0$^\circ$ global warming level
+        \end{itemize}
+    \end{block}
+\end{frame}
 
 \begin{frame}[allowframebreaks]{References}
     \printbibliography

@@ -8,7 +8,7 @@ df = pd.read_csv(filename, comment='#', sep=r",\s*", engine='python')
 ensemble = 'r1i1p1f1'
 scenario = 'ssp370'
 level = 3 # 1.5 for present, 3 for GWL+1.5
-models = ["MPI-ESM1-2-HR"] # ["EC-Earth3-Veg",  "MPI-ESM1-2-HR",  "NorESM2-MM"]
+models = ["EC-Earth3-Veg",  "MPI-ESM1-2-HR",  "NorESM2-MM"]
 
 # Find start and end years
 df_filt = df[

@@ -42,11 +42,11 @@ if __name__ == '__main__':
     ds_list = [xr.open_dataset(file) for file in filenames]
 
     # Set up plot
-    fig = plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=(12,8))
     axs = [fig.add_subplot(2, 3, i, projection=ccrs.PlateCarree()) for i in range (1, 6+1)]
 
     # Color and variable setting
-    delta_level = np.arange(-3, 3, 0.5)  # K
+    delta_level = np.arange(-3, 3.5, 0.5)  # K
     varname = 'ts'
     cmap = plt.get_cmap("RdBu_r")
     norm = mcolors.BoundaryNorm(delta_level, cmap.N)

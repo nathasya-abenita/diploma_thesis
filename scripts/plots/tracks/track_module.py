@@ -550,7 +550,7 @@ def plot_max_sfc_wind(tracker, nhc_data=None, ax=None, smooth_window=1, era5_inc
         
     return ax
 
-def load_best_track_data(nc_file):
+def load_best_track_data(nc_file, time_res='6hr'):
     """Load best track data."""
 
     # Read file
@@ -565,7 +565,13 @@ def load_best_track_data(nc_file):
     df = df.reset_index(drop=True)
     df['time'] = df['time'].dt.round('s')
     df = df.rename(columns={'usa_wind': 'wind', 'usa_pres': 'min_pressure'})
-    return df[::2]
+
+    if time_res == '6hr':
+        return df[::2]
+    elif time_res == '3hr':
+        return df
+    else:
+        raise ValueError ('IBTrACS provides 3-hourly data! Choose `3hr` or `6hr`')
 
 # Dataset loaders
 def load_era5(era_dir, verbose=False):
