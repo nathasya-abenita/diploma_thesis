@@ -1,4 +1,4 @@
-from scripts.plots.tracks.track_module import CycloneTracker, load_best_track_data, font_size, plot_cyclone_tracks, plot_time_series_comparison, plot_max_sfc_wind
+from track_module import CycloneTracker, load_best_track_data, font_size, plot_cyclone_tracks, plot_time_series_comparison, plot_max_sfc_wind
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 

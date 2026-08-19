@@ -537,9 +537,10 @@ def plot_max_sfc_wind(tracker, nhc_data=None, ax=None, smooth_window=1, era5_inc
         #     y_text = y1 - (y_top - y1)/2
         if era5_included:
             x_text = pd.to_datetime(tracker.variable_data['ERA5-max-sfcWind']["time"].max()) #+ pd.Timedelta(days=-1.5)
+            ax.text(x_text, y_text, label, va='center', ha='right', fontsize=font_size, color='k')
         else:
             x_text = pd.to_datetime(moist_data['time'].min())
-        ax.text(x_text, y_text, label, va='center', ha='left', fontsize=font_size, color='k')
+            ax.text(x_text, y_text, label, va='center', ha='left', fontsize=font_size, color='k')
 
     ax.set_ylim(0, y_top)
     ax.set_ylabel("Max wind speed (m/s)", fontsize=font_size, fontweight='bold')

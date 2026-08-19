@@ -44,7 +44,7 @@ flood_hotspots = {
     'Tarutung': (98.97, 2.01),
 }
 
-fig = plt.figure(figsize=(6, 6))
+fig = plt.figure(figsize=(5, 5))
 ax = plt.axes(projection=ccrs.PlateCarree())
 
 # 2. Set map extent for Aceh, North Sumatra, and West Sumatra [6, 7]
@@ -109,9 +109,9 @@ ax.scatter(df_cy['lon'].iloc[0], df_cy['lat'].iloc[0], s=80, marker='*', color='
 ax.plot(df_cy['lon'], df_cy['lat'], '-', color='tab:red', linewidth=2, label='TC track')
 
 # Gridlines
-gl = ax.gridlines(draw_labels=True, linestyle="--", alpha=0.5)
-gl.top_labels = False
-gl.right_labels = False
+# gl = ax.gridlines(draw_labels=True, linestyle=None, alpha=0.5)
+# gl.top_labels = False
+# gl.right_labels = False
 
 # 6. Final Touches
 # plt.title('2025 Extreme Rainfall & Disaster Sites: Sumatra Focus', fontsize=14)

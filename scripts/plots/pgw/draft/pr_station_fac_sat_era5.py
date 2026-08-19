@@ -49,7 +49,7 @@ if __name__ == '__main__':
     
     # Set up plot
     vmin, vmax = 0, 720
-    fig = plt.figure(figsize=(9, 6))
+    fig = plt.figure(figsize=(12, 8))
     ax1 = fig.add_subplot(1, 3, 1, projection=ccrs.PlateCarree())
     ax2 = fig.add_subplot(1, 3, 2, projection=ccrs.PlateCarree())
     ax3 = fig.add_subplot(1, 3, 3, projection=ccrs.PlateCarree())
@@ -62,22 +62,23 @@ if __name__ == '__main__':
     cmap = mcolors.ListedColormap(base)
     norm = mcolors.BoundaryNorm(levels, ncolors=cmap.N + 1, extend='max')
 
+    fontsize=14
 
     # Add factual precipitation map
     pcm = ax1.contourf(pr_fac.xlon, pr_fac.xlat, pr_fac.values.squeeze(), cmap=cmap, levels=levels, 
                         vmin=vmin, vmax=vmax, transform=ccrs.PlateCarree(), extend='max')
-    ax1.set_title('present', fontsize=8)
+    ax1.set_title('present', fontsize=fontsize)
 
     # Add satellite data
     ax2.contourf(pr_sat.lon, pr_sat.lat, pr_sat.values, cmap=cmap, levels=levels,
                         vmin=vmin, vmax=vmax, transform=ccrs.PlateCarree(), extend='max')
-    ax2.set_title('MSWEP', fontsize=8)
+    ax2.set_title('MSWEP', fontsize=fontsize)
 
     # Add ERA5 data
     ax3.contourf(pr_era5.longitude, pr_era5.latitude, 
                  pr_era5.values, cmap=cmap, levels=levels, 
                         vmin=vmin, vmax=vmax, transform=ccrs.PlateCarree(), extend='max')
-    ax3.set_title('ERA5', fontsize=8)
+    ax3.set_title('ERA5', fontsize=fontsize)
 
     # Decorate plot
     for ax in axs:
@@ -89,8 +90,8 @@ if __name__ == '__main__':
 
     # Shared horizontal colorbar
     cbar = fig.colorbar(pcm, ax=axs, orientation="horizontal", pad=0.08, fraction=0.06, aspect=40)
-    cbar.ax.tick_params(labelsize=8)
-    cbar.set_label('Accumulated precipitation 25-28Nov2025 (mm)', fontsize=8)
+    cbar.ax.tick_params(labelsize=fontsize)
+    cbar.set_label('Accumulated precipitation 25-28Nov2025 (mm)', fontsize=fontsize)
 
     plt.savefig('./figs/compare/finals/observed_pr.png', bbox_inches='tight')
     plt.show()

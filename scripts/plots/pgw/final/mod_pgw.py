@@ -394,7 +394,7 @@ class PGW:
         bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
         ax.set_yscale('log')
         ax.scatter(bin_centers, prob, s=5, color=color, label=label, alpha=alpha, edgecolors=None)
-        ax.set_ylim(1e-6, 1)
+        
 
     def plot_normal(self, ax, values, ens_mean, ens_std, linewidth=None, color=None, label=None):
         ax.plot(values, ens_mean, linewidth=linewidth, color=color, label=label)
@@ -451,7 +451,7 @@ class PGW:
         ens_change_std = stacked_change.std(axis=0)
         return excd_prob, ens_val_mean, ens_val_std, ens_change_mean, ens_change_std, dens_prob_list, bin_edges_list
 
-    def plot_dist_change(self, change_val_min, change_val_max, change_min=0, change_max=20, outfile=None, add_cc_limit=False, pct=0.99, bins='auto'):
+    def plot_dist_change(self, change_val_min, change_val_max, change_min=0, change_max=20, outfile=None, add_cc_limit=False, pct=0.99, bins='auto', ylim_pdf=(1e-6, 1)):
         # Set up plot
         lw = 3
         alpha_cf = 0.2
@@ -530,6 +530,7 @@ class PGW:
         axs[1].set_xlabel(self.unit)
     
         axs[2].legend(loc='upper right')
+        axs[2].set_ylim(ylim_pdf)
         axs[2].set_ylabel('Density')
         axs[2].set_xlabel(self.unit)
 

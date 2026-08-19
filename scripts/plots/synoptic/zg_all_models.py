@@ -13,8 +13,10 @@ from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 def setup(ax):
     lon_min, lon_max, lat_min, lat_max = 94, 106, -1.5, 7.5 # 90, 115, -5, 14
     ax.set_extent([lon_min, lon_max, lat_min, lat_max], crs=ccrs.PlateCarree())
-    ax.set_xticks(np.arange(lon_min, lon_max, 4), crs=ccrs.PlateCarree())
-    ax.set_yticks(np.arange(lat_min, lat_max, 4), crs=ccrs.PlateCarree())
+    # ax.set_xticks(np.arange(lon_min, lon_max, 4), crs=ccrs.PlateCarree())
+    # ax.set_yticks(np.arange(lat_min, lat_max, 4), crs=ccrs.PlateCarree())
+    ax.set_xticks([])
+    ax.set_yticks([])
     ax.xaxis.set_major_formatter(LongitudeFormatter())
     ax.yaxis.set_major_formatter(LatitudeFormatter())
     
@@ -44,7 +46,7 @@ def plot_zg(ax, lon, lat, zg, zg_levels, title):
     return cf
 
 # General parameters
-fontsize=8
+fontsize=14
 
 if __name__ == '__main__':
 
@@ -59,7 +61,7 @@ if __name__ == '__main__':
     path_in = './data/final_exp'
 
     # Set up figure
-    fig = plt.figure(figsize=(9,8))
+    fig = plt.figure(figsize=(12, 8))
     axs = [
         fig.add_subplot(2, 2, 1, projection=ccrs.PlateCarree()),
         fig.add_subplot(2, 2, 2, projection=ccrs.PlateCarree()),
@@ -68,7 +70,7 @@ if __name__ == '__main__':
         ]
 
     # Plot parameter
-    zg_levels  = np.linspace(5750, 5900, 20)   # hPa
+    zg_levels  = np.arange(5750, 5910, 10)   # hPa
 
     # Plot ERA5
     ds_era5 = xr.open_dataset('./data/era5/z500_daily.nc').sel(valid_time=selected_time).isel(pressure_level=0)
@@ -84,7 +86,7 @@ if __name__ == '__main__':
         lon, lat, zg = read_data(os.path.join(path_in, name_in, file_name), selected_time)
         cf = plot_zg(ax, lon, lat, zg, zg_levels, title)
 
-    cbar = fig.colorbar(cf, ax=axs, orientation='horizontal', pad=0.08, fraction=0.06)
+    cbar = fig.colorbar(cf, ax=axs, orientation='horizontal', pad=0.08, fraction=0.06, aspect=40)
     cbar.set_label("500 hPa Geopotential Height (m)", fontsize=fontsize, fontweight='bold')
     cbar.ax.tick_params(labelsize=fontsize)
 

@@ -56,7 +56,7 @@ elev = ds['elevation']
 
 #%% PLOT
 
-fig = plt.figure(figsize=(7,7))
+fig = plt.figure(figsize=(6, 6))
 ax = plt.axes(projection=ccrs.PlateCarree())
 
 # Plot extent

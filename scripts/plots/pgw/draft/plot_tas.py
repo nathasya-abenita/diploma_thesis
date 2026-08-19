@@ -9,14 +9,16 @@ import cartopy.feature as cfeature
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
 # Plot settings
-font_size = 8
+font_size = 14
 lon_min, lon_max, lat_min, lat_max = 90, 115, -5, 14
 
 def setup(ax):
 
     ax.set_extent([lon_min, lon_max, lat_min, lat_max], crs=ccrs.PlateCarree())
-    ax.set_xticks(np.arange(lon_min, lon_max, 4), crs=ccrs.PlateCarree())
-    ax.set_yticks(np.arange(lat_min, lat_max, 4), crs=ccrs.PlateCarree())
+    # ax.set_xticks(np.arange(lon_min, lon_max, 4), crs=ccrs.PlateCarree())
+    # ax.set_yticks(np.arange(lat_min, lat_max, 4), crs=ccrs.PlateCarree())
+    ax.set_xticks([])
+    ax.set_yticks([])
     ax.xaxis.set_major_formatter(LongitudeFormatter())
     ax.yaxis.set_major_formatter(LatitudeFormatter())
     
@@ -31,8 +33,8 @@ if __name__ == '__main__':
     # Define paths
     outfile = r'./figs/compare/tas_complete.png'
     basefile = lambda x : rf'./data/final_exp/counterfactual/GWL{x}1.5'
-    model_list = ['past -1.5K, tweak', 'past -1.5K, EC-Earth3-Veg', 'past -1.5K, MPI-ESM1-2-HR', 'past -1.5K, NorESM2-MM',
-                  'fut. +1.5K, tweak', 'fut. +1.5K, EC-Earth3-Veg', 'fut. +1.5K, MPI-ESM1-2-HR', 'fut. +1.5K, NorESM2-MM'] # for title
+    model_list = ['past -1.5K (tweak)', 'past -1.5K (EC-Earth3-Veg)', 'past -1.5K (MPI-ESM1-2-HR)', 'past -1.5K (NorESM2-MM)',
+                      'fut. +1.5K (tweak)', 'fut. +1.5K (EC-Earth3-Veg)', 'fut. +1.5K (MPI-ESM1-2-HR)', 'fut. +1.5K (NorESM2-MM)'] # for title
     model_list_ori = ['tweak', 'EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
     varfile = r'tas_SRF.nc'
     filenames = [os.path.join(basefile('-'), model, varfile) for model in model_list_ori]
@@ -43,7 +45,7 @@ if __name__ == '__main__':
     ds_fac = xr.open_dataset(os.path.join('./data/final_exp/factual/', varfile))
 
     # Set up plot
-    fig = plt.figure(figsize=(15, 8))
+    fig = plt.figure(figsize=(18, 9))
     axs = [fig.add_subplot(2, 4, i, projection=ccrs.PlateCarree()) for i in range (1, 8+1)]
 
     # Color and variable setting
