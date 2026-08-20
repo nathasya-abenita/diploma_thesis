@@ -96,27 +96,26 @@
     \begin{block}{Storyline attribution study}
         \begin{itemize}
             \item Conditional approaches offer another perspective by fixing the large-scale meteorological conditions.
-            \item Pseudo-global warming (PGW) approach lets us study the event in both past cooler and future warmer climates.
+            \item Pseudo-global warming (PGW) method is one of the approach.
         \end{itemize}
     \end{block}
     \end{columns}
 \end{frame}
 
 \begin{frame}
-    \begin{block}{Research objectives}
-        \begin{enumerate}
-            \item \textbf{Event reconstruction:} Simulate the 2025 extreme rainfall and cyclone dynamics associated with TC Senyar in Sumatra with high resolution RegCM5 model under present climate.
-            \item \textbf{Historical attribution:} Simulate a counterfactual model where the warming signal is removed (-1.5$^\circ$) from the boundary conditions to represent a pre-industrial climate.
-            \item \textbf{Future projection:} Simulate a future projection by adding a +1.5$^\circ$ warming signal to the boundary conditions to assess the hazard's evolution in a warmer world.
-            \item Quantify the physical changes between the models.
-        \end{enumerate}
-    \end{block}
-
     \centering{
     Under the PGW approach, we are asking: 
     
     \textit{"If an event like the 2025 Sumatra floods had occurred under a pre-industrial (cooler) or future (warmer) climate, how would it have changed?"}
     }
+    \begin{block}{Research objectives}
+        \begin{enumerate}
+            \item \textbf{Factual simulation:} Simulate the 2025 extreme rainfall and cyclone dynamics associated with TC Senyar in Sumatra with high resolution RegCM5 model under present climate.
+            \item \textbf{Historical attribution:} Simulate a counterfactual model where the warming signal is removed (-1.5$^\circ$) from the boundary conditions to represent a pre-industrial climate.
+            \item \textbf{Future projection:} Simulate a future projection by adding a +1.5$^\circ$ warming signal to the boundary conditions to assess the hazard's evolution in a warmer world.
+            \item Quantify the physical changes between the models.
+        \end{enumerate}
+    \end{block}
 \end{frame}
 
 \section{Methodology and Data}
@@ -164,17 +163,19 @@
 
     \begin{block}{Physical schemes}
         \begin{itemize}
+            \small{
             \item MOLOCH non-hydrostatic dynamical core
             \item UW planetary boundary layer scheme
             \item RRTM radiation scheme
             \item CLM4.5 land surface scheme
             \item Explicit moisture Nogherotto/Tompkins scheme
             \item Zeng ocean flux scheme
+            }
         \end{itemize}
     \end{block}
 
     \begin{block}{Track definition}
-        At each time step, the track is defined at a coordinate with the lowest sea level pressure (used by \citep{patricola2018anthropogenic}).
+        At each time step, the track is defined at a coordinate with the lowest sea level pressure \citep{patricola2018anthropogenic}.
     \end{block}
     \end{columns}
 \end{frame}
@@ -189,7 +190,7 @@
             \item Greenhouse gases are perturbed to reflect the counterfactual climate based on \citet{meinshausen2017historical,meinshausen2020ssp}.
         \end{itemize}
          
-    \end{block}
+    \end{block} \pause
 
     \begin{block}{Generalized PGW approach}
         \begin{columns}[T,onlytextwidth]
@@ -241,27 +242,14 @@
 
     \begin{block}{Steps in applying PGW}
         \begin{enumerate}
-            \item Prepare monthly mean perturbation from different periods of CMIP6 data.
-            \item Compute perturbation. For example, "cooling" perturbation from EC-Earth3-Veg is 
+            \item Prepare monthly mean of variable $X$ from different periods of CMIP6 data.
+            \item Compute perturbation. For example, "cooling" perturbation from EC-Earth3-Veg at month $m$ is 
             \[ \Delta X_m = \overline{X_{(\text{1850--1900}), m}} - \overline{X_{(\text{2002--2021}), m}}. \]
             \item Apply interpolation (vertical, horizontal, and time) to the perturbation to match control simulation's resolution.
             \item Apply perturbation to control simulation: $X^{\text{PGW}}_m = X^{\text{CTRL}}_m + \Delta X_m$
             \item Greenhouse gases are also perturbed to reflect the counterfactual climate.
         \end{enumerate}
     \end{block}
-\end{frame}
-
-\begin{frame}
-    \centering
-    {
-    \includegraphics[width=\textwidth]{../../figs/compare/ts_complete.png}
-
-    \vspace{-0.1cm}
-    {
-    \scriptsize 
-    Time-mean (25--28 November 2025) of surface temperature perturbation applied to control simulation
-    }
-    }
 \end{frame}
 
 \begin{frame}
@@ -280,25 +268,37 @@
     \end{table}
 \end{frame}
 
-\subsection{Assessment Metrics}
 \begin{frame}
-    \begin{itemize}
-        \item We focus on observed peak days, between 25 November 2025 01:00 UTC and 26 November 2025 23:00 UTC. \pause
-        \item Data is sorted and presented as exceedance probability plot (equivalent to $1-\text{PCTL}/100$ where $\text{PCTL}$ is percentile). Relative change from a distribution to another distribution is assessed on a given percentile. \pause
-        \item To evaluate anthropogenic influence, the relative change of variable $X$ from \textbf{past to present} is computed by
-        \begin{equation} \label{eq:increase-1}
-            X_{\text{increase}} = \frac{X_\text{present} - X_{\text{past}}}{X_{\text{past}}} \cdot 100
-        \end{equation} 
-        with $m$ represents each experiment with the corresponding $m$-th perturbation or climate model forcing. \pause
-        \item Similarly, the relative change from \textbf{present to future} is computed by
-        \begin{equation} \label{eq:increase-2}
-            X_{\text{increase}} = \frac{X_{\text{fut.}} - X_\text{present}}{X_\text{present}} \cdot 100.
-        \end{equation} \pause
-        \item The Clausius-Clapeyron scaling analysis is done to study the response of the variables to global warming level change between the factual and counterfactual simulation. We divide $X_{\text{increase}}$ in Eq. \eqref{eq:increase-1} and \eqref{eq:increase-2} with 1.5$^\circ$ which corresponds to the experiment design.
-    \end{itemize}
+    \centering
+    {
+    \includegraphics[width=\textwidth]{../../figs/compare/ts_complete.png}
+
+    \vspace{-0.1cm}
+    {
+    \scriptsize 
+    Time-mean (25--28 November 2025) of surface temperature perturbation applied to control simulation
+    }
+    }
 \end{frame}
 
-\section{Synoptic Evolution from Reanalysis Data (ERA5)}
+% \subsection{Assessment Metrics}
+% \begin{frame}
+%     \begin{itemize}
+%         \item We focus on observed peak days, between 25 November 2025 01:00 UTC and 26 November 2025 23:00 UTC. \pause
+%         \item Data is sorted and presented as exceedance probability plot (equivalent to $1-\text{PCTL}/100$ where $\text{PCTL}$ is percentile). Relative change from a distribution to another distribution is assessed on a given percentile. \pause
+%         \item To evaluate anthropogenic influence, the relative change of variable $X$ from \textbf{past to present} is computed by
+%         \begin{equation} \label{eq:increase-1}
+%             X_{\text{increase}} = \frac{X_\text{present} - X_{\text{past}}}{X_{\text{past}}} \cdot 100.
+%         \end{equation} \pause
+%         \item Similarly, the relative change from \textbf{present to future} is computed by
+%         \begin{equation} \label{eq:increase-2}
+%             X_{\text{increase}} = \frac{X_{\text{fut.}} - X_\text{present}}{X_\text{present}} \cdot 100.
+%         \end{equation} \pause
+%         \item The Clausius-Clapeyron scaling analysis is done to study the response of the variables to global warming level change. We divide $X_{\text{increase}}$ in Eq. \eqref{eq:increase-1} and \eqref{eq:increase-2} with 1.5$^\circ$ which corresponds to the experiment design.
+%     \end{itemize}
+% \end{frame}
+
+% \section{Synoptic Evolution from Reanalysis Data (ERA5)}
 
 % \begin{frame}
 %     \begin{columns}[T,onlytextwidth]
@@ -321,27 +321,25 @@
 %     \end{columns}
 % \end{frame}
 
-\begin{frame}
-    % \begin{itemize}
-    %     \item We first assess whether ERA5 could represent TC Senyar well, before using it as experiment's initial and boundary conditions.
-    % \end{itemize}
-    \centering
-    {
-    \includegraphics[width=\textwidth]{../../figs/track/era5_track_roll_2.png}
+% \begin{frame}
+%     % \end{itemize}
+%     \centering
+%     {
+%     \includegraphics[width=\textwidth]{../../figs/track/era5_track_roll_2.png}
 
-    {
-    \scriptsize Track comparison between ERA5 and observation (IBTrACS)
-    }
-    }
-    \vspace{0.5cm}
-    \begin{itemize}
-        \item  ERA5 is able to represent the big pattern of the event evolution with weaker intensities. This is consistent with past study on ERA5 performance representing TCs \citep{dulac2024assessing}.
-    \end{itemize}
-\end{frame}
+%     {
+%     \scriptsize Track comparison between ERA5 and observation (IBTrACS)
+%     }
+%     }
+%     \vspace{0.5cm}
+%     \begin{itemize}
+%         \item  ERA5 is able to represent the big pattern of the event evolution with weaker intensities. This is consistent with past study on ERA5 performance representing TCs \citep{dulac2024assessing}.
+%     \end{itemize}
+% \end{frame}
 
 \section{Results}
 
-\subsection{Factual Simulation of TC Senyar with RegCM5}
+\subsection{Factual Simulation of Tropical Cyclone (TC) Senyar with RegCM5}
 
 \begin{frame}
     \centering
@@ -355,7 +353,7 @@
     }
     \vspace{0.5cm}
     \begin{itemize}
-        \item The presented factual simulation is the best experiment out of different experiments on initialization time, domain, and physical schemes.
+        \item The presented factual simulation is the best experiment out of different trials on initialization time, domain, and physical schemes.
         \item With convection-permitting RegCM5 model, TC track and intensity are improved.
     \end{itemize}
 \end{frame}
@@ -423,7 +421,7 @@
     }
     \vspace{0.5cm}
     \begin{itemize}
-        \item Short-duration extremes are intensifying at Clausius-Clapeyron (CC) rates or exceeding it due to \textbf{thermodynamic and dynamical feedbacks} \citep{fowler2021}.
+        \item Short-duration extremes can intensify at Clausius-Clapeyron (CC) rates or exceeding it due to \textbf{thermodynamic and dynamical feedbacks} \citep{fowler2021}.
         \item Moisture transport is quantified by its vertical integration between the surface and 700 hPa, as moisture transport associated with TCs is primarily concentrated in the lower troposphere \citep{li2024western}.
     \end{itemize}
 \end{frame}
@@ -431,6 +429,17 @@
 \subsection{Anthropogenic influences on \textbf{precipitation} associated with TC Senyar}
 
 \begin{frame}
+    \centering
+
+    % \begin{textblock*}{4cm}(9cm,1cm)
+    % \includegraphics[width=0.2\textwidth]{../../figs/event_view.png}
+
+    % \end{textblock*}
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=north east] at (current page.north east)
+        {\includegraphics[width=0.2\textwidth]{../../figs/event_view.png}};
+    \end{tikzpicture}
+
     \centering
     {
     \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/observed_pr.png}
@@ -442,22 +451,23 @@
     }
     \vspace{0.5cm}
     \begin{itemize}
-        \item Factual simulation with RegCM improves spatial distribution of extremes compared to ERA5.
+        \item Factual simulation with RegCM5 improves spatial distribution of accumulated precipitation compared to ERA5.
     \end{itemize}
     }
 \end{frame}
 
 \begin{frame}
-    \centering{\textbf{Accumulated Precipitation and Hourly Intensity}}
+    % \centering{\textbf{Accumulated Precipitation and Hourly Intensity}}
+    \vspace{-0.5cm}
     \begin{figure}[ht]
         \centering
-        \begin{subfigure}{0.7\textwidth}
+        \begin{subfigure}{0.8\textwidth}
             \centering
             \includegraphics[width=\textwidth]{../../figs/compare/finals/map_pr_mean_with_impact.png}
             % \caption{}
         \end{subfigure}
         % \vspace{1em} % optional spacing
-        \begin{subfigure}{0.7\textwidth}
+        \begin{subfigure}{0.8\textwidth}
             \centering
             \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_pr_mean.png}
             % \caption{}
@@ -498,7 +508,8 @@
 % \end{frame}
 
 \begin{frame}
-    \centering{\textbf{Moisture Transport}}
+    \vspace{-0.5cm}
+    {\alert{\small\textbf{Integrated Vapor Transport (IVT)}}}
     \begin{figure}[ht]
         \centering
         \begin{subfigure}{0.7\textwidth}
@@ -518,7 +529,8 @@
 \end{frame}
 
 \begin{frame}
-    \centering{\textbf{Convective Available Potential Energy (CAPE)}}
+    \vspace{-0.5cm}
+    {\alert{\small\textbf{Convective Available Potential Energy (CAPE)}}}
     \begin{figure}[ht]
         \centering
         \begin{subfigure}{0.7\textwidth}
@@ -538,7 +550,8 @@
 \end{frame}
 
 \begin{frame}
-    \centering{\textbf{Latent Heating Rate}}
+    \vspace{-0.5cm}
+    {\alert{\small\textbf{Latent Heating Rate}}}
     \begin{figure}[ht]
         \centering
         \begin{subfigure}{0.7\textwidth}
@@ -559,13 +572,12 @@
 \end{frame}
 
 \begin{frame}
-    
-\begin{figure}[ht]
-    \centering{\textbf{Maximum Vertical Velocity}}
-    \centering
+    \vspace{-0.5cm}
+    {\alert{\small\textbf{Updraft (Maximum Vertical Velocity)}}}
+    \begin{figure}[ht]
     \begin{subfigure}{0.7\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../../figs/compare/finals/map_wa_max.png}
+        \includegraphics[width=\textwidth]{../../figs/compare/finals/map_wa_med.png}
         % \caption{}
     \end{subfigure}
     % \vspace{1em} % optional spacing
@@ -575,7 +587,7 @@
         % \caption{}
     \end{subfigure}
 
-    \caption*{\scriptsize (Top) Spatial map of time-maximum of maximum vertical velocity during peak days. Maximum vertical velocity is obtained by taking vertical maxima over each time step. Ensemble maxima is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
+    \caption*{\scriptsize (Top) Spatial map of time-maximum of maximum vertical velocity during peak days. Maximum vertical velocity is obtained by taking vertical maxima over each time step. Ensemble median is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
     \label{fig:compare_wa}
 \end{figure}
 \end{frame}
@@ -597,7 +609,7 @@
     \vspace{-0.1cm}
     {
     \scriptsize 
-    Values indicate the median relative change for the historical attribution (past-to-present) and future projection (present-to-future) scenarios. Blue boxes highlight localized impacts within the Aceh Province, while gray boxes show regional changes.
+    Values indicate the relative change for the historical attribution (past-to-present) and future projection (present-to-future) scenarios. Blue boxes highlight localized impacts within the Aceh Province, while gray boxes show regional changes.
     }
     }
     \newline
