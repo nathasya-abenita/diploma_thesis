@@ -110,9 +110,9 @@
     }
     \begin{block}{Research objectives}
         \begin{enumerate}
-            \item \textbf{Factual simulation:} Simulate the 2025 extreme rainfall and cyclone dynamics associated with TC Senyar in Sumatra with high resolution RegCM5 model under present climate.
-            \item \textbf{Historical attribution:} Simulate a counterfactual model where the warming signal is removed (-1.5$^\circ$) from the boundary conditions to represent a pre-industrial climate.
-            \item \textbf{Future projection:} Simulate a future projection by adding a +1.5$^\circ$ warming signal to the boundary conditions to assess the hazard's evolution in a warmer world.
+            \item \textbf{Factual simulation:} Simulate the 2025 extreme rainfall and cyclone dynamics associated with TC Senyar in Sumatra with high resolution RegCM5 model under \textbf{present climate}.
+            \item \textbf{Historical attribution:} Simulate a counterfactual model where the warming signal is removed (\textbf{-1.5$^\circ$}) from the boundary conditions to represent a \textbf{pre-industrial} climate.
+            \item \textbf{Future projection:} Simulate a \textbf{future} projection by adding a \textbf{+1.5$^\circ$} warming signal to the boundary conditions to assess the hazard's evolution in a warmer world.
             \item Quantify the physical changes between the models.
         \end{enumerate}
     \end{block}
@@ -121,12 +121,12 @@
 \section{Methodology and Data}
 
 \begin{frame}
-    \begin{block}{Methods}
-        \begin{itemize}
-            \item Convection-permitting model with RegCM5 forced by ERA5
-            \item Pseudo-global warming approach
-        \end{itemize}
-    \end{block}
+    % \begin{block}{Methods}
+    %     \begin{itemize}
+    %         \item Convection-permitting model with RegCM5 forced by ERA5
+    %         \item Pseudo-global warming approach
+    %     \end{itemize}
+    % \end{block}
 
     \begin{block}{Dataset}
         \begin{itemize}
@@ -175,7 +175,7 @@
     \end{block}
 
     \begin{block}{Track definition}
-        At each time step, the track is defined at a coordinate with the lowest sea level pressure \citep{patricola2018anthropogenic}.
+        At each time step, the track is defined at a coordinate with the lowest sea level pressure, also used by \citet{patricola2018anthropogenic}.
     \end{block}
     \end{columns}
 \end{frame}
@@ -353,6 +353,7 @@
     }
     \vspace{0.5cm}
     \begin{itemize}
+        \item  ERA5 is able to represent the big pattern of the event evolution with weaker intensities \citep{dulac2024assessing}.
         \item The presented factual simulation is the best experiment out of different trials on initialization time, domain, and physical schemes.
         \item With convection-permitting RegCM5 model, TC track and intensity are improved.
     \end{itemize}
@@ -422,7 +423,7 @@
     \vspace{0.5cm}
     \begin{itemize}
         \item Short-duration extremes can intensify at Clausius-Clapeyron (CC) rates or exceeding it due to \textbf{thermodynamic and dynamical feedbacks} \citep{fowler2021}.
-        \item Moisture transport is quantified by its vertical integration between the surface and 700 hPa, as moisture transport associated with TCs is primarily concentrated in the lower troposphere \citep{li2024western}.
+        \item Moisture transport is quantified by integrated vapor transport (IVT) between surface and 700 hPa, as moisture transport associated with TCs is primarily concentrated in the lower troposphere \citep{li2024western}.
     \end{itemize}
 \end{frame}
 
@@ -512,13 +513,13 @@
     {\alert{\small\textbf{Integrated Vapor Transport (IVT)}}}
     \begin{figure}[ht]
         \centering
-        \begin{subfigure}{0.7\textwidth}
+        \begin{subfigure}{0.75\textwidth}
             \centering
             \includegraphics[width=\textwidth]{../../figs/compare/finals/map_ivt.png}
             % \caption{}
         \end{subfigure}
         % \vspace{1em} % optional spacing
-        \begin{subfigure}{0.7\textwidth}
+        \begin{subfigure}{0.75\textwidth}
             \centering
             \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_ivt.png}
             % \caption{}
@@ -533,13 +534,13 @@
     {\alert{\small\textbf{Convective Available Potential Energy (CAPE)}}}
     \begin{figure}[ht]
         \centering
-        \begin{subfigure}{0.7\textwidth}
+        \begin{subfigure}{0.75\textwidth}
             \centering
             \includegraphics[width=\textwidth]{../../figs/compare/finals/map_cape.png}
             % \caption{}
         \end{subfigure}
         % \vspace{1em} % optional spacing
-        \begin{subfigure}{0.7\textwidth}
+        \begin{subfigure}{0.75\textwidth}
             \centering
             \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_cape.png}
             % \caption{}
@@ -554,19 +555,19 @@
     {\alert{\small\textbf{Latent Heating Rate}}}
     \begin{figure}[ht]
         \centering
-        \begin{subfigure}{0.7\textwidth}
+        \begin{subfigure}{0.75\textwidth}
             \centering
             \includegraphics[width=\textwidth]{../../figs/compare/finals/map_diab.png}
             % \caption{}
         \end{subfigure}
         % \vspace{1em} % optional spacing
-        \begin{subfigure}{0.7\textwidth}
+        \begin{subfigure}{0.75\textwidth}
             \centering
             \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_diab.png}
             % \caption{}
         \end{subfigure}
 
-        \caption*{\scriptsize (Top) Spatial map of time-maximum of maximum temperature tendency due to latent heat exchange during peak days. Maximum temperature tendency is obtained by taking vertical maxima over each time step. Ensemble mean is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
+        \caption*{\scriptsize (Top) Spatial map of time-maximum of maximum temperature tendency due to latent heat exchange during peak days. Maximum temperature tendency is obtained by taking vertical maxima over each time step. Ensemble mean is used for counterfactuals. (Bottom) Distribution change \\is based on pooled six-hourly values from whole shown domain.}
         \label{fig:compare_diab}
     \end{figure}
 \end{frame}
@@ -575,13 +576,13 @@
     \vspace{-0.5cm}
     {\alert{\small\textbf{Updraft (Maximum Vertical Velocity)}}}
     \begin{figure}[ht]
-    \begin{subfigure}{0.7\textwidth}
+    \begin{subfigure}{0.75\textwidth}
         \centering
         \includegraphics[width=\textwidth]{../../figs/compare/finals/map_wa_med.png}
         % \caption{}
     \end{subfigure}
     % \vspace{1em} % optional spacing
-    \begin{subfigure}{0.7\textwidth}
+    \begin{subfigure}{0.75\textwidth}
         \centering
         \includegraphics[width=\textwidth]{../../figs/compare/finals/dist_wa.png}
         % \caption{}
@@ -592,11 +593,11 @@
 \end{figure}
 \end{frame}
 
-\section{Concluding Remarks}
+\section{Conclusion}
 
 \begin{frame}
     \begin{itemize}
-            \item Convection-permitting RegCM5 model improves the representation of TC Senyar track, intensity, and accumulated precipitation than ERA5.
+            \item Convection-permitting RegCM5 model improves the representation of TC Senyar track, intensity, and accumulated precipitation compared to ERA5.
     \end{itemize}
 \end{frame}
 

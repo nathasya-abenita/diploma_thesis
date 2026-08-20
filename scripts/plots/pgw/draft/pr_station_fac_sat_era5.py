@@ -6,6 +6,13 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from mod_prec import read_data, cut_area, activate_geo, load_sat, set_extent
 from mod_prec import event_lat_max, event_lon_max, event_lat_min, event_lon_min
+import geopandas as gpd
+
+def plot_polygon(ax, polygon_path='./data/shp/Aceh.geojson'):
+    gdf = gpd.read_file(polygon_path)
+    gdf = gdf.to_crs(epsg=4326)
+    gdf.boundary.plot(ax=ax, linestyle='-', color='tab:orange', zorder=1)
+
 
 if __name__ == '__main__':
     # Variables
@@ -81,12 +88,14 @@ if __name__ == '__main__':
     ax3.set_title('ERA5', fontsize=fontsize)
 
     # Decorate plot
+    polygon_path=r'./data/shp/Sumatra_Affected_Provinces.geojson'
     for ax in axs:
         activate_geo(ax, mask_ocean=False)
         set_extent(ax)
         # Add station plots
         ax.scatter(df_stat['longitude'], df_stat['latitude'], c=df_stat['RR'],
                     vmin=vmin, vmax=vmax, cmap=cmap, edgecolors='k')
+        # plot_polygon(ax, polygon_path=polygon_path)
 
     # Shared horizontal colorbar
     cbar = fig.colorbar(pcm, ax=axs, orientation="horizontal", pad=0.08, fraction=0.06, aspect=40)
