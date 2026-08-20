@@ -384,29 +384,22 @@ class PGW:
             plt.savefig(outfile, bbox_inches='tight')
         return fig, axs
 
-    def plot_exceedance_prob(self, ax, excd_prob, ens_mean, ens_std, linewidth=None, color=None, label=None):
+    def plot_exceedance_prob(self, ax, excd_prob, ens_mean, linewidth=None, color=None, label=None):
         plot_exceedance_prob_simple(ax, excd_prob, ens_mean, linewidth=linewidth, color=color, label=label)
-        ax.fill_between(excd_prob, ens_mean - ens_std, ens_mean + ens_std, 
-                        color=color, alpha=0.2, edgecolor=None)
 
     def plot_pdf(self, ax, bin_edges, prob, linewidth=None, color=None, label=None, alpha=None):
         
         bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
         ax.set_yscale('log')
-        ax.scatter(bin_centers, prob, s=5, color=color, label=label, alpha=alpha, edgecolors=None)
+        ax.scatter(bin_centers, prob, s=12, color=color, label=label, alpha=alpha, edgecolors=None)
         
 
-    def plot_normal(self, ax, values, ens_mean, ens_std, linewidth=None, color=None, label=None):
+    def plot_normal(self, ax, values, ens_mean, linewidth=None, color=None, label=None):
         ax.plot(values, ens_mean, linewidth=linewidth, color=color, label=label)
-        ax.fill_between(values, ens_mean - ens_std, ens_mean + ens_std, 
-                        color=color, alpha=0.2, edgecolor=None)
 
     def compute_exceedance_prob_ens(self, values_fac, scenario, bins='auto'):
-        values_cfac_list = []
-        change_list = []
-        dens_prob_list = []
-        bin_edges_list = []
-        
+        values_cfac_collection = []
+
         # Plot members of counterfactual
         for exp in self.model_list:
             
@@ -418,88 +411,54 @@ class PGW:
             else:
                 raise ValueError (r'check scenario input (choices: "past" or "fut.")')
             val_cfac = self.prepare_data(path_cfac)
-            excd_prob, values, dens_prob, bin_edges = compute_exceedance_prob(val_cfac.values, bins=bins)
-            values_cfac_list.append(values)
+            values_cfac_collection += val_cfac.values.tolist()
 
-            if scenario == 'past':
-                change = (values_fac - values) / values * 100
-            elif scenario == 'fut.':
-                change = (values - values_fac) / values_fac * 100
-            else:
-                raise ValueError (r'check scenario input (choices: "past" or "fut.")')
-            change_list.append(change / 1.5) # convert unit to % per degree
+        excd_prob, values, dens_prob, bin_edges = compute_exceedance_prob(np.array(values_cfac_collection), bins=bins)
 
-            bin_edges_list.append(bin_edges)
-            dens_prob_list.append(dens_prob)
+        # p = np.linspace(1e-6, 1-1e-6, 50_000)
+        exc = np.logspace(-7, 0, 750)
+        p = (1 - exc) * 100
+        values_p = np.percentile(values, p)
+        values_fac_p = np.percentile(values_fac, p)
 
-        # Compute ensemble stats
-        stacked_val = np.stack(values_cfac_list)      # shape: (n_ens, n_points)
-        stacked_change = np.stack(change_list)
+        if scenario == 'past':
+            change = (values_fac_p - values_p) / values_p * 100 / 1.5
+        elif scenario == 'fut.':
+            change = (values_p - values_fac_p) / values_fac_p * 100 / 1.5
+        else:
+            raise ValueError (r'check scenario input (choices: "past" or "fut.")')
+        
+        return excd_prob, values, (values_fac_p, values_p, change), dens_prob, bin_edges
 
-        if self.ens_stat == 'mean':
-            ens_val_mean = stacked_val.mean(axis=0)        
-            ens_change_mean = stacked_change.mean(axis=0)
-        elif self.ens_stat == 'median':
-            ens_val_mean = np.median(stacked_val, axis=0)
-            ens_change_mean = np.median(stacked_change, axis=0)
-        elif self.ens_stat == 'max':
-            ens_val_mean = stacked_val.max(axis=0)        
-            ens_change_mean = stacked_change.max(axis=0)
-
-        # Compute spread
-        ens_val_std  = stacked_val.std(axis=0)
-        ens_change_std = stacked_change.std(axis=0)
-        return excd_prob, ens_val_mean, ens_val_std, ens_change_mean, ens_change_std, dens_prob_list, bin_edges_list
-
-    def plot_dist_change(self, change_val_min, change_val_max, change_min=0, change_max=20, outfile=None, add_cc_limit=False, pct=0.99, bins='auto', ylim_pdf=(1e-6, 1)):
+    def plot_dist_change(self, change_val_min, change_val_max, change_min=0, change_max=20, outfile=None, add_cc_limit=False, pct=99, bins='auto', ylim_pdf=(1e-6, 1)):
         # Set up plot
         lw = 3
-        alpha_cf = 0.2
+        alpha_cf = 0.8
         fig, axs = plt.subplots(1, 3, figsize=(12, 4))
 
         # Compute factual
         path_fac = rf'./data/final_exp/factual/{self.filename}'
         val_fac = self.prepare_data(path_fac)
-        excd_prob, values_fac, dens_prob_fac, bin_edges_fac = compute_exceedance_prob(val_fac.values, bins=bins)
+        excd_prob_fac, values_fac, dens_prob_fac, bin_edges_fac = compute_exceedance_prob(val_fac.values, bins=bins)
 
         # Plot counterfactuals (past/1)
         print('plotting counterfactuals of past dist')
-        excd_prob, ens_val_mean1, ens_val_std1, ens_change_mean1, ens_change_std1, dens_prob_list1, bin_edges_list1 = self.compute_exceedance_prob_ens(values_fac, scenario='past', bins=bins)
-        self.plot_exceedance_prob(axs[0], excd_prob, ens_val_mean1, ens_val_std1,
-                                  linewidth=lw, color='tab:blue', label='past -1.5K')
-        self.plot_normal(axs[1], ens_val_mean1, ens_change_mean1, ens_change_std1,
-                                      linewidth=lw, color='tab:blue', label='past to present')
-        # plot_density_simple(axs[2], ens_val_mean, pr_min=pr_min, pr_max=pr_max, color='tab:blue', linewidth=lw/2, label='past -1.5K')
-        #plot_hist_simple(axs[2], ens_val_mean1, val_min=self.val_min, val_max=self.val_max, color='tab:blue', alpha=0.25, label='past -1.5K')
-        for i in range (len(self.model_list)):
-            dens_prob, bin_edges = dens_prob_list1[i], bin_edges_list1[i]
-            if i == 0:
-                self.plot_pdf(axs[2], bin_edges, dens_prob, color='tab:blue', label='past -1.5K', alpha=alpha_cf)
-            else:
-                self.plot_pdf(axs[2], bin_edges, dens_prob, color='tab:blue', alpha=alpha_cf)
+        excd_prob, values1, change_list1, dens_prob1, bin_edges1 = self.compute_exceedance_prob_ens(values_fac, scenario='past', bins=bins)
+        self.plot_exceedance_prob(axs[0], excd_prob, values1, linewidth=lw, color='tab:blue', label='past -1.5K')
+        self.plot_normal(axs[1], change_list1[1], change_list1[2], linewidth=lw, color='tab:blue', label='past to present')
+        self.plot_pdf(axs[2], bin_edges1, dens_prob1, color='tab:blue', label='past -1.5K', alpha=alpha_cf)
 
         # Plot factual
         print('plotting factual dist')
-        plot_exceedance_prob_simple(axs[0], excd_prob, values_fac, linewidth=lw, color='k', label='present')
-        # plot_density_simple(axs[2], values_fac, pr_min=pr_min, pr_max=pr_max, color='k', linestyle='--', linewidth=lw/2, label='present')
-        #plot_hist_simple(axs[2], values_fac, val_min=self.val_min, val_max=self.val_max, color='k', alpha=0.25, label='present')
+        plot_exceedance_prob_simple(axs[0], excd_prob_fac, values_fac, linewidth=lw, color='k', label='present')
         self.plot_pdf(axs[2], bin_edges_fac, dens_prob_fac, color='k', label='present', alpha=1)
 
         # Plot counterfactuals (future/2)
         print('plotting counterfactuals of future dist')
-        excd_prob, ens_val_mean2, ens_val_std2, ens_change_mean2, ens_change_std2, dens_prob_list2, bin_edges_list2 = self.compute_exceedance_prob_ens(values_fac, scenario='fut.', bins=bins)
-        self.plot_exceedance_prob(axs[0], excd_prob, ens_val_mean2, ens_val_std2,
-                                    linewidth=lw, color='tab:red', label='fut. +1.5K')
-        self.plot_normal(axs[1], values_fac, ens_change_mean2, ens_change_std2,
-                                        linewidth=lw, color='tab:red', label='present to fut.')
-        # plot_density_simple(axs[2], ens_val_mean, pr_min=pr_min, pr_max=pr_max, color='tab:red', linestyle=':', linewidth=lw/2, label='fut. +1.5K')
-        # plot_hist_simple(axs[2], ens_val_mean2, val_min=self.val_min, val_max=self.val_max, color='tab:red', alpha=0.25, label='fut. +1.5K')
-        for i in range (len(self.model_list)):
-            dens_prob, bin_edges = dens_prob_list2[i], bin_edges_list2[i]
-            if i == 0:
-                self.plot_pdf(axs[2], bin_edges, dens_prob, color='tab:red', label='fut. +1.5K', alpha=alpha_cf)
-            else:
-                self.plot_pdf(axs[2], bin_edges, dens_prob, color='tab:red', alpha=alpha_cf)
+        excd_prob, values2, change_list2, dens_prob2, bin_edges2 = self.compute_exceedance_prob_ens(values_fac, scenario='fut.', bins=bins)
+        self.plot_exceedance_prob(axs[0], excd_prob, values2, linewidth=lw, color='tab:red', label='fut. +1.5K')
+        self.plot_normal(axs[1], change_list2[0], change_list2[2], linewidth=lw, color='tab:red', label='present to fut.')
+        self.plot_pdf(axs[2], bin_edges2, dens_prob2, color='tab:red', label='fut. +1.5K', alpha=alpha_cf)
         
         # Change per degree warming plot
         # # combined mean
@@ -531,7 +490,7 @@ class PGW:
     
         axs[2].legend(loc='upper right')
         axs[2].set_ylim(ylim_pdf)
-        axs[2].set_ylabel('Density')
+        axs[2].set_ylabel('Frequency')
         axs[2].set_xlabel(self.unit)
 
         plt.tight_layout()
@@ -539,20 +498,16 @@ class PGW:
             plt.savefig(outfile + '.png', bbox_inches='tight')
     
         # Extract percentile
-        idx = np.searchsorted(excd_prob[::-1], 1-pct)
-        pct_present = values_fac[-idx-1]
-        pct_past = ens_val_mean1[-idx-1]
-        pct_fut = ens_val_mean2[-idx-1]
-        pct_past_present_change = ens_change_mean1[-idx-1]
-        pct_present_fut_change = ens_change_mean2[-idx-1]
-
-        # Extract median change
-        med_past_present_change = np.nanmedian(ens_change_mean1)
-        med_present_fut_change = np.nanmedian(ens_change_mean2)
+        pct_present = np.percentile(values_fac, pct)
+        pct_past = np.percentile(values1, pct)
+        pct_fut = np.percentile(values2, pct)
+        med_present, med_past, med_fut = np.median(values_fac), np.median(values1), np.median(values2)
+        pct_past_present_change = (pct_present - pct_past) / pct_past * 100
+        pct_present_fut_change = (pct_fut - pct_present) / pct_present * 100
 
         with open(f"{outfile}.txt", "w") as f:
             f.write(f"pct: {pct}\n")
             f.write(f"pct: {pct_past: .3f}, {pct_present: .3f}, {pct_fut: .3f}\n")
-            f.write(f"pct_change: {pct_past_present_change * 1.5: .1f}, {pct_present_fut_change * 1.5: .1f}\n")
-            f.write(f"med_change: {med_past_present_change * 1.5: .1f}, {med_present_fut_change * 1.5: .1f}\n")
+            f.write(f"pct_change: {pct_past_present_change : .1f}, {pct_present_fut_change : .1f}\n")
+            f.write(f"median_change: {(med_present - med_past)/med_past * 100}, {(med_fut - med_present)/med_present * 100}")
         return fig, axs

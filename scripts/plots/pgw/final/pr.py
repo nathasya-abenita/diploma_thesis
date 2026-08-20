@@ -21,7 +21,7 @@ if __name__ == '__main__':
             var_name='pr', time_start="2025-11-25", time_end="2025-11-26",
             time_stat=None, ens_stat='mean')
     
-    pgw.plot_dist_change(change_val_min=5, change_val_max=90, add_cc_limit=True, pct=0.99, bins=np.arange(0, 120, 1),
+    pgw.plot_dist_change(change_val_min=5, change_val_max=100, add_cc_limit=True, pct=99.9, bins=np.arange(0, 140, 1), ylim_pdf=(1e-6, 1),
                          change_min=-10, change_max=30, outfile=r'./figs/compare/finals/dist_pr_mean')
 
     #%% Focus on All Affected Provinces

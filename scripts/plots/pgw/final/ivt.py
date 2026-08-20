@@ -1,5 +1,5 @@
 from mod_pgw import PGW
-import matplotlib.pyplot as plt
+import numpy as np
 
 if __name__ == '__main__':
     # Create spatial map
@@ -13,5 +13,5 @@ if __name__ == '__main__':
                             unit=r"Low-Level Integrated Vapor Transport (kg m s$^{-1}$)",
                             var_name='ivt', time_start="2025-11-25", time_end="2025-11-26",
                             time_stat=None, ens_stat='mean')
-    pgw.plot_dist_change(change_val_min=10, change_val_max=1_000, pct=0.99, ylim_pdf=(1e-7, 1e-2),
+    pgw.plot_dist_change(change_val_min=100, change_val_max=1500, pct=99, ylim_pdf=(1e-8, 1e-2), bins=np.arange(0,2100,10),
                              change_min=-10, change_max=15, outfile=r'./figs/compare/finals/dist_ivt')

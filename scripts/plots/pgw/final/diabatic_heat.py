@@ -14,5 +14,5 @@ if __name__ == '__main__':
                              unit="Max. Temp. Tendency (Latent Heat Exchange) (K s⁻¹)",
                              var_name='ttenlsc', time_start="2025-11-25", time_end="2025-11-26",
                              time_stat=None, ens_stat='mean')
-    pgw.plot_dist_change(change_val_min=0.005, change_val_max=0.05, ylim_pdf=(1e-3, 1e1), bins=np.arange(0, 0.20, 0.01/12),
+    pgw.plot_dist_change(change_val_min=0.005, change_val_max=0.10, ylim_pdf=(1e-4, 1e1), bins=np.arange(0, 0.20, 0.01/12),
                          change_min=-5, change_max=20, outfile=r'./figs/compare/finals/dist_diab')

@@ -42,6 +42,29 @@ def compute_change(cfac_path : callable, n_fac : int, pct_fac : float, case : st
     print(n_change_list)
     return np.median(n_change_list)
 
+# def compute_change(cfac_path : callable, n_fac : int, pct_fac : float, case : str):
+#     exp_list = ['tweak', 'EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
+#     pr_list = []
+#     for exp in exp_list:
+#         # Define path
+#         path_cfac = cfac_path(exp)
+#         # Read file
+#         ds_cfac = read_data(path_cfac, time1, time2)
+#         # Take time max
+#         tp_cfac = ds_cfac['ttenlsc'].max(dim="time", skipna=False)
+#         pr_list.append(tp_cfac)
+#     ens_pr_mean, _ = compute_ens_mean_std(pr_list)
+#     n_cfac = compute_grids_above_thr(ens_pr_mean, pct_fac)
+#     # Compute change
+#     if case == 'fut.':
+#         n_change = (n_cfac - n_fac) / n_fac * 100
+#     elif case == 'past':
+#         n_change = (n_fac - n_cfac) / n_cfac * 100
+#     else:
+#         raise ValueError ('check case option!')
+    
+#     return n_change
+
 if __name__ == '__main__':
     # Parameters
     time1, time2 = "2025-11-25", "2025-11-26"
