@@ -106,7 +106,7 @@
     \begin{block}{Research objectives}
         \begin{enumerate}
             \item \textbf{Event reconstruction:} Simulate the 2025 extreme rainfall and cyclone dynamics associated with TC Senyar in Sumatra with high resolution RegCM5 model under present climate.
-            \item \textbf{Historical attribution:} Simulate a counterfactual model where the warming signal is removed from the boundary conditions to represent a pre-industrial climate.
+            \item \textbf{Historical attribution:} Simulate a counterfactual model where the warming signal is removed (-1.5$^\circ$) from the boundary conditions to represent a pre-industrial climate.
             \item \textbf{Future projection:} Simulate a future projection by adding a +1.5$^\circ$ warming signal to the boundary conditions to assess the hazard's evolution in a warmer world.
             \item Quantify the physical changes between the models.
         \end{enumerate}
@@ -243,7 +243,7 @@
         \begin{enumerate}
             \item Prepare monthly mean perturbation from different periods of CMIP6 data.
             \item Compute perturbation. For example, "cooling" perturbation from EC-Earth3-Veg is 
-            \[ \Delta X_m = \overline{X_{\text{2002--2021}, m}} - \overline{X_{\text{1850--1900}, m}}. \]
+            \[ \Delta X_m = \overline{X_{(\text{1850--1900}), m}} - \overline{X_{(\text{2002--2021}), m}}. \]
             \item Apply interpolation (vertical, horizontal, and time) to the perturbation to match control simulation's resolution.
             \item Apply perturbation to control simulation: $X^{\text{PGW}}_m = X^{\text{CTRL}}_m + \Delta X_m$
             \item Greenhouse gases are also perturbed to reflect the counterfactual climate.
@@ -271,30 +271,30 @@
         \hline
         \textbf{Name} & \textbf{Description} \\
         \hline
-        present	& Factual simulation, driven by ERA5 \\
-        past -1.5K	& Counterfactual simulation to represent \textbf{pre-industrial} climate, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
-        fut. +1.5K	& Counterfactual simulation to represent \textbf{future} climate with +1.5$^\circ$ warming, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
+        present	& \textbf{Factual} simulation, driven by \textbf{ERA5} \\
+        past -1.5K	& \textbf{Counterfactual} simulation to represent \textbf{pre-industrial} climate, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
+        fut. +1.5K	& \textbf{Counterfactual} simulation to represent \textbf{future} climate with +1.5$^\circ$ warming, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
         \hline
         \end{tabular}
-        \caption*{Simulation Naming Conventions}
+        \caption*{Simulation Name Convention}
     \end{table}
 \end{frame}
 
 \subsection{Assessment Metrics}
 \begin{frame}
     \begin{itemize}
-        \item We focus on observed peak days, between 25 November 2025 01:00 UTC and 26 November 2025 23:00 UTC.
-        \item Data is sorted and presented as exceedance probability plot (equivalent to $1-\text{PCTL}/100$ where $\text{PCTL}$ is percentile). Relative change from a distribution to another distribution is assessed on a given percentile.
+        \item We focus on observed peak days, between 25 November 2025 01:00 UTC and 26 November 2025 23:00 UTC. \pause
+        \item Data is sorted and presented as exceedance probability plot (equivalent to $1-\text{PCTL}/100$ where $\text{PCTL}$ is percentile). Relative change from a distribution to another distribution is assessed on a given percentile. \pause
         \item To evaluate anthropogenic influence, the relative change of variable $X$ from \textbf{past to present} is computed by
         \begin{equation} \label{eq:increase-1}
-            X_{\text{increase},m} = \frac{X_\text{present} - X_{\text{past},m}}{X_{\text{past},m}} \cdot 100
+            X_{\text{increase}} = \frac{X_\text{present} - X_{\text{past}}}{X_{\text{past}}} \cdot 100
         \end{equation} 
-        with $m$ represents each experiment with the corresponding $m$-th perturbation or climate model forcing. 
+        with $m$ represents each experiment with the corresponding $m$-th perturbation or climate model forcing. \pause
         \item Similarly, the relative change from \textbf{present to future} is computed by
         \begin{equation} \label{eq:increase-2}
-            X_{\text{increase},m} = \frac{X_{\text{fut.},m} - X_\text{present}}{X_\text{present}} \cdot 100.
-        \end{equation}
-        \item The Clausius-Clapeyron scaling analysis is done to study the response of the variables to global warming level change between the factual and counterfactual simulation. We divide $\%_{\text{increase}}$ in Eq. \eqref{eq:increase-1} and \eqref{eq:increase-2} with 1.5$^\circ$ which corresponds to the experiment design.
+            X_{\text{increase}} = \frac{X_{\text{fut.}} - X_\text{present}}{X_\text{present}} \cdot 100.
+        \end{equation} \pause
+        \item The Clausius-Clapeyron scaling analysis is done to study the response of the variables to global warming level change between the factual and counterfactual simulation. We divide $X_{\text{increase}}$ in Eq. \eqref{eq:increase-1} and \eqref{eq:increase-2} with 1.5$^\circ$ which corresponds to the experiment design.
     \end{itemize}
 \end{frame}
 
@@ -322,9 +322,9 @@
 % \end{frame}
 
 \begin{frame}
-    \begin{itemize}
-        \item We first assess whether ERA5 could represent TC Senyar well, before using it as experiment's initial and boundary conditions.
-    \end{itemize}
+    % \begin{itemize}
+    %     \item We first assess whether ERA5 could represent TC Senyar well, before using it as experiment's initial and boundary conditions.
+    % \end{itemize}
     \centering
     {
     \includegraphics[width=\textwidth]{../../figs/track/era5_track_roll_2.png}
@@ -402,12 +402,33 @@
     \newline \centering{
     \begin{itemize}
         \item In general, there’s no significant change in TC track and intensity with warming.
-        \item In future climate, peak wind intensity consistently increases.
+        \item In future climate, peak wind intensity consistently increases. This is consistent with previous attribution study on TCs \citep{patricola2018anthropogenic}.
     \end{itemize}
     }
 \end{frame}
 
-\subsection{Anthropogenic influences on rainfall associated with TC Senyar}
+\subsection{Conceptual Framework of Analyzed Variables}
+
+\begin{frame}
+    \vspace{-0.5cm}
+    \centering
+    {
+    \includegraphics[width=0.7\textwidth]{../figs/intro_schematic.png} 
+    \vspace{-0.5cm}\newline
+    \vspace{-0.1cm}
+    {
+    \scriptsize 
+    Changes in extreme precipitation processes
+    }
+    }
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item Short-duration extremes are intensifying at Clausius-Clapeyron (CC) rates or exceeding it due to \textbf{thermodynamic and dynamical feedbacks} \citep{fowler2021}.
+        \item Moisture transport is quantified by its vertical integration between the surface and 700 hPa, as moisture transport associated with TCs is primarily concentrated in the lower troposphere \citep{li2024western}.
+    \end{itemize}
+\end{frame}
+
+\subsection{Anthropogenic influences on \textbf{precipitation} associated with TC Senyar}
 
 \begin{frame}
     \centering
@@ -419,7 +440,7 @@
     \scriptsize 
     Comparison of accumulated precipitation during TC Senyar lifetime between factual (present), MSWEP, and ERA5. Corresponding values from local stations are plotted as scatter points.
     }
-    \newline
+    \vspace{0.5cm}
     \begin{itemize}
         \item Factual simulation with RegCM improves spatial distribution of extremes compared to ERA5.
     \end{itemize}
@@ -427,6 +448,7 @@
 \end{frame}
 
 \begin{frame}
+    \centering{\textbf{Accumulated Precipitation and Hourly Intensity}}
     \begin{figure}[ht]
         \centering
         \begin{subfigure}{0.7\textwidth}
@@ -454,7 +476,7 @@
 %     \end{figure}
 % \end{frame}
 
-\subsection{Anthropogenic influences on physical drivers controlling extreme rainfall}
+\subsection{Anthropogenic influences on \textbf{physical drivers} controlling extreme rainfall}
 
 % \begin{frame}
 %     \begin{figure}[ht]
@@ -476,6 +498,7 @@
 % \end{frame}
 
 \begin{frame}
+    \centering{\textbf{Moisture Transport}}
     \begin{figure}[ht]
         \centering
         \begin{subfigure}{0.7\textwidth}
@@ -495,6 +518,7 @@
 \end{frame}
 
 \begin{frame}
+    \centering{\textbf{Convective Available Potential Energy (CAPE)}}
     \begin{figure}[ht]
         \centering
         \begin{subfigure}{0.7\textwidth}
@@ -514,6 +538,7 @@
 \end{frame}
 
 \begin{frame}
+    \centering{\textbf{Latent Heating Rate}}
     \begin{figure}[ht]
         \centering
         \begin{subfigure}{0.7\textwidth}
@@ -536,10 +561,11 @@
 \begin{frame}
     
 \begin{figure}[ht]
+    \centering{\textbf{Maximum Vertical Velocity}}
     \centering
     \begin{subfigure}{0.7\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../../figs/compare/finals/map_wa.png}
+        \includegraphics[width=\textwidth]{../../figs/compare/finals/map_wa_max.png}
         % \caption{}
     \end{subfigure}
     % \vspace{1em} % optional spacing
@@ -549,7 +575,7 @@
         % \caption{}
     \end{subfigure}
 
-    \caption*{\scriptsize (Top) Spatial map of time-maximum of maximum vertical velocity during peak days. Maximum vertical velocity is obtained by taking vertical maxima over each time step. Ensemble mean is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
+    \caption*{\scriptsize (Top) Spatial map of time-maximum of maximum vertical velocity during peak days. Maximum vertical velocity is obtained by taking vertical maxima over each time step. Ensemble maxima is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
     \label{fig:compare_wa}
 \end{figure}
 \end{frame}
@@ -558,7 +584,7 @@
 
 \begin{frame}
     \begin{itemize}
-            \item Convection-permitting RegCM model improves the representation of TC Senyar track, intensity, and accumulated precipitation than ERA5.
+            \item Convection-permitting RegCM5 model improves the representation of TC Senyar track, intensity, and accumulated precipitation than ERA5.
     \end{itemize}
 \end{frame}
 

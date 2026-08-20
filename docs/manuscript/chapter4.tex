@@ -1,5 +1,15 @@
 \chapter{Results}
 
+\section{Factual simulation of Tropical Cyclone (TC) Senyar with RegCM5}
+In Figure \ref{fig:factual_track}, we present the best factual simulation to represent TC Senyar from experiments summarized in Appendix \ref{appendix:exp}. The convection-permitting model (CPM) adds a significant value over the ERA5 reanalysis, which failed to represent the cyclone's trajectory and intensity as accurately as the IBTrACS observation.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../../figs/track/regcm_track_best_2_new.png}
+\caption{Track comparison between ERA5, observation (IBTrACS), and factual simulation}
+\label{fig:factual_track}
+\end{figure}
+
 \section{Anthropogenic influences on Tropical Cyclone Senyar}
 
 %\paragraph{Thermodynamic Baseline and Synoptic Fidelity}
@@ -12,7 +22,7 @@ We first verify the experimental design through near-surface air temperature and
 \label{fig:t2m_change}
 \end{figure}
 
-This thermodynamic shift is further reflected in the 500 hPa geopotential height plots (Figure \ref{fig:geop_change}), which serve as a proxy for synoptic consistency. In the present-day simulation, the RegCM5 model faithfully reproduces the ERA5 reanalysis baseline, maintaining spatial structures around 5,820--5,870 meters. Under the +1.5$^\circ$ future scenario, widespread thermal expansion elevates the entire 500 hPa surface above the 5,880-meter threshold, while the -1.5$^\circ$ past scenario depresses it below 5,820 meters. Critically, the PGW framework succeeds in preserving the core synoptic features—specifically the cyclone vortex—while correctly adjusting the hydrostatic pressure heights and atmospheric column temperatures.
+This thermodynamic shift is further reflected in the 500 hPa geopotential height plots (Figure \ref{fig:geop_change}), which serve as a proxy for synoptic consistency. In the present-day simulation, the RegCM5 model faithfully reproduces the ERA5 reanalysis baseline, maintaining spatial structures around 5,840--5,870 meters. Under the +1.5$^\circ$ future scenario, widespread thermal expansion elevates the entire 500 hPa surface above the 5,870-meter threshold, while the -1.5$^\circ$ past scenario depresses it below 5,820 meters. Critically, the PGW framework succeeds in preserving the core synoptic features—specifically the cyclone vortex—while correctly adjusting the hydrostatic pressure heights and atmospheric column temperatures.
 
 \begin{figure}[h]
 \centering
@@ -22,9 +32,9 @@ This thermodynamic shift is further reflected in the 500 hPa geopotential height
 \end{figure}
 
 %\paragraph{Track Robustness and Peak Wind Intensification}
-Furthermore, we evaluate the representation of Tropical Cyclone Senyar across all experiments. The convection-permitting model (CPM) adds a significant value over the ERA5 reanalysis, which failed to represent the cyclone's trajectory and intensity as accurately as the IBTrACS observation. Across all climate scenarios—past, present, and future—the trajectory of TC Senyar remains robust, confirming that the storm's path is not significantly altered by background warming. While some counterfactuals fail to represent proper track after landfall in Sumatra, each still shows reasonable sea level pressure of the tropical cyclone lifetime and maximum wind speed.
+Next, we evaluate the representation of Tropical Cyclone Senyar across all experiments. Across all climate scenarios—past, present, and future—the trajectory of TC Senyar remains robust, confirming that the storm's path is not significantly altered by background warming. While some counterfactuals fail to represent proper track after landfall in Sumatra, each still shows reasonable sea level pressure of the tropical cyclone lifetime and maximum wind speed.
 
-While the general track and overall intensity (in terms of minimum sea level pressure) do not show significant shifts, a distinct anthropogenic influence can be identified in the wind intensity. In the warmer future climate, the results indicate that wind intensity consistently increases at peak times. This is consistent with previous study that found robust increase in wind speed of tropical cyclones \citep{patricola2018anthropogenic}. This suggests that while the 2025 event was primarily a hydrological disaster, similar equatorial cyclones in a warmer world may evolve into compounding hazards with more destructive wind profiles upon landfall.
+While the general track and overall intensity (in terms of minimum sea level pressure) do not show significant shifts, a distinct anthropogenic influence can be identified in the wind intensity. In the warmer future climate, the results indicate that wind intensity consistently increases at peak times. This is consistent with previous study that found robust increase in wind speed of TCs \citep{patricola2018anthropogenic}. This suggests that while the 2025 event was primarily a hydrological disaster, similar equatorial cyclones in a warmer world may evolve into compounding hazards with more destructive wind profiles upon landfall.
 
 \begin{figure}[h]
 \centering
@@ -53,7 +63,7 @@ Before assessing the human fingerprint on the disaster, it is essential to verif
 \label{fig:compare_observed_pr}
 \end{figure}
 
-Comparing the present-day simulation to the pre-industrial counterfactual reveals that human-induced climate change has already significantly amplified the 2025 event. In the present climate, the total rainfall in Aceh increased by 10\%, matched by a 10\% increase in heavy rainfall intensity (99th percentile of hourly intensity). The most striking anthropogenic influence, however, is the spatial expansion of the hazard: the rainfall area exceeding the 300 mm threshold grew by 64\% compared to the cooler pre-industrial world. This expansion indicates that historical warming has not only made the storm wetter but has drastically increased the geographic area exposed to extreme hydrological triggers. These historical increases generally align with the Clausius-Clapeyron (CC) relationship, where a warmer atmosphere holds approximately 7\% more moisture per degree of warming.
+Comparing the present-day simulation to the pre-industrial counterfactual reveals that human-induced climate change has already significantly amplified the 2025 event. In the present climate, the total rainfall in Aceh increased by 10\%, matched by a 6\% increase in heavy rainfall intensity (99.9th percentile of hourly intensity). The most striking anthropogenic influence, however, is the spatial expansion of the hazard: the rainfall area exceeding the 300 mm threshold grew by 64\% compared to the cooler pre-industrial world. This expansion indicates that historical warming has not only made the storm wetter but has drastically increased the geographic area exposed to extreme hydrological triggers. These historical increases generally align with the Clausius-Clapeyron (CC) relationship, where a warmer atmosphere holds approximately 7\% more moisture per degree of warming.
 
 \begin{figure}[ht]
     \centering
@@ -72,7 +82,7 @@ Comparing the present-day simulation to the pre-industrial counterfactual reveal
     \label{fig:compare_pr}
 \end{figure}
 
-Projecting the 2025 event into a +1.5$^\circ$ warmer future introduces a more complex changes. While heavy rainfall intensity is projected to continue its increase (+8\%), this intensification does not lead to a larger total rainfall volume or a broader impact zone. Instead, the results indicate a reversal of the historical trend: total rainfall is projected to decrease by 9\%, and the rainfall area is expected to contract by 15\%. This suggests that in a warmer future, atmospheric moisture is not distributed equally across all events; rather, rainfall becomes increasingly concentrated into fewer but more violent bursts. While the overall footprint of the storm may shrink, the localized core of the disaster becomes more dangerous as extreme intensity begins to exceed Clausius-Clapeyron scaling, even as lighter rainfall events decrease in frequency.
+Projecting the 2025 event into a +1.5$^\circ$ warmer future introduces a more complex changes. While heavy rainfall intensity is projected to continue its increase (+17\%), this intensification does not lead to a larger total rainfall volume or a broader impact zone. Instead, the results indicate a reversal of the historical trend: total rainfall is projected to decrease by 9\%, and the rainfall area is expected to contract by 15\%. This suggests that in a warmer future, atmospheric moisture is not distributed equally across all events; rather, rainfall becomes increasingly concentrated into fewer but more violent bursts. While the overall footprint of the storm may shrink, the localized core of the disaster becomes more dangerous as extreme intensity begins to exceed Clausius-Clapeyron scaling, even as lighter rainfall events decrease in frequency.
 
 The evolution of area-averaged hourly rainfall and its corresponding cumulative totals in Aceh Province provide visual confirmation of the discussed changes. The cumulative hyetograph (Figure \ref{fig:hyetograph}) shows that with present-day totals ending higher than those in the pre-industrial (-1.5$^\circ$) scenario. In contrast, the future (+1.5$^\circ$) cumulative trajectory eventually falls below present-day levels, supporting the projected 9\% decrease in total rainfall. %Physically, this indicates that while a warmer future atmosphere holds more moisture, the lack of consistently favorable lifting mechanisms—such as atmospheric circulation or storm dynamics—results in a less efficient conversion of that moisture into surface precipitation over the storm's duration
 
@@ -90,9 +100,9 @@ The physical basis for these changes lies in the efficiency with which the atmos
 In understanding changes in extreme precipitation, it is common to decompose the contributions from thermodynamics and dynamics \citep{pfahl2017understanding} while both interact in a feedback especially in the tropics \citep{neelin2022precipitation}. Thus, to explain the physical mechanisms behind the 2025 Sumatra disaster, this subchapter analyzes the anthropogenic influences in the thermodynamic and dynamical drivers that control the extreme rainfall. By quantifying changes in moisture supply, atmospheric instability, and convective strength, we can identify how human-caused warming has intensified the extreme rainfall associated with TC Senyar and how it changes in the future.
 
 \subsection{Changes in moisture supply: Evaporation and IVT}
-The intensification of the 2025 extreme rainfall begins with an increased supply of moisture from the surrounding oceans. Analysis of evaporation flux in Figure \ref{fig:compare_evaporation} shows a consistent median increase of +5\% in both the historical attribution (past-to-present) and future projection scenarios (present-to-future). This steady increase in surface moisture is complemented by significant changes in low-level integrated vapor transport (IVT) over the Malacca Strait. While the median IVT change appears small (+2\% in the present and -1\% in the future), the spatial maps and exceedance probability distributions (Figure \ref{fig:compare_ivt}) reveal a critical shift in moisture dynamics.
+The intensification of the 2025 extreme rainfall begins with an increased supply of moisture from the surrounding oceans. Analysis of evaporation flux in Figure \ref{fig:compare_evaporation} shows a consistent median increase of +4\% in both the historical attribution (past-to-present) and future projection scenarios (present-to-future). This steady increase in surface moisture is complemented by significant changes in low-level integrated vapor transport (IVT) over the Malacca Strait. The IVT spatial maps and exceedance probability distributions (Figure \ref{fig:compare_ivt}) reveal a critical shift in moisture dynamics.
 
-In a warmer climate, the extreme tail of IVT (values exceeding 800 kg m$^{-1}$ s$^{-1}$) increases substantially at a rate of 5\% to 10\% per degree of warming, closely aligning with Clausius-Clapeyron scaling. This intensification is concentrated specifically within the storm’s core moisture corridor over the Malacca Strait, while surrounding areas experience a decrease in weak moisture transport. This suggests that anthropogenic warming converges more extreme moisture directly into the cyclone’s circulation.
+In a warmer climate, the extreme tail of IVT (values exceeding 800 kg m$^{-1}$ s$^{-1}$) increases substantially at a rate of 5\% to 12\% per degree of warming, closely aligning with Clausius-Clapeyron scaling. This intensification is concentrated specifically within the storm’s core moisture corridor over the Malacca Strait, while surrounding areas experience a decrease in weak moisture transport. This suggests that anthropogenic warming converges more extreme moisture directly into the cyclone’s circulation.
 
 \begin{figure}[ht]
     \centering
@@ -129,7 +139,7 @@ In a warmer climate, the extreme tail of IVT (values exceeding 800 kg m$^{-1}$ s
 \end{figure}
 
 \subsection{Changes in atmospheric instability and potential energy}
-The increased moisture supply is coupled with a dramatic rise in convective available potential energy (CAPE), the primary measure of atmospheric instability, seen in Figure \ref{fig:compare_cape}. Across both climate scenarios, median CAPE values increase by +24\%, with high-CAPE regions (>1000 J/kg) expanding significantly in both spatial area and intensity along the storm corridor (the Malacca Strait). These findings support previous research \citep{seeley2015does}, showing that CAPE increases as the climate warms, providing the potential required for severe convective storms. This surge in potential energy ensures that when moisture is lifted within the cyclone's core, the resulting convection is significantly more violent than it would have been in a cooler climate.
+The increased moisture supply is coupled with a dramatic rise in convective available potential energy (CAPE), the primary measure of atmospheric instability, seen in Figure \ref{fig:compare_cape}. Across both climate scenarios, median CAPE values increase by +23\%--28\%, with high-CAPE regions (>1000 J/kg) expanding significantly in both spatial area and intensity along the storm corridor (the Malacca Strait). These findings support previous research \citep{seeley2015does}, showing that CAPE increases as the climate warms, providing the potential required for severe convective storms. This surge in potential energy ensures that when moisture is lifted within the cyclone's core, the resulting convection is significantly more violent than it would have been in a cooler climate.
 
 \begin{figure}[ht]
     \centering
@@ -149,9 +159,9 @@ The increased moisture supply is coupled with a dramatic rise in convective avai
 \end{figure}
 
 \subsection{Changes in physical mechanisms: Latent Heating and Updrafts}
-The final link in the convective process is the conversion of potential energy into vertical motion and intense rainfall through dynamical feedbacks. As moisture condenses within the storm's core, it releases more latent heat, which further amplifies the peak diabatic heating rates, up to 15\% per degree of warming in future scenarios (Figure \ref{fig:compare_diab}). This localized release of energy increases in-cloud buoyancy, which directly accelerates vertical motion (Figure \ref{fig:compare_wa}).
+The final link in the convective process is the conversion of potential energy into vertical motion and intense rainfall through dynamical feedbacks. As moisture condenses within the storm's core, it releases more latent heat, which further amplifies the peak diabatic heating rates, up to 17\% per degree of warming in future scenarios (Figure \ref{fig:compare_diab}). This localized release of energy increases in-cloud buoyancy, which directly accelerates vertical motion (Figure \ref{fig:compare_wa}).
 
-Consequently, maximum updraft velocity shows a median increase of +8\% in the present climate and +4\% future. This dynamical intensification explains the complex intensity-area change: even as the broader regional rainfall area contracts, the intensified convective core becomes more efficient at converting moisture to concentrated, high-magnitude bursts.
+Consequently, the 99.9th percentile of maximum updraft velocity shows an increase of +12\% in the present climate and +15\% future. This dynamical intensification explains the complex intensity-area change: even as the broader regional rainfall area contracts, the intensified convective core becomes more efficient at converting moisture to concentrated, high-magnitude bursts.
 
 \begin{figure}[ht]
     \centering
@@ -175,7 +185,7 @@ Consequently, maximum updraft velocity shows a median increase of +8\% in the pr
     \centering
     \begin{subfigure}{0.8\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../../figs/compare/finals/map_wa.png}
+        \includegraphics[width=\textwidth]{../../figs/compare/finals/map_wa_max.png}
         % \caption{}
     \end{subfigure}
     % \vspace{1em} % optional spacing
@@ -185,6 +195,6 @@ Consequently, maximum updraft velocity shows a median increase of +8\% in the pr
         % \caption{}
     \end{subfigure}
 
-    \caption{(Top) Spatial map of time-maximum of maximum vertical velocity during peak days. Maximum vertical velocity is obtained by taking vertical maxima over each time step. Ensemble mean is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
+    \caption{(Top) Spatial map of time-maximum of maximum vertical velocity during peak days. Maximum vertical velocity is obtained by taking vertical maxima over each time step. Ensemble maxima is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
     \label{fig:compare_wa}
 \end{figure}
