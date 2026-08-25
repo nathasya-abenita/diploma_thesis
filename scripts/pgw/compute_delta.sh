@@ -56,10 +56,11 @@ for model in "${models[@]}"; do
 
 	outfile1="${OUT_DIR}/${model}/${var}_nov_hist.nc"
         outfile2="${OUT_DIR}/${model}/${var}_nov_ssp.nc"
+	outfile="${OUT_DIR}/${model}/${var}_nov_delta.nc"
 
         tmpfile="${OUT_DIR}/${model}/${var}_merged.nc"
 
-        cdo -L sellonlatbox,${LON1},${LON2},${LAT1},${LAT2} -mergetime "${files[@]}" "$tmpfile"
+        #cdo -L sellonlatbox,${LON1},${LON2},${LAT1},${LAT2} -mergetime "${files[@]}" "$tmpfile"
 
 
         # ---------------------------------------------
@@ -98,11 +99,11 @@ for model in "${models[@]}"; do
         # ---------------------------------------------
         # November climatology
         # ---------------------------------------------
-	cdo -L timmean -selmon,11 -selyear,${YEAR_HIST_START}/${YEAR_HIST_END} "$tmpfile" "$outfile1"
+	#cdo -L timmean -selmon,11 -selyear,${YEAR_HIST_START}/${YEAR_HIST_END} "$tmpfile" "$outfile1"
 
-	cdo -L timmean -selmon,11 -selyear,${YEAR_SSP_START}/${YEAR_SSP_END} "$tmpfile" "$outfile2"
-	
-	#rm "$tmpfile"
+	#cdo -L timmean -selmon,11 -selyear,${YEAR_SSP_START}/${YEAR_SSP_END} "$tmpfile" "$outfile2"
+
+	cdo sub "$outfile1" "$outfile2" "$outfile"
     done
 
 done

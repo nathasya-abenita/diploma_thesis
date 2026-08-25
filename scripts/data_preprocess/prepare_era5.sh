@@ -14,12 +14,12 @@ OUTPUT_DIR="/leonardo/home/userexternal/nchristi/sumatra_work/out"
 
 # Domain
 LON_MIN=80
-LON_MAX=130
+LON_MAX=120
 LAT_MIN=-15
 LAT_MAX=15
 
 # Date
-START_DATE="2025-11-23"
+START_DATE="2025-11-25"
 END_DATE="2025-11-29"
 
 # Create output directory

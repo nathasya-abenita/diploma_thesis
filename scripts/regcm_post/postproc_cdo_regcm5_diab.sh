@@ -17,8 +17,8 @@ CDO(){
 }
 
 #EXP_LIST="EC-Earth3-Veg  MPI-ESM1-2-HR  NorESM2-MM  tweak"
-EXP_LIST="fin"
-VAR_LIST="pr psl sfcWind uas vas tas cape cin evspsbl"
+EXP_LIST="fin_diag"
+VAR_LIST="ttenlsc"
 
 LON_MIN=90
 LON_MAX=115
@@ -32,10 +32,10 @@ echo
 echo "1. Select variable"
 for EXP in ${EXP_LIST[@]}; do
 	
-	#DIR_IN="/leonardo/home/userexternal/nchristi/scratch/counterfactual/GWL-1.5/${EXP}/output"
+	#DIR_IN="/leonardo/home/userexternal/nchristi/scratch/counterfactual_diag/GWL-1.5/${EXP}/output"
 	#DIR_OUT="/leonardo/home/userexternal/nchristi/sumatra_work/counterfactual/GWL-1.5/${EXP}"
 	DIR_IN="/leonardo/home/userexternal/nchristi/scratch/factual/${EXP}"
-        DIR_OUT="/leonardo/home/userexternal/nchristi/sumatra_work/factual/${EXP}"
+        DIR_OUT="/leonardo/home/userexternal/nchristi/sumatra_work/factual/fin"
 	mkdir -p "${DIR_OUT}"
 
 	echo
@@ -43,9 +43,9 @@ for EXP in ${EXP_LIST[@]}; do
 	echo ${DIR_IN}
 
 		for VAR in ${VAR_LIST[@]}; do
-			CDO sellonlatbox,\
+			CDO vertmax -sellonlatbox,\
 ${LON_MIN},${LON_MAX},${LAT_MIN},${LAT_MAX} \
-			-selname,${VAR} *SRF*.nc ${DIR_OUT}/${VAR}_SRF.nc
+			-selname,${VAR} *ATM*.nc ${DIR_OUT}/${VAR}_max.nc
 		done
 done    
 

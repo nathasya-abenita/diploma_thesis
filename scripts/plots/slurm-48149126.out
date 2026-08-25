@@ -1,0 +1,1 @@
+/var/spool/slurmd/job48149126/slurm_script: line 16: 3304216 Segmentation fault      python track_plot_regcm.py
