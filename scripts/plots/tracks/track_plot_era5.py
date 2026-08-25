@@ -6,12 +6,12 @@ if __name__ == "__main__":
     # Configuration
     output_path = "./figs/"
 
-    experiments = ['factual']
+    experiments = []
     track_extent = [97, 105, 2, 5]    # Used for track detection
     map_extent =[94, 107, 0, 8]
-    data_dir = f"./data/best_3km"
+    data_dir = f"./data/era5"
     best_track_dir = r"./data/IBTrACS.last3years.v04r01.nc"
-    roll = 6
+    roll = 2
     
     # Initialize tracker
     tracker = CycloneTracker(data_dir, experiments, track_extent)
@@ -53,8 +53,8 @@ if __name__ == "__main__":
     
     # Subplot (c) - Maximum Wind Speed
     ax3 = fig.add_subplot(1, 3, 3)
-    plot_max_sfc_wind(tracker, nhc_data, ax=ax3)
+    plot_max_sfc_wind(tracker, nhc_data, ax=ax3, smooth_window=1)
     
     plt.tight_layout()
-    plt.savefig(output_path + f"regcm_track_roll_{roll}.png", dpi=400, bbox_inches='tight')
+    plt.savefig(output_path + f"era5_track_roll_{roll}.png", dpi=400, bbox_inches='tight')
     plt.show()

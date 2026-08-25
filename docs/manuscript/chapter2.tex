@@ -1,0 +1,156 @@
+\chapter{Methodology and Data}
+
+This study consists of two stages. First, control or factual simulation of Tropical Cyclone (TC) Senyar is done by utilizing convection-permitting simulation with a regional climate model. If the control simulation is comparable with the observed TC, the next stage is to simulate the event under a cooler or warmer climate. By this, we can study the response in the TC intensity and rainfall given anthropogenic perturbations.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\linewidth]{./../../figs/domain_elev.png}
+\caption{Simulation domain with TC Senyar track from IBTrACS and elevation from GMTED2010 \citep{danielson2011global}}
+\label{fig:domain}.
+\end{figure}
+
+\section{Convection-permitting simulation with RegCM}
+\label{section:cpm_with_regcm}
+
+Factual simulation of the event is performed using the regional climate model RegCM, developed by the National Center for Atmospheric Research (NCAR) at first, and then at the Abdus Salam International Centre for Theoretical Physics (ICTP). The latest version of RegCM, RegCM5, features a non-hydrostatic dynamical core from the weather prediction MOLOCH. With the new core, RegCM5 has been improved to provide better statistics, including hourly precipitation intensities, especially at convection-permitting resolutions \citep{giorgi2023fifth, coppola20255th}. %Additionally, the use of regional climate model over a global model to perform this hindcast is beneficial in constraining the large-scale circulation of the tropical cyclone hindcast \cite{patricola2018anthropogenic}, such that observed tracks are represented well.
+
+The model is run at resolution of 3 km over region of 80°E--120°E and 26°S--14°N, as seen in Figure \ref{fig:domain}, with 50 levels of vertical height spanning 30 km. This region is chosen to be centered around the Malacca Strait which is the domain of TC genesis and main track. The center is intentionally shifted slightly southward to avoid biasing the model toward another strong low-pressure system located at South China Sea. The region also encloses Sumatra Island and Malay Peninsula which are the most impacted regions from this event.
+
+The simulations in this study use the following physical schemes: UW planetary boundary layer scheme (PBL), RRTM radiation scheme, CLM4.5 land surface scheme, explicit moisture Nogherotto/Tompkins scheme, and Zeng ocean flux scheme. As mentioned, the latest version of RegCM features the MOLOCH non-hydrostatic dynamical core that resolves convection. Most of these schemes, except the PBL, are chosen to follow the CORDEX-CORE simulation for Southeast Asia region, where details of the schemes are summarized in \citet{coppola20255th}. However, modification is done to obtain the best representation of the cyclone track, done by different experiments summarized in Appendix \ref{appendix:exp}.
+
+All simulations use ERA5 reanalysis fields \citep{hersbach2020era5} as initial and lateral boundary conditions (ICBC), which includes sea surface temperature, surface air pressure, surface temperature, and atmospheric variables, such as horizontal wind speed, air temperature, and humidity mixing ratio. ERA5 reanalysis has been shown to represent TC Senyar during its lifetime with weaker intensity as discussed in Chapter \ref{ch:synoptic_evolution}. Simulations are initialized at 25 November 2025 00:00 UTC such that some hours of spin-up time is given. Generally, an earlier initialization time fails to capture the genesis of the cyclone. This is also in agreement with a similar study in hindcasting TC using a convection-permitting model where tropical cyclone intensity within the model adjusts from its initial condition within hours \citep{patricola2018anthropogenic}.
+
+Center of the tropical cyclone is defined as the coordinate with the lowest sea level pressure. To validate the simulation, we compare both coordinates and intensity of the center with ERA5 reanalysis data and observation from the International Best Track Archive for Climate Stewardship (IBTrACS) \citep{knapp2010international, IBTrACS_data}. IBTrACS collects observed tropical cyclone data from agencies around the world and provides 6-hourly data of TCs tracks. Lastly, we use MSWEP v2 \citep{beck2019mswep} to verify the simulated precipitation by noting that it is known as the most reliable dataset for Indonesia \citep{wati2022statistics}.
+
+\section{Simulation in different climate with pseudo-global warming method}
+
+We simulate the case if the event were to occur in a cooler or warmer climate using pseudo-global warming (PGW) approach. The strategy of this approach is to impose perturbations directly in the climate system by modifying the boundary conditions. This approach has been commonly used as discussed in detail in \citet{brogli2023pseudo}. The study provides review of the method and a software to implement it seamlessly, which is also utilized by recent extreme event attribution studies \citep{calvo2026human}. Furthermore, this strategy has been used well for tropical cyclone attribution studies \citep{patricola2018anthropogenic}.
+
+To reflect different climate based on a certain global warming level change, the ICBC are perturbed based on different time periods from three CMIP6 climate models, summarized in Table \ref{table:cmip6}. Pre-industrial climate as the baseline year is defined on 1850--1900. We collected 20-year period from each model corresponding to global warming level of 1.5$^\circ$ compared to the baseline \citep{hauser2022transient}. Each variable in ICBC, mentioned in Section \ref{section:cpm_with_regcm}, is perturbed such that we require CMIP6 variables mentioned in Table \ref{table:cmip6_vars}.
+
+% \begin{table}[h] 
+% \centering
+% \begin{tabular}{ccc} 
+% \hline
+% \textbf{Model} & \textbf{20-year period for GWL 1.5$^\circ$} & \textbf{20-year period for GWL 3.0$^\circ$} \\
+% \hline
+% EC-Earth3-Veg & 2002--2021 & 2012--2058 \\
+% MPI-ESM1-2-HR & 2025--2044 & 2035--2082 \\
+% NorESM2-MM & 2037--2056 & 2047--2091 \\
+
+% \hline
+% \end{tabular}
+% \caption{List of CMIP6 models used to perturb simulation ICBC with the corresponding period of certain global warming level (GWL) compared to 1850--1900 baseline under SSP3-7.0 scenario \citep{hauser2022transient}}
+% \label{table:cmip6}
+% \end{table}
+
+\begin{table}[h] 
+\centering
+\begin{tabular}{cc} 
+\hline
+\textbf{Model} & \textbf{20-year period for GWL 1.5$^\circ$} \\
+\hline
+EC-Earth3-Veg & 2002--2021 \\
+MPI-ESM1-2-HR & 2025--2044 \\
+NorESM2-MM & 2037--2056 \\
+\hline
+\end{tabular}
+\caption{List of CMIP6 models used to perturb simulation ICBC with the corresponding global warming level (GWL) compared to 1850--1900 baseline under SSP3-7.0 scenario \citep{hauser2022transient}}
+\label{table:cmip6}
+\end{table}
+
+\begin{table}[h] 
+\centering
+\begin{tabular}{ccc} 
+\hline
+\textbf{Type} & \textbf{Variable} \\
+\hline
+3D	&Specific humidity \\
+2D	&Surface pressure \\
+2D	&Surface temperature \\
+3D	&Air temperature \\
+3D	&Horizontal wind \\
+3D	&Geopotential height \\
+\hline
+\end{tabular}
+\caption{List of required variables from CMIP6 models of monthly mean on different pressure levels}
+\label{table:cmip6_vars}
+\end{table}
+
+The perturbation is quantified by computing the difference between two long-term monthly mean climate periods. A summary of these periods can be seen in Table \ref{table:cmip6}. By choosing a long climatic period, we also reduce effects from internal variability as a common strategy in PGW method \citep{brogli2023pseudo}. Furthermore, the CMIP6 historical experiment is concatenated with the SSP3-7.0 scenario when needed to construct the period for GWL 1.5$^\circ$. As an example, we define the "cooling" perturbation from EC-Earth3-Veg as
+\begin{equation} \label{eq:delta}
+    \Delta X_m = \overline{X_{\text{(1850--1900)}, m}} - \overline{X_{\text{(2002--2021)}, m}}
+\end{equation}
+with $m$ is the month and $X$ is one of the ICBC variables.
+
+This perturbation values undergo interpolation in space and time, such as it fits the ICBC of RegCM simulation. Vertically, we apply linear interpolation in logarithmic-scaled pressure levels. In horizontal space, we apply bilinear interpolation. Lastly, linear interpolation in time is applied such that we have variation in time, between midpoints of two consecutive months.
+
+Finally, the ICBC for the counterfactuals are generated by adding the interpolated climate perturbations defined in Eq \eqref{eq:delta} to the ICBC of the control simulation, defined as
+\begin{equation}
+    X^{\text{PGW}}_m = X^{\text{CTRL}}_m + \Delta X_m
+\end{equation}
+with $X^{\text{CTRL}}_m$ is the ICBC of control simulation for month $m$.
+
+Additionally, greenhouse gases (GHG) are perturbed to reflect pre-industrial conditions. The quantity of the perturbation is quantified by comparing global GHG values between two years \citep{meinshausen2017historical, meinshausen2020ssp}. We choose 1875 as the year to represent pre-industrial climate, while for present or future climate, we take the midpoint of the 20-year period in Table \ref{table:cmip6}. The ratio values are used to tweak the RegCM simulation.
+
+As an idealized experiment, PGW method is applied with uniform cooling or warming of 1.5$^\circ$ everywhere. This is done by the tweak feature in RegCM experiment and the perturbation is applied on all temperature variables, including surface and air temperature at all vertical levels. Moisture content in the atmosphere is adjusted accordingly under assumption of constant relative humidity. Hereinafter, we label this experiment as the tweak experiment. To conclude, we define simulation name conclusions in Table \ref{tab:name_convention}.
+
+\begin{table}[h] 
+    \centering
+    \begin{tabular}{p{2cm}p{12cm}} 
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    present	& \textbf{Factual} simulation, driven by \textbf{ERA5} \\
+    past -1.5K	& \textbf{Counterfactual} simulation to represent \textbf{pre-industrial} climate, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
+    fut. +1.5K	& \textbf{Counterfactual} simulation to represent \textbf{future} climate with +1.5$^\circ$ warming, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
+    \hline
+    \end{tabular}
+    \caption{Simulation Name Convention}
+    \label{tab:name_convention}
+\end{table}
+
+We present an example of the perturbation from the three CMIP6 models for surface temperature variable in Figure \ref{fig:surface_temperature_perturbation}. Note that while there is no plot for the tweak experiment given it is designed as uniform cooling or warming. 
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../../figs/compare/ts_complete.png}
+\caption{Time-mean (25--28 November 2025) of surface temperature perturbation applied to control simulation}
+\label{fig:surface_temperature_perturbation}.
+\end{figure}
+
+% \begin{table}[h] 
+% \centering
+% \begin{tabular}{lcccc} 
+% \hline
+% \textbf{Gas} & \textbf{Unit} & \textbf{1865 Value} & \textbf{2025 Value} & \textbf{Ratio} \\
+% \hline
+% CO$_2$ & ppm & 286.6 & 429.0 & 0.67 \\
+% CH$_4$ & ppb & 836.9 & 1960.7 & 0.43 \\
+% N$_2$O & ppb& 274.9 & 336.0 & 0.82 \\
+% CFC11 & ppt & 0.0 & 204.43 & 0.00 \\
+% CFC12 & ppt & 0.0 & 471.7 & 0.00 \\
+% \hline
+% \end{tabular}
+% \caption{Global greenhouse gas concentrations and ratio from 2025 to 1865.}
+% \label{table:ghg}
+% \end{table}
+
+\section{Assessment metrics}
+In this study, we analyze rainfall intensity and area, changes in the moisture content and flux, and changes in physical mechanisms controlling the extreme rainfall associated with TC Senyar. We focus on the peak days based on observation, that is between 25 November 2025 01:00 UTC and 26 November 2025 23:00 UTC. For rainfall analysis, we focus on Aceh Province, while for the rest, we focus on a whole domain centered in the Malacca Strait. The rainfall area is derived using a threshold from observed rainfall in Aceh Province which is 300 mm over the full two peak days. 
+
+Data is sorted and presented as exceedance probability plot (equivalent to $1-\text{PCTL}/100$ where $\text{PCTL}$ is percentile). Relative change from a distribution to another distribution is assessed on a given percentile.
+
+To evaluate anthropogenic influence, the rate of increase of variable $X$ from past to present is computed by
+\begin{equation} \label{eq:increase-1}
+    X_{\text{increase}} = \frac{X_\text{present} - X_{\text{past}}}{X_{\text{past}}} \cdot 100.
+\end{equation} 
+Similarly, the rate of increase from present to future is computed by
+\begin{equation} \label{eq:increase-2}
+    X_{\text{increase}} = \frac{X_{\text{fut.}} - X_\text{present}}{X_\text{present}} \cdot 100.
+\end{equation}
+
+Some postprocessed variables are used to study the physical drivers of extreme rainfall. With pycordex, we extract specific humidty, horizontal wind velocity, vertical wind velocity, and geopotential height at different pressure levels. In our analysis, we derive low-level integrated vapor transport (IVT) using specific humidity and horizontal wind velocity from pressure levels between surface and 700 hPa. This is because moisture transport associated with TCs is primarily concentrated in the lower troposphere \citep{li2024western}.
+
+The Clausius-Clapeyron scaling analysis is done to study the response of the variables to global warming level change between the factual and counterfactual simulation. We divide $X_{\text{increase}}$ in Eq. \eqref{eq:increase-1} and \eqref{eq:increase-2} with 1.5$^\circ$ which corresponds to the experiment design.

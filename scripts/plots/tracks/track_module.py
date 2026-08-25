@@ -30,7 +30,7 @@ class CycloneTracker:
     Class to track cyclone centers and compute associated meteorological variables.
     """
     
-    def __init__(self, data_dir, experiments, map_extent):
+    def __init__(self, data_dir, experiments, map_extent, era5=True):
         """
         Initialize the cyclone tracker.
         
@@ -59,35 +59,35 @@ class CycloneTracker:
                 print(f"Warning: Could not load data for experiment {exp}")
         
         # Load ERA5 data
-        try:
-            era_dir = "./data/era5"
-            self.ds_era = load_era5(era_dir)
-            self.ds_era = self.ds_era.rename({
-            "valid_time": "time",
-            "latitude": "lat",
-            "longitude": "lon",
-            "pressure_level": "plev",
-            "msl": "psl",
-            "t": "ta",
-            "u10": "uas",
-            "u": "ua",
-            "v10": "vas",
-            "v": "va"
-            # "w": "wa"
-            })
-            self.ds_era = self.fix_longitude(self.ds_era, 'lon')
+        if era5:
+            try:
+                era_dir = "./data/era5"
+                self.ds_era = load_era5(era_dir)
+                self.ds_era = self.ds_era.rename({
+                "valid_time": "time",
+                "latitude": "lat",
+                "longitude": "lon",
+                "pressure_level": "plev",
+                "msl": "psl",
+                "t": "ta",
+                "u10": "uas",
+                "u": "ua",
+                "v10": "vas",
+                "v": "va"
+                # "w": "wa"
+                })
+                self.ds_era = self.fix_longitude(self.ds_era, 'lon')
 
-            # Add sfcWind
-            self.ds_era['sfcWind'] = (self.ds_era['uas'] ** 2 + self.ds_era['vas']) ** 0.5
+                # Add sfcWind
+                self.ds_era['sfcWind'] = (self.ds_era['uas'] ** 2 + self.ds_era['vas']) ** 0.5
 
-            # Save to models list
-            self.ds_models["ERA5"] = self.ds_era
-            
-        except FileNotFoundError:
-            print("Warning: Could not load ERA5 data")
-            self.ds_era = None
+                # Save to models list
+                self.ds_models["ERA5"] = self.ds_era
+                
+            except FileNotFoundError:
+                print("Warning: Could not load ERA5 data")
+                self.ds_era = None
 
-        
     def fix_longitude(self, ds, lon_var):
         """Fix longitude range to [-180, 180] if necessary."""
         if np.any(ds[lon_var] > 180):
@@ -95,7 +95,7 @@ class CycloneTracker:
             ds = ds.sortby(ds[lon_var])
         return ds
     
-    def find_cyclone_centers(self, psl_threshold=1010.0, max_jump_km=300, smooth_window=None):
+    def find_cyclone_centers(self, psl_threshold=1010.0, max_jump_km=600, smooth_window=None):
         """
         Find cyclone centers based on minimum sea level pressure,
         with robustness checks for dissipation and spurious jumps.
@@ -216,54 +216,69 @@ class CycloneTracker:
         models = self.ds_models
         for exp_name, ds in models.items():
             if exp_name not in self.cyclone_centers:
-                continue
-                
-            centers_df = self.cyclone_centers[exp_name]
-            results = []
-            
-            for _, center in centers_df.iterrows():
-                if center.isna().any():
-                    continue
-                # Define area around center
-                lat_min = center['lat'] - radius_deg
-                lat_max = center['lat'] + radius_deg
-                lon_min = center['lon'] - radius_deg
-                lon_max = center['lon'] + radius_deg
-                
-                # Select data around center
-                try:
-                    ds_area = ds.where(
-                                 (ds.lat >= min(lat_min, lat_max)) &
-                                 (ds.lat <= max(lat_min, lat_max)) &
-                                 (ds.lon >= lon_min) &
-                                 (ds.lon <= lon_max) &
-                                 (ds.time == center['time']),
-                                 drop=True
-                            )
-                    
-                    var_data = ds_area[var_name]
-                    
-                    # Compute statistic
-                    if stat_type == 'max':
-                        stat_value = var_data.max().item()
-                    elif stat_type == 'mean':
-                        stat_value = var_data.mean().item()
-                    elif stat_type == 'min':
-                        stat_value = var_data.min().item()
-                    else:
-                        raise ValueError(f"Unknown stat_type: {stat_type}")
-                    
-                    results.append({
+                results.append({
                         'time': center['time'],
                         'lat': center['lat'],
                         'lon': center['lon'],
                         f'{stat_type}_{var_name}': stat_value,
                         'experiment': exp_name
                     })
-                    
-                except Exception as e:
-                    print(f"Warning: Could not compute {var_name} for {exp_name} at {center['time']}: {e}")
-                    continue
+            else:
+                centers_df = self.cyclone_centers[exp_name]
+                results = []
+                
+                for _, center in centers_df.iterrows():
+                    if center.isna().any():
+                        # continue
+                        results.append({
+                                'time': center['time'],
+                                'lat': center['lat'],
+                                'lon': center['lon'],
+                                f'{stat_type}_{var_name}': np.nan,
+                                'experiment': exp_name
+                            })
+                    else:
+                        # Define area around center
+                        lat_min = center['lat'] - radius_deg
+                        lat_max = center['lat'] + radius_deg
+                        lon_min = center['lon'] - radius_deg
+                        lon_max = center['lon'] + radius_deg
+                        
+                        # Select data around center
+                        try:
+                            ds_area = ds.where(
+                                        (ds.lat >= min(lat_min, lat_max)) &
+                                        (ds.lat <= max(lat_min, lat_max)) &
+                                        (ds.lon >= lon_min) &
+                                        (ds.lon <= lon_max) &
+                                        (ds.time == center['time']),
+                                        drop=True
+                                    )
+                            
+                            var_data = ds_area[var_name]
+                            
+                            # Compute statistic
+                            if stat_type == 'max':
+                                stat_value = var_data.max().item()
+                            elif stat_type == 'mean':
+                                stat_value = var_data.mean().item()
+                            elif stat_type == 'min':
+                                stat_value = var_data.min().item()
+                            else:
+                                raise ValueError(f"Unknown stat_type: {stat_type}")
+                            
+
+                            results.append({
+                                'time': center['time'],
+                                'lat': center['lat'],
+                                'lon': center['lon'],
+                                f'{stat_type}_{var_name}': stat_value,
+                                'experiment': exp_name
+                            })
+                            
+                        except Exception as e:
+                            print(f"Warning: Could not compute {var_name} for {exp_name} at {center['time']}: {e}")
+                            continue
                     
             # Store results
             key = f"{exp_name}-{stat_type}-{var_name}"
@@ -272,13 +287,19 @@ class CycloneTracker:
 
 # PLOTTING FUNCTIONS  
 def plot_time_series_comparison(tracker, var_name, experiments=None, nhc_data=None, 
-                               era5_included=True, ax=None, **kwargs):
+                               era5_included=True, ax=None, clean=False, color=None, label=None, **kwargs):
     """
     Plot time series comparison of a variable across experiments.
     """
     
     if ax is None:
         fig, ax = plt.subplots()
+
+    # Plot NHC data if provided
+    if nhc_data is not None and var_name in nhc_data.columns:
+        ax.plot(nhc_data['time'], nhc_data[var_name], 'o-', 
+                label='IBTrACS', color="tab:orange", linewidth=2)
+    
     
     if experiments is None:
         experiments = list(tracker.cyclone_centers.keys())
@@ -286,18 +307,33 @@ def plot_time_series_comparison(tracker, var_name, experiments=None, nhc_data=No
             experiments.remove('ERA5')
     
     # Plot model experiments
-    for i, exp in enumerate(experiments):
-        if exp == 'ERA5':
-            continue
-            
-        if exp in tracker.cyclone_centers:
+    if not clean:
+        for i, exp in enumerate(experiments):
+            if exp == 'ERA5':
+                continue
+                
+            if exp in tracker.cyclone_centers:
+                df = tracker.cyclone_centers[exp]
+                
+                if var_name in df.columns:
+                    color = COLORS[i % len(COLORS)]
+                    ax.plot(df['time'], df[var_name], 'o-', 
+                        label=exp, color=color, alpha=0.8, **kwargs)
+    else:
+        # Collect wind speed time series
+        wind_list = []
+        for exp in experiments:
             df = tracker.cyclone_centers[exp]
-            
-            if var_name in df.columns:
-                color = COLORS[i % len(COLORS)]
-                ax.plot(df['time'], df[var_name], 'o-', 
-                       label=exp, color=color, alpha=0.8, **kwargs)
-    
+            wind_list.append(df[var_name].values)
+        # Compute ensemble stats
+        ens_wind_mean, ens_wind_std = compute_ens_stat_std(wind_list, stat='mean')
+        # Plot ensemble mean
+        ax.plot(df['time'], ens_wind_mean, 'o-', 
+                label=label, color=color, alpha=1, **kwargs)
+        # Plot ensemble spread
+        ax.fill_between(df['time'], ens_wind_mean - ens_wind_std, ens_wind_mean + ens_wind_std, 
+                color=color, alpha=0.25, edgecolor=None, **kwargs)
+        
     # Plot ERA5 if requested
     if era5_included and 'ERA5' in tracker.cyclone_centers:
         df_era5 = tracker.cyclone_centers['ERA5']
@@ -306,10 +342,6 @@ def plot_time_series_comparison(tracker, var_name, experiments=None, nhc_data=No
             ax.plot(df_era5['time'], df_era5[var_name], 'o-', 
                    label='ERA5', color='blue', alpha=0.8)
     
-    # Plot NHC data if provided
-    if nhc_data is not None and var_name in nhc_data.columns:
-        ax.plot(nhc_data['time'], nhc_data[var_name], 'o-', 
-               label='IBTrACS', color="r", linewidth=2)
     
     ax.set_ylabel(var_name)
     ax.legend()
@@ -318,8 +350,20 @@ def plot_time_series_comparison(tracker, var_name, experiments=None, nhc_data=No
     
     return ax
 
+def compute_ens_stat_std (val_list, stat):
+    stacked_val = np.stack(val_list)
+    if stat == 'mean':
+        ens_val = np.nanmean(stacked_val, axis=0) 
+        ens_val_std  = np.nanstd(stacked_val, axis=0)
+    elif stat == 'median':
+        ens_val = np.nanmedian(stacked_val, axis=0) 
+        ens_val_std  = np.nanstd(stacked_val, axis=0)
+    else:
+        raise ValueError ('check stat option!')
+    return ens_val, ens_val_std 
+
 def plot_cyclone_tracks(tracker, experiments=None, nhc_data=None, era5_included=True, 
-                        map_extent_plot=None, ax=None):
+                        map_extent_plot=None, ax=None, clean=False, color=None, label=None):
     """
     Plot cyclone tracks on a map.
     
@@ -328,6 +372,9 @@ def plot_cyclone_tracks(tracker, experiments=None, nhc_data=None, era5_included=
     map_extent_plot : list or None
         [lon_min, lon_max, lat_min, lat_max] for map extent in the plot.
         If None, uses tracker.map_extent.
+    clean : boolean
+        if True, experiments are plotted as 6-hourly values with ensemble mean and spread.
+        Otherwise, the raw hourly statistics are plotted.
     """
     
     if ax is None:
@@ -346,22 +393,53 @@ def plot_cyclone_tracks(tracker, experiments=None, nhc_data=None, era5_included=
     
     if experiments is None:
         experiments = [exp for exp in tracker.cyclone_centers.keys() if exp != 'ERA5']
+
+    # Plot best track
+    if nhc_data is not None:
+        print(nhc_data)
+        ax.plot(nhc_data['lon'], nhc_data['lat'], 's-', color="tab:orange",
+                linewidth=1, markersize=3, label='IBTrACS', alpha=0.8)
+        ax.scatter(nhc_data['lon'].iloc[0], nhc_data['lat'].iloc[0],
+                    marker='*', s=75, color="r", edgecolor='black', zorder=5)
+    
     
     # Plot model tracks
-    for i, exp in enumerate(experiments):
-        if exp in tracker.cyclone_centers:
+    if not clean:
+        for i, exp in enumerate(experiments):
+            if exp in tracker.cyclone_centers:
+                df = tracker.cyclone_centers[exp]
+                color = COLORS[i % len(COLORS)]
+                
+                # Plot track
+                ax.plot(df['lon'], df['lat'], 'o-', color=color, 
+                    linewidth=1, markersize=4, label=exp, alpha=0.8)
+                
+                # Mark start point
+                ax.scatter(df['lon'].iloc[0], df['lat'].iloc[0], 
+                        marker='*', s=75, color=color, 
+                        edgecolor='black', zorder=5)
+    else:
+        # Prepare list to save values
+        lon_list, lat_list = [], [] # each item is time series for an experiment
+
+        # Compute ensemble mean and spread
+        for exp in experiments:
             df = tracker.cyclone_centers[exp]
-            color = COLORS[i % len(COLORS)]
-            
-            # Plot track
-            ax.plot(df['lon'], df['lat'], 'o-', color=color, 
-                   linewidth=1, markersize=4, label=exp, alpha=0.8)
-            
-            # Mark start point
-            ax.scatter(df['lon'].iloc[0], df['lat'].iloc[0], 
-                      marker='*', s=75, color=color, 
-                      edgecolor='black', zorder=5)
-    
+            lon_list.append(df['lon'].values[::6])
+            lat_list.append(df['lat'].values[::6])
+            ax.plot(df['lon'], df['lat'], '-', color=color, linewidth=1, alpha=0.2)
+        ens_lon_mean, ens_lon_std = compute_ens_stat_std(lon_list, stat='median')
+        ens_lat_mean, ens_lat_std = compute_ens_stat_std(lat_list, stat='median')
+
+        # Plot
+        # Plot track
+        ax.plot(ens_lon_mean, ens_lat_mean, 'o-', color=color, 
+            linewidth=1, markersize=4, label=label, alpha=0.8)
+        
+        # Mark start point
+        ax.scatter(df['lon'].iloc[0], df['lat'].iloc[0], 
+                marker='*', s=75, color=color, zorder=5, edgecolor='k')
+
     # Plot ERA5 track
     if era5_included and 'ERA5' in tracker.cyclone_centers:
         df_era5 = tracker.cyclone_centers['ERA5']
@@ -370,14 +448,6 @@ def plot_cyclone_tracks(tracker, experiments=None, nhc_data=None, era5_included=
                linewidth=1, markersize=3, label='ERA5', alpha=0.8)
         ax.scatter(df_era5['lon'].iloc[0], df_era5['lat'].iloc[0],
                   marker='*', s=75, color='blue', edgecolor='black', zorder=5)
-    
-    # Plot best track
-    if nhc_data is not None:
-        print(nhc_data)
-        ax.plot(nhc_data['lon'], nhc_data['lat'], 's-', color="r",
-               linewidth=1, markersize=3, label='IBTrACS', alpha=0.8)
-        ax.scatter(nhc_data['lon'].iloc[0], nhc_data['lat'].iloc[0],
-                  marker='*', s=75, color="r", edgecolor='black', zorder=5)
     
     # Add x and y labels (Longitude and Latitude)
     ax.set_xlabel('Longitude')
@@ -396,28 +466,56 @@ def plot_cyclone_tracks(tracker, experiments=None, nhc_data=None, era5_included=
     gl.top_labels = False
     gl.right_labels = False
 
-    ax.legend(loc=3, fontsize=font_size)
+    # ax.legend(loc=3, fontsize=font_size)
     ax.set_title('(a)', loc='left', fontsize=font_size, fontweight='bold')
-    
+    ax.legend()
     return ax
 
-def plot_max_sfc_wind(tracker, nhc_data=None, ax=None):
+def plot_max_sfc_wind(tracker, nhc_data=None, ax=None, smooth_window=1, era5_included=True,
+                      clean=False, label=None, color=None):
     """Plot maximum surface wind speed."""
     if ax is None:
         fig, ax = plt.subplots()
-    
-    for i, var in enumerate(tracker.variable_data.keys()):
-        expname = var.split("-")[0]
-        moist_data = tracker.variable_data[var]
-        color = COLORS[i] if ('ERA5' not in var) else 'blue'
-        ax.plot(moist_data['time'], moist_data['max_sfcWind'], 
-                'o-', label=expname, alpha=0.8, color=color)
-    
+
     # Add NHC wind data
     if nhc_data is not None:
         ax.plot(nhc_data['time'], nhc_data['wind'] * 0.514444, 
-                'o-', label='IBTrACS', color="r", linewidth=2)
+                'o-', label='IBTrACS', color="tab:orange", linewidth=2)
 
+
+    if not clean:
+        # Plot model experiments
+        for i, var in enumerate(tracker.variable_data.keys()):
+            if (var == 'ERA5') and (era5_included == False):
+                continue
+            else:
+                expname = var.split("-")[0]
+                moist_data = tracker.variable_data[var]
+                moist_data['max_sfcWind'] = moist_data['max_sfcWind'].rolling(window=smooth_window, min_periods=1, center=True).mean()
+                color = COLORS[i] if ('ERA5' not in var) else 'blue'
+                ax.plot(moist_data['time'], moist_data['max_sfcWind'], 
+                        'o-', label=expname, alpha=0.8, color=color)
+    else:
+        # Collect wind speed time series
+        wind_list = []
+        for var in tracker.variable_data.keys():
+            if (var == 'ERA5') and (era5_included == False):
+                continue
+            else:
+                moist_data = tracker.variable_data[var]
+                # moist_data['max_sfcWind'] = moist_data['max_sfcWind'].rolling(window=smooth_window, min_periods=1, center=True).mean()
+                print(moist_data['max_sfcWind'].shape)
+                wind_list.append(moist_data['max_sfcWind'].values)
+        # Compute ensemble stats
+        ens_wind_mean, ens_wind_std = compute_ens_stat_std(wind_list, stat='mean')
+        # Plot ensemble mean
+        ax.plot(moist_data['time'], ens_wind_mean, 'o-', 
+                label=label, color=color, alpha=1)
+        # Plot ensemble spread
+        ax.fill_between(moist_data['time'], ens_wind_mean - ens_wind_std, ens_wind_mean + ens_wind_std,
+                color=color, alpha=0.25, edgecolor=None)
+    
+    
     # Define bounds    
     x_min, x_max = ax.get_xlim()
     y_top = 32.7
@@ -430,15 +528,19 @@ def plot_max_sfc_wind(tracker, nhc_data=None, ax=None):
     ]
 
     for i, (y0, y1, fill_color, label, y_text) in enumerate(intervals):
-        ax.fill_between([x_min, x_max], y0, y1, color=fill_color, alpha=0.4)
+        ax.fill_between([x_min, x_max], y0, y1, color=fill_color, alpha=0.4, zorder=-10)
 
         # if i < len(intervals) - 1:
         #     next_y0, next_y1 = intervals[i + 1][0], intervals[i + 1][1]
         #     y_text = next_y0 - (next_y1 - next_y0)/2
         # else:
         #     y_text = y1 - (y_top - y1)/2
-        x_text = pd.to_datetime(tracker.variable_data['ERA5-max-sfcWind']["time"].max()) #+ pd.Timedelta(days=-1.5)
-        ax.text(x_text, y_text, label, va='center', ha='right', fontsize=font_size, color='k')
+        if era5_included:
+            x_text = pd.to_datetime(tracker.variable_data['ERA5-max-sfcWind']["time"].max()) #+ pd.Timedelta(days=-1.5)
+            ax.text(x_text, y_text, label, va='center', ha='right', fontsize=font_size, color='k')
+        else:
+            x_text = pd.to_datetime(moist_data['time'].min())
+            ax.text(x_text, y_text, label, va='center', ha='left', fontsize=font_size, color='k')
 
     ax.set_ylim(0, y_top)
     ax.set_ylabel("Max wind speed (m/s)", fontsize=font_size, fontweight='bold')
@@ -449,7 +551,7 @@ def plot_max_sfc_wind(tracker, nhc_data=None, ax=None):
         
     return ax
 
-def load_best_track_data(nc_file):
+def load_best_track_data(nc_file, time_res='6hr'):
     """Load best track data."""
 
     # Read file
@@ -464,7 +566,13 @@ def load_best_track_data(nc_file):
     df = df.reset_index(drop=True)
     df['time'] = df['time'].dt.round('s')
     df = df.rename(columns={'usa_wind': 'wind', 'usa_pres': 'min_pressure'})
-    return df[::2]
+
+    if time_res == '6hr':
+        return df[::2]
+    elif time_res == '3hr':
+        return df
+    else:
+        raise ValueError ('IBTrACS provides 3-hourly data! Choose `3hr` or `6hr`')
 
 # Dataset loaders
 def load_era5(era_dir, verbose=False):
@@ -488,8 +596,10 @@ def load_era5(era_dir, verbose=False):
     return ds_merged
 
 def load_regcm5_multi_file(data_dir, verbose=False):
-    nc_files = sorted(glob.glob(os.path.join(data_dir, '*.nc')))
-    
+    nc_files = sorted(glob.glob(os.path.join(data_dir, '*_SRF.nc')))
+    wanted = ['psl_SRF.nc', 'sfcWind_SRF.nc']
+    nc_files = [f for f in nc_files if os.path.basename(f) in wanted]
+
     if not nc_files:
         raise ValueError(f"No NetCDF files found in {data_dir}")
 
