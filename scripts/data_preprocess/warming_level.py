@@ -10,6 +10,12 @@ scenario = 'ssp370'
 level = 3 # 1.5 for present, 3 for GWL+1.5
 models = ["EC-Earth3-Veg",  "MPI-ESM1-2-HR",  "NorESM2-MM"]
 
+# List all models from chosen ensemble
+df_ensemble = df[(df['ensemble'] == ensemble) & (df['exp'] == scenario) & (df['warming_level'] == level)]
+models_set = set(df_ensemble['model'].tolist())
+print(len(models_set))
+print(models_set)
+
 # Find start and end years
 df_filt = df[
     (df['ensemble'] == ensemble) & \
@@ -17,6 +23,8 @@ df_filt = df[
     (df['warming_level'] == level) & \
     (df['model'].isin(models))
 ]
+
+df_filt = df_filt.set_index(keys='model')
 
 # Find midpoint year
 df_filt['mid_year'] = (df['start_year'] + df['end_year']) // 2 + 1
