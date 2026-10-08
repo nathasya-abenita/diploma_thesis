@@ -13,11 +13,11 @@ gas_tweak_factors = 1.5, 1.4 , 1.1 , 0.5 , 0.6,
 !                   CO2  CH4   N2O   CFC11 CFC12
 '''
 if GWL_LABEL == '+3.0':
-    ghg_tweak_ratio = "1.6, 1.5, 1.2, 0.4, 0.6"
+    ghg_tweak_ratio = [1.6, 1.5, 1.2, 0.4, 0.6]
 elif GWL_LABEL == '+1.5':
-    ghg_tweak_ratio = "1.1, 1.1, 1.0, 0.8, 0.9"
+    ghg_tweak_ratio = [1.1, 1.1, 1.0, 0.8, 0.9]
 elif GWL_LABEL == '-1.5':
-    ghg_tweak_ratio = "0.7, 0.5, 0.8, 0.0, 0.0"
+    ghg_tweak_ratio = [0.7, 0.5, 0.8, 0.0, 0.0]
 else:
     raise ValueError ('unrecognized global warming level!')
 
@@ -27,26 +27,26 @@ else:
 cmip6_models = ['EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
 
 diag_mode = {
-    "ifatm"     : ".true",
-    "atmfrq"    : "3",
-    "ifrad"     : ".false.",
-    "ifsts"     : ".false.",
-    "ifshf"     : ".false.",
-    "ifsrf"     : ".false.",
-    "idiag"     : "1",
-    "ifcordex"  : ".false."
+    "ifatm"     : True,
+    "atmfrq"    : 3,
+    "ifrad"     : False,
+    "ifsts"     : False,
+    "ifshf"     : False,
+    "ifsrf"     : False,
+    "idiag"     : 1,
+    "ifcordex"  : False
 }
 
 cordex_mode = {
-    "atmfrq"    : "1",
-    "ifatm"     : ".true",
-    "atmfrq"    : "1",
-    "ifrad"     : ".true.",
-    "ifsts"     : ".true.",
-    "ifshf"     : ".true.",
-    "ifsrf"     : ".true.",
-    "idiag"     : "0",
-    "ifcordex"  : ".true."
+    "atmfrq"    : 1,
+    "ifatm"     : True,
+    "atmfrq"    : 1,
+    "ifrad"     : True,
+    "ifsts"     : True,
+    "ifshf"     : True,
+    "ifsrf"     : True,
+    "idiag"     : 0,
+    "ifcordex"  : True
 }
 
 cmip6_namelists = []
@@ -58,21 +58,43 @@ for model in cmip6_models:
     }
     cmip6_namelists.append(nl)
 
+def format_namelist_value(value):
+    """Convert a Python value to Fortran namelist syntax."""
+
+    if isinstance(value, bool):
+        return ".true." if value else ".false."
+
+    if isinstance(value, int):
+        return str(value)
+
+    if isinstance(value, float):
+        return str(value)
+
+    if isinstance(value, (list, tuple)):
+        return ", ".join(format_namelist_value(v) for v in value)
+
+    if isinstance(value, str):
+        return f"'{value}'"
+
+    raise TypeError(f"Unsupported value type: {type(value)}")
+
+
 def replace_namelist_val(content, param_name, new_value):
-    """Replace a parameter value in Fortran namelist syntax."""
+    """Replace a parameter value in a Fortran namelist."""
 
-    if isinstance(new_value, str):
-        val_str = f"'{new_value}'"
-    else:
-        val_str = str(new_value)
+    val_str = format_namelist_value(new_value)
 
-    pattern = rf"({re.escape(param_name)}\s*=\s*)([^/\n!]+)"
+    pattern = (
+        rf"(^\s*{re.escape(param_name)}\s*=\s*)"
+        rf"(.*?)"
+        rf"(,\s*(?:!.*)?$)"
+    )
 
     return re.sub(
         pattern,
-        rf"\1{val_str}",
+        rf"\g<1>{val_str}\g<3>",
         content,
-        flags=re.IGNORECASE,
+        flags=re.IGNORECASE | re.MULTILINE,
     )
 
 def main():
@@ -96,6 +118,9 @@ def main():
         os.makedirs(os.path.join(NAMELIST_DIR, model_name, 'cordex'))
         os.makedirs(os.path.join(NAMELIST_DIR, model_name, 'diag'))
 
+        # Replace GHG tweak
+        content = replace_namelist_val(content, 'gas_tweak_factors', ghg_tweak_ratio)
+
         # Replace output for diagnostic mode
         for parameter, value in diag_mode.items():
             content = replace_namelist_val(content, parameter, value)
@@ -105,8 +130,8 @@ def main():
         with open(out_path, "w") as f:
             f.write(content)
 
-        # Replace output for diagnostic mode
-        for parameter, value in diag_mode.items():
+        # Replace output for cordex mode
+        for parameter, value in cordex_mode.items():
             content = replace_namelist_val(content, parameter, value)
 
         # Save to individual namelist file
