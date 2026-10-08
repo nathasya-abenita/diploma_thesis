@@ -99,6 +99,3 @@ if __name__ == '__main__':
     df[index_list[2]] = df_clima_gwl_3_0 / df_clima_fac
     df = df.astype("float")
     print(df.round(1))
-    
-
-    
