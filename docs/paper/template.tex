@@ -1,0 +1,830 @@
+%% Copernicus Publications Manuscript Preparation Template for LaTeX Submissions
+%% ---------------------------------
+%% This template should be used for copernicus.cls
+%% The class file and some style files are bundled in the Copernicus Latex Package, which can be downloaded from the different journal webpages.
+%% For further assistance please contact Copernicus Publications at: production@copernicus.org
+%% https://publications.copernicus.org/for_authors/manuscript_preparation.html
+
+
+%% Please use the following documentclass and journal abbreviations for preprints and final revised papers.
+
+%% 2-column papers and preprints
+\documentclass[journal abbreviation, manuscript]{copernicus}
+
+
+
+%% Journal abbreviations (please use the same for preprints and final revised papers)
+
+
+% Advances in Geosciences (adgeo)
+% Advances in Radio Science (ars)
+% Advances in Science and Research (asr)
+% Advances in Statistical Climatology, Meteorology and Oceanography (ascmo)
+% Aerosol Research (ar)
+% Annales Geophysicae (angeo)
+% Archives Animal Breeding (aab)
+% Atmospheric Chemistry and Physics (acp)
+% Atmospheric Measurement Techniques (amt)
+% Biogeosciences (bg)
+% Climate of the Past (cp)
+% DEUQUA Special Publications (deuquasp)
+% Earth Surface Dynamics (esurf)
+% Earth System Dynamics (esd)
+% Earth System Science Data (essd)
+% E&G Quaternary Science Journal (egqsj)
+% EGUsphere (egusphere) | This is only for EGUsphere preprints submitted without relation to an EGU journal.
+% Earth Observation (eo)
+% European Journal of Mineralogy (ejm)
+% Geochronology (gchron)
+% Geographica Helvetica (gh)
+% Geoscience Communication (gc)
+% Geoscientific Instrumentation, Methods and Data Systems (gi)
+% Geoscientific Model Development (gmd)
+% History of Geo- and Space Sciences (hgss)
+% Hydrology and Earth System Sciences (hess)
+% Journal of Bone and Joint Infection (jbji)
+% Journal of Environmentally Compatible Air Transport System (jecats)
+% Journal of Micropalaeontology (jm)
+% Journal of Sensors and Sensor Systems (jsss)
+% Magnetic Resonance (mr)
+% Mechanical Sciences (ms)
+% Land Systems (ls)
+% Natural Hazards and Earth System Sciences (nhess)
+% Nonlinear Processes in Geophysics (npg)
+% Ocean Science (os)
+% Polarforschung - Journal of the German Society for Polar Research (polf)
+% Proceedings of the International Association of Hydrological Sciences (piahs)
+% Proceedings of the International Ocean Drilling Programme (piodp)
+% Safety of Nuclear Waste Disposal (sand)
+% Scientific Drilling (sd)
+% SOIL (soil)
+% Solid Earth (se)
+% State of the Planet (sp)
+% The Cryosphere (tc)
+% Weather and Climate Dynamics (wcd)
+% Web Ecology (we)
+% Wind Energy Science (wes)
+
+
+%% \usepackage commands included in the copernicus.cls:
+%\usepackage[german, english]{babel}
+%\usepackage{tabularx}
+%\usepackage{cancel}
+%\usepackage{multirow}
+%\usepackage{supertabular}
+%\usepackage{algorithmic}
+%\usepackage{algorithm}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage{subfig}
+%\usepackage{rotating}
+
+
+\begin{document}
+
+\title{Anthropogenic Influences on the 2025 Sumatra Flash Floods associated with Tropical Cyclone Senyar}
+
+
+% \Author[affil]{given_name}{surname}
+
+\Author[1]{Nathasya Abenita}{Christien}
+\Author[1]{Maria Leidinice}{da Silva}
+\Author[1]{Erika}{Coppola}
+
+\affil[1]{The Abdus Salam International Centre for Theoretical
+Physics, Trieste, Italy}
+
+%% The [] brackets identify the author with the corresponding affiliation. 1, 2, 3, etc. should be inserted.
+
+%% If an author is deceased, please add \deceased[$Deceased date if applicable$]{$Author number$} (e.g. \deceased[13 November 2015]{2}) at the end of the affiliations. The author number depends on the placement of the author in the author list, e.g. the third author has number 3.
+
+
+%% If authors contributed equally, please add \equalcontrib{$Author numbers$} (e.g. \equalcontrib{1,3}) at the end of the affiliations. The author number depends on the placement of the author in the author list, e.g. the third author has number 3.
+
+\runningtitle{TEXT}
+
+\runningauthor{TEXT}
+
+\received{}
+\pubdiscuss{} %% only important for two-stage journals
+\revised{}
+\accepted{}
+\published{}
+
+%% These dates will be inserted by Copernicus Publications during the typesetting process.
+
+
+\firstpage{1}
+
+\maketitle
+
+
+
+\begin{abstract}
+In late November 2025, Sumatra was devastated by the rare equatorial Tropical Cyclone (TC) Senyar, which triggered catastrophic flash floods and landslides affecting millions of people. While rapid attribution studies suggested a human fingerprint, these unconditional approaches treat the disaster as part of a broad class of events and may struggle to capture the local and nonlinear processes unique to this specific storm's evolution. To complement these studies with a conditional approach, this study utilizes a convection-permitting regional climate model (RegCM5) and a pseudo-global warming (PGW) storyline framework to evaluate the event's evolution across three global warming levels: a $-1.5\,\unit{^\circ C}$ counterfactual scenario for historical anthropogenic climate change (ACC) attribution, alongside $+1.5\,\unit{^\circ C}$ and $+3.0\,\unit{^\circ C}$ future warming scenarios. Reconstruction of the event confirms that the convection-permitting model significantly improves the representation of the storm compared to reanalysis data. Historical attribution reveals that ACC has already amplified the disaster, while future projections indicate a more violent, concentrated bursts of extreme rainfall. These shifts are underpinned by a robust increase in atmospheric energy and moisture transport. The increased release of latent heat within the storm core accelerates updraft velocities, effectively converting moisture to extreme precipitation. Furthermore, a consistent increase in peak wind intensity of TC Senyar in future scenarios suggests an emerging threat of compounding wind and hydrological hazards for Sumatra. These findings imply that future adaptation strategies must prioritize resilience against high-magnitude, localized bursts even within a potentially smaller total disaster footprint.
+\end{abstract}
+
+
+% \copyrightstatement{TEXT} %% This section is optional and can be used for copyright transfers.
+
+
+\section{Introduction}  %% \introduction[modified heading if necessary]
+At the end of November 2025, Sumatra was devastated by exceptional monsoon rains and a rare equatorial tropical storm, Tropical Cyclone (TC) Senyar \citep{climameter,egusphere-2026-694}. Forming near the Strait of Malacca—a tropical basin long considered almost cyclone-free due to the weak Coriolis force at low latitudes—Senyar’s development was enabled by a strong monsoon surge and exceptionally active convective clustering \citep{yulihastin2026origins}. The storm moved towards Sumatra, allowing convective activities to persist over land and triggering massive flooding, flash floods, and widespread landslides that affected more than 3 million people \citep{wu2026analysis, wwa, climameter}, as summarized in Figure \ref{fig:impact_marker}.
+
+Rapid attribution studies have already assessed the likelihood of anthropogenic climate change (ACC) influencing the event. A study by ClimaMeter using an analogue-based approach suggested that meteorological conditions causing the Sumatra floods are up to 10\% wetter in the present compared to the past \citep{climameter}. Furthermore, a probabilistic assessment by World Weather Attribution (WWA) detected an increase in extreme rainfall associated with historical warming estimated at 9\%--50\% \citep{wwa}. However, WWA could not robustly attribute this trend to ACC because climate models showed inconsistent results regarding the direction of change. This indicated that atmospheric circulation and tropical convective processes might be systematically misrepresented by coarse-resolution global models.
+
+While these rapid attribution studies allow for quick communication to the public, there are limitations to these "unconditional" approaches, which treat an extreme event as part of a broad class of similar events \citep{lenderink2025pseudo,van2026essential}. Individual events can deviate from average behavior, and their impacts often depend on local, nonlinear processes and specific mesoscale dynamics that are not captured when events are grouped into classes \citep{van2026essential}. Conditional approaches, also known as storyline methods, offer another perspective by fixing the large-scale meteorological conditions to see how a specific event evolves in a warmer or cooler climate.
+
+In performing conditional attribution studies, the pseudo-global warming (PGW) approach has been commonly used \citep{brogli2023pseudo, calvo2026human}, including for studies on tropical cyclones \citep{patricola2018anthropogenic}. With the PGW method, thermodynamic perturbations are applied to the boundary conditions of a simulation, allowing an event to be simulated across different climate states. Similar strategies have been used to study convective extremes in both past cooler and future warmer climates, allowing us to move beyond historical attribution toward future projection \citep{lenderink2025pseudo}.
+
+Furthermore, while rainfall is the primary driver of Sumatra's flash floods, a comprehensive assessment must also consider changes in TC Senyar intensity. Previous storyline studies on major tropical cyclones have demonstrated that while ACC significantly enhances rainfall, the response of maximum surface wind speeds and minimum sea level pressure can vary depending on the storm's environment and structure \citep{patricola2018anthropogenic}. By assessing TC Senyar across a range of climates, this study aims to determine how both the hydrological impact and the strength of equatorial TC Senyar evolve with global warming.
+
+% Define research questions
+In general, under the PGW approach, we are asking: \textit{"If an event like the 2025 Sumatra floods had occurred under a pre-industrial (cooler) or future (warmer) climate, how would it have changed?"}. Specifically, we define several research objectives to attribute ACC to the 2025 Sumatra's flood-inducing extreme rainfalls and its future projection. First, we simulate the 2025 extreme rainfall and cyclone dynamics associated with TC Senyar in Sumatra with high resolution RegCM5 model under present climate. The simulation shall be checked whether it can represent the observed storm or extreme precipitation well. For historical attribution, we utilize a counterfactual model where the warming signal ($1.5\,\unit{^\circ C}$) is removed from the boundary conditions to represent a pre-industrial climate. We also simulate different future projections by adding a $+1.5\,\unit{^\circ C}$ or $+3.0\,\unit{^\circ C}$ warming signal to the boundary conditions to assess the hazard's evolution in a warmer world. This is done to perform future risk projection. We also quantify the thermodynamic and dynamical changes between the models to fully explain the changes within the convective process.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\linewidth]{../../figs/event_view.png}
+\caption{Accumulated rainfall during TC Senyar lifetime from MSWEP and the TC track from IBTrACS with impact markers}
+\label{fig:impact_marker}.
+\end{figure}
+
+\section{Methodology and Data}
+
+
+This study consists of two stages. First, factual simulation of Tropical Cyclone (TC) Senyar is done by utilizing convection-permitting simulation with a regional climate model. If the factual simulation is comparable with the observed TC, the next stage is to simulate the event under a cooler or warmer climate. By this, we can study the response in the TC intensity and rainfall given anthropogenic perturbations.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\linewidth]{./../../figs/domain_elev.png}
+\caption{Simulation domain with TC Senyar track from IBTrACS and elevation from GMTED2010 \citep{danielson2011global}}
+\label{fig:domain}.
+\end{figure}
+
+\subsection{Convection-permitting simulation with RegCM}
+\label{section:cpm_with_regcm}
+
+Factual simulation of the event is performed using the regional climate model RegCM, developed by the National Center for Atmospheric Research (NCAR) at first, and then at the Abdus Salam International Centre for Theoretical Physics (ICTP). The latest version of RegCM, RegCM5, features a non-hydrostatic dynamical core from the weather prediction MOLOCH. With the new core, RegCM5 has been improved to provide better statistics, including hourly precipitation intensities, especially at convection-permitting resolutions \citep{giorgi2023fifth, coppola20255th}. %Additionally, the use of regional climate model over a global model to perform this hindcast is beneficial in constraining the large-scale circulation of the tropical cyclone hindcast \cite{patricola2018anthropogenic}, such that observed tracks are represented well.
+
+The model is run at resolution of 3 km over region of 80°E--120°E and 26°S--14°N, as seen in Figure \ref{fig:domain}, with 50 levels of vertical height spanning 30 km. This region is chosen to be centered around the Malacca Strait which is the domain of TC genesis and main track. The center is intentionally shifted slightly southward to avoid biasing the model toward another strong low-pressure system located at South China Sea. The region also encloses Sumatra Island and Malay Peninsula which are the most impacted regions from this event.
+
+The simulations in this study use the following physical schemes: UW planetary boundary layer scheme (PBL), RRTM radiation scheme, CLM4.5 land surface scheme, explicit moisture Nogherotto/Tompkins scheme, and Zeng ocean flux scheme. As mentioned, the latest version of RegCM features the MOLOCH non-hydrostatic dynamical core that resolves convection. Most of these schemes, except the PBL, are chosen to follow the CORDEX-CORE simulation for Southeast Asia region, where details of the schemes are summarized in \citet{coppola20255th}. However, modification is done to obtain the best representation of the cyclone track, done by different experiments summarized in Appendix \ref{appendix:exp}.
+
+All simulations use ERA5 reanalysis fields \citep{hersbach2020era5} as initial and lateral boundary conditions (ICBC), which includes sea surface temperature, surface air pressure, surface temperature, and atmospheric variables, such as horizontal wind speed, air temperature, and humidity mixing ratio. ERA5 reanalysis has been shown to represent TC Senyar during its lifetime with weaker intensity as discussed in Section \ref{subsec:factual_sim}. Simulations are initialized at 25 November 2025 00:00 UTC such that some hours of spin-up time is given. Generally, an earlier initialization time fails to capture the genesis of the cyclone. This is also in agreement with a similar study in hindcasting TC using a convection-permitting model where tropical cyclone intensity within the model adjusts from its initial condition within hours \citep{patricola2018anthropogenic}.
+
+Center of the tropical cyclone is defined as the coordinate with the lowest sea level pressure. To validate the simulation, we compare both coordinates and intensity of the center with ERA5 reanalysis data and observation from the International Best Track Archive for Climate Stewardship (IBTrACS) \citep{knapp2010international, IBTrACS_data}. IBTrACS collects observed tropical cyclone data from agencies around the world and provides 6-hourly data of TCs tracks. Lastly, we use MSWEP v2 \citep{beck2019mswep} to verify the simulated precipitation by noting that it is known as the most reliable dataset for Indonesia \citep{wati2022statistics}.
+
+\subsection{Simulation in different climate with pseudo-global warming method}
+
+We simulate the case if the event were to occur in a cooler or warmer climate using pseudo-global warming (PGW) approach. The strategy of this approach is to impose perturbations directly in the climate system by modifying the boundary conditions. This approach has been commonly used as discussed in detail in \citet{brogli2023pseudo}. Furthermore, this strategy has been used well for tropical cyclone attribution studies \citep{patricola2018anthropogenic}.
+
+To reflect different climate periods based on a certain global warming level change, the ICBC are perturbed based on different time periods from three CMIP6 climate models, summarized in Table \ref{table:cmip6}. Pre-industrial climate as the baseline year is defined on 1850--1900. We collected 20-year period from each model corresponding to global warming level of \unit{1.5\,^{\circ}C} and \unit{3.0\,^{\circ}C} compared to the baseline \citep{hauser2022transient}. Each variable in ICBC, mentioned in Section \ref{section:cpm_with_regcm}, is perturbed such that we require CMIP6 variables mentioned in Table \ref{table:cmip6_vars}.
+
+
+\begin{table}[h] 
+\centering
+\caption{List of CMIP6 models used to perturb simulation ICBC and the corresponding 20-year period with a certain global warming level (GWL) compared to 1850--1900 baseline under SSP3-7.0 scenario \citep{hauser2022transient}}
+\begin{tabular}{ccc} 
+\hline
+\textbf{Model} & \textbf{GWL 1.5$^\circ$} & \textbf{GWL 3.0$^\circ$} \\
+\hline
+EC-Earth3-Veg & 2002--2021 & 2048--2067 \\
+MPI-ESM1-2-HR & 2025--2044 & 2072--2091 \\
+NorESM2-MM & 2037--2056 & 2081--2100 \\
+\hline
+\end{tabular}
+\label{table:cmip6}
+\end{table}
+
+\begin{table}[h] 
+\centering
+\caption{List of required variables from CMIP6 models of monthly mean on different pressure levels}
+\begin{tabular}{ccc} 
+\hline
+\textbf{Type} & \textbf{Variable} \\
+\hline
+3D	&Specific humidity \\
+2D	&Surface pressure \\
+2D	&Surface temperature \\
+3D	&Air temperature \\
+3D	&Horizontal wind \\
+3D	&Geopotential height \\
+\hline
+\end{tabular}
+\label{table:cmip6_vars}
+\end{table}
+
+The perturbations are quantified by computing the difference in multi-year monthly mean fields between a target counterfactual climate period and a factual reference period, as summarized in Table \ref{table:cmip6}. Averaging over long multi-decadal windows minimizes the influence of internal climate variability, following standard pseudo-global warming (PGW) protocols \citep{brogli2023pseudo}. Where needed, historical CMIP6 runs are concatenated with the SSP3-7.0 scenario to construct continuous 20-year windows corresponding to global warming levels (GWLs) of $1.5\,\unit{^\circ C}$ and $3.0\,\unit{^\circ C}$. For a given ICBC variable $X$, the monthly perturbation $\Delta X_m$ is expressed as:
+
+\begin{equation} \label{eq:delta}
+    \Delta X_m = \bar{X}_{\text{counterfactual}, m} - \bar{X}_{\text{factual}, m}
+\end{equation}
+
+where $m$ denotes the month, $\bar{X}_{\text{factual}, m}$ represents the baseline present-day state and $\bar{X}_{\text{counterfactual}, m}$ is either the 1850--1900 pre-industrial baseline or a future GWL state.
+
+This perturbation values undergo interpolation in space and time, such as it fits the ICBC of RegCM simulation. Vertically, we apply linear interpolation in logarithmic-scaled pressure levels. In horizontal space, we apply bilinear interpolation. Lastly, linear interpolation in time is applied such that we have variation in time, between midpoints of two consecutive months.
+
+Finally, the ICBC for the counterfactuals are generated by adding the interpolated climate perturbations defined in Eq \eqref{eq:delta} to the ICBC of the control simulation, defined as
+\begin{equation}
+    X^{\text{PGW}}_m = X^{\text{CTRL}}_m + \Delta X_m
+\end{equation}
+with $X^{\text{CTRL}}_m$ is the ICBC of control simulation for month $m$.
+
+Additionally, greenhouse gases (GHGs), including \chem{CO_2}, \chem{CH_4}, \chem{N_2O}, \chem{CFC11}, and \chem{CFC12}, are perturbed in the RegCM5 namelist to align radiative forcing with the respective counterfactual climate states following \citet{meinshausen2017historical, meinshausen2020ssp}. For each gas $i$, a concentration ratio $R_i$ is computed by comparing long-term mean global concentrations between the target counterfactual climate period and the 2005--2024 present-day event baseline period:
+
+\begin{equation}
+R_i = \frac{\bar{C}_{i, \text{counterfactual}}}{\bar{C}_{i, \text{event}}}
+\label{eq:ghg_ratio}
+\end{equation}
+
+where $\bar{C}_{i, \text{event}}$ represents the 2005--2024 mean concentration for gas $i$, and $\bar{C}_{i, \text{counterfactual}}$ is the corresponding multi-year mean for either the 1850--1900 pre-industrial baseline or the 20-year global warming level (GWL) windows specified in Table~\ref{table:cmip6}. The resulting gas-specific ratios $R_i$ are directly applied to scale the greenhouse gas forcing parameters in the RegCM5 radiation namelist.
+
+In addition to utilizing CMIP6 models to derive climate perturbations, we performed an idealized PGW experiment. In this setup, a uniform temperature perturbation corresponding to the storyline is applied across all ICBCs. Implemented via the tweak functionality in RegCM5, this perturbation modifies all temperature fields. including surface temperature and atmospheric temperature profiles across all vertical levels. Moisture content in the atmosphere is adjusted accordingly under assumption of constant relative humidity. Hereinafter, we label this experiment as the tweak experiment.
+
+To ensure consistency across experiments, a single consensus ratio $R_{i, \text{median}}$ is defined for each greenhouse gas by taking the ensemble median across the evaluated CMIP6 models:
+
+\begin{equation}
+R_{i, \text{median}} = \text{median} \left( \frac{\bar{C}_{i, \text{counterfactual}, k}}{\bar{C}_{i, \text{event}}} \right)
+\label{eq:ghg_ratio_median}
+\end{equation}
+
+where $k$ denotes the driving CMIP6 model, $\bar{C}_{i, \text{event}}$ is the 2005--2024 present-day event baseline concentration, and $\bar{C}_{i, \text{counterfactual}, k}$ is the multi-year mean concentration corresponding to the baseline or GWL window of model $k$. While ICBC variables ($\Delta X_m$) remain model-specific to preserve individual circulation footprints \citep{brogli2023pseudo}, applying $R_{i, \text{median}}$ standardizes the global radiative forcing across all RegCM5 simulations \citep{meinshausen2020ssp, calvo2026human}.
+
+To conclude, we define simulation name conclusions in Table \ref{tab:name_convention}. Additionally, we present an example of the perturbation from the three CMIP6 models for surface temperature variable in Figure \ref{fig:surface_temperature_perturbation}.
+
+\begin{table}[h] 
+    \centering
+    \caption{Simulation Name Convention}
+    \begin{tabular}{p{2cm}p{12cm}} 
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    present	& \textbf{Factual} simulation, driven by \textbf{ERA5} \\
+    past -1.5K	& \textbf{Counterfactual} simulation to represent \textbf{pre-industrial} climate, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
+    fut. +1.5K	& \textbf{Counterfactual} simulation to represent \textbf{future} climate with $+1.5\,\unit{^\circ C}$ warming, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
+    fut. +3.0K	& \textbf{Counterfactual} simulation to represent \textbf{future} climate with $+3.0\,\unit{^\circ C}$ warming, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
+    \hline
+    \end{tabular}
+    \label{tab:name_convention}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../../figs/compare/ts_complete.png}
+\caption{Time-mean (25--28 November 2025) of surface temperature perturbation applied to control simulation}
+\label{fig:surface_temperature_perturbation}.
+\end{figure}
+
+\subsection{Assessment metrics}
+In this study, we analyze rainfall intensity and area, changes in the moisture content and flux, and changes in physical mechanisms controlling the extreme rainfall associated with TC Senyar. We focus on the peak days based on observation, that is between 25 November 2025 01:00 UTC and 26 November 2025 23:00 UTC. For rainfall analysis, we focus on Aceh Province, while for the rest, we focus on a whole domain centered in the Malacca Strait. The rainfall area is derived using a threshold from observed average rainfall in Aceh Province which is around 300 mm over the full two peak days \citep{wu2026analysis}. 
+
+Data is sorted and presented as exceedance probability plot (equivalent to $1-\text{PCTL}/100$ where $\text{PCTL}$ is percentile). Relative change from a distribution to another distribution is assessed on a given percentile.
+
+To evaluate anthropogenic influence, the rate of increase of variable $X$ from past to present is computed by
+\begin{equation} \label{eq:increase-1}
+    X_{\text{increase}} = \frac{X_\text{present} - X_{\text{past}}}{X_{\text{past}}} \cdot 100.
+\end{equation} 
+Similarly, the rate of increase from present to future is computed by
+\begin{equation} \label{eq:increase-2}
+    X_{\text{increase}} = \frac{X_{\text{fut.}} - X_\text{present}}{X_\text{present}} \cdot 100.
+\end{equation}
+
+Some postprocessed variables are used to study the physical drivers of extreme rainfall. With pycordex, we extract specific humidty, horizontal wind velocity, vertical wind velocity, and geopotential height at different pressure levels. In our analysis, we derive low-level integrated vapor transport (IVT) using specific humidity and horizontal wind velocity from pressure levels between surface and 700 hPa. This is because moisture transport associated with TCs is primarily concentrated in the lower troposphere \citep{li2024western}.
+
+The Clausius-Clapeyron scaling analysis is done to study the response of the variables to global warming level change between the factual and counterfactual simulation. We divide $X_{\text{increase}}$ in Eq. \eqref{eq:increase-1} and \eqref{eq:increase-2} with $+1.5\,\unit{^\circ C}$ which corresponds to the experiment design.
+
+\section{Results}
+
+\subsection{Factual simulation of Tropical Cyclone (TC) Senyar with RegCM5} \label{subsec:factual_sim}
+In Figure \ref{fig:factual_track}, we present the best factual simulation to represent TC Senyar from experiments summarized in Appendix \ref{appendix:exp}. The convection-permitting model (CPM) adds a significant value over the ERA5 reanalysis, which failed to represent the cyclone's trajectory and intensity as accurately as the IBTrACS observation.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{../../figs/track/regcm_track_best_2_new.png}
+\caption{Track comparison between ERA5, observation (IBTrACS), and factual simulation}
+\label{fig:factual_track}
+\end{figure}
+
+\subsection{Anthropogenic influences on Tropical Cyclone Senyar}
+
+%\paragraph{Thermodynamic Baseline and Synoptic Fidelity}
+We first verify the experimental design through near-surface air temperature and geopotential height responses. Time-mean near-surface temperature plots for the counterfactual simulations (Figure \ref{fig:t2m_change}) confirm the successful application of the warming and cooling signals. These simulations reveal model-specific climate sensitivities. For instance, the NorESM2-MM model exhibits stronger land-based warming/cooling anomalies than other models, implying the importance of local feedback mechanisms.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../../figs/compare/tas_complete.png}
+\caption{Difference of time-mean (25--28 November 2025) near-surface temperature between counterfactual and factual simulation}
+\label{fig:t2m_change}
+\end{figure}
+
+This thermodynamic shift is further reflected in the 500 hPa geopotential height plots (Figure \ref{fig:geop_change}), which serve as a proxy for synoptic consistency. In the present-day simulation, the RegCM5 model faithfully reproduces the ERA5 reanalysis baseline, maintaining spatial structures around 5,840--5,870 meters. Under the +1.5$^\circ$ future scenario, widespread thermal expansion elevates the entire 500 hPa surface above the 5,870-meter threshold, while the -1.5$^\circ$ past scenario depresses it below 5,820 meters. Critically, the PGW framework succeeds in preserving the core synoptic features—specifically the cyclone vortex—while correctly adjusting the hydrostatic pressure heights and atmospheric column temperatures.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\linewidth]{../../figs/dynamical/zg500_all_model.png}
+\caption{Time-mean of 500 hPa geopotential height at 25 November 2025. Ensemble mean is used for counterfactuals.}
+\label{fig:geop_change}
+\end{figure}
+
+Next, we evaluate the representation of Tropical Cyclone Senyar across all experiments. Across all climate scenarios—past, present, and future—the trajectory of TC Senyar remains robust, confirming that the storm's path is not significantly altered by background warming. While some counterfactuals fail to represent proper track after landfall in Sumatra, each still shows reasonable sea level pressure of the tropical cyclone lifetime and maximum wind speed.
+
+While the general track and overall intensity (in terms of minimum sea level pressure) do not show significant shifts, a distinct anthropogenic influence can be identified in the wind intensity. In the warmer future climate, the results indicate that wind intensity consistently increases at peak times. This is consistent with previous study that found robust increase in wind speed of TCs \citep{patricola2018anthropogenic}. This suggests that while the 2025 event was primarily a hydrological disaster, similar equatorial cyclones in a warmer world may evolve into compounding hazards with more destructive wind profiles upon landfall.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../../figs/track/regcm_track_final_0_3hr.png}
+\caption{Simulated TC Senyar track and intensity. (a) For track, ensemble median of counterfactuals track is used. Tracks from each experiment are plotted as shaded lines. (b, c) For intensity, ensemble mean $\pm$ standard deviation of the counterfactuals is used.}
+\label{fig:track_exp_all}
+\end{figure}
+
+\subsection{Anthropogenic influences on rainfall associated with Tropical Cyclone Senyar}
+
+Before assessing the human fingerprint on the disaster, it is essential to verify the model's ability to represent the 2025 extreme event. A comparison of accumulated precipitation during the TC Senyar lifetime (25--28 November 2025) between the factual (present-day) simulation, the MSWEP v2 observed gridded dataset, ERA5 reanalysis, and local stations demonstrates the added value of the high-resolution RegCM5 model (Figure \ref{fig:compare_observed_pr}). While the ERA5 reanalysis captures the broad synoptic evolution of the storm, it tends to underestimate the magnitude and spatial concentration of local extremes in the Aceh province. In contrast, the factual simulation more closely aligns with the spatial distribution of extremes observed in the MSWEP dataset, successfully capturing the intense precipitation core over northern Sumatra. Although the model exhibits some discrepancies in representing the precise daily evolution of rainfall compared to local station data (See Appendix \ref{appendix:daily_evolution}), its superior performance in reproducing the spatial extent of heavy rainfall relative to ERA5 provides a foundation for further attribution and projection analyses.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\linewidth]{../../figs/compare/finals/observed_pr.png}
+\caption{Comparison of accumulated precipitation during TC Senyar lifetime between factual (present), MSWEP, and ERA5. Corresponding values from local stations are plotted as scatter points. Factual simulation with RegCM improves spatial distribution of extremes compared to ERA5.}
+\label{fig:compare_observed_pr}
+\end{figure}
+
+Comparing the present-day simulation to the pre-industrial counterfactual reveals that human-induced climate change has already significantly amplified the 2025 event. In the present climate, the total rainfall in Aceh increased by 10\%, matched by a 6\% increase in heavy rainfall intensity (99.9th percentile of hourly intensity). The most striking anthropogenic influence, however, is the spatial expansion of the hazard: the rainfall area exceeding the 300 mm threshold grew by 64\% compared to the cooler pre-industrial world. This expansion indicates that historical warming has not only made the storm wetter but has drastically increased the geographic area exposed to extreme hydrological triggers. These historical increases generally align with the Clausius-Clapeyron (CC) relationship, where a warmer atmosphere holds approximately 7\% more moisture per degree of warming.
+
+\begin{figure}[ht]
+    \centering
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_pr_mean_with_impact.png}
+        % \caption{} % optional individual caption
+    }
+
+    % \vspace{1em} % optional spacing
+
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_pr_mean.png}
+        % \caption{} % optional individual caption
+    }
+
+    \caption{(Top) Spatial map of accumulated precipitation between peak days. Ensemble mean is used for counterfactuals. Triangles are impact markers. (Bottom) Distribution change based on pooled hourly intensity from Aceh Province during peak days (orange line).}
+    \label{fig:compare_pr}
+\end{figure}
+
+Projecting the 2025 event into a +1.5$^\circ$ warmer future introduces a more complex changes. While heavy rainfall intensity is projected to continue its increase (+17\%), this intensification does not lead to a larger total rainfall volume or a broader impact zone. Instead, the results indicate a reversal of the historical trend: total rainfall is projected to decrease by 9\%, and the rainfall area is expected to contract by 15\%. This suggests that in a warmer future, atmospheric moisture is not distributed equally across all events; rather, rainfall becomes increasingly concentrated into fewer but more violent bursts. While the overall footprint of the storm may shrink, the localized core of the disaster becomes more dangerous as extreme intensity begins to exceed Clausius-Clapeyron scaling, even as lighter rainfall events decrease in frequency.
+
+The evolution of area-averaged hourly rainfall and its corresponding cumulative totals in Aceh Province provide visual confirmation of the discussed changes. The cumulative hyetograph (Figure \ref{fig:hyetograph}) shows that with present-day totals ending higher than those in the pre-industrial (-1.5$^\circ$) scenario. In contrast, the future (+1.5$^\circ$) cumulative trajectory eventually falls below present-day levels, supporting the projected 9\% decrease in total rainfall. %Physically, this indicates that while a warmer future atmosphere holds more moisture, the lack of consistently favorable lifting mechanisms—such as atmospheric circulation or storm dynamics—results in a less efficient conversion of that moisture into surface precipitation over the storm's duration
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\linewidth]{../../figs/compare/finals/hyetograph_event.png}
+\caption{(a) Evolution of area-averaged hourly rainfall in Aceh Province with its ensemble mean $\pm$ standard deviation for counterfactuals, while (b) shows the corresponding cumulative rainfall.}
+\label{fig:hyetograph}
+\end{figure}
+
+The physical basis for these changes lies in the efficiency with which the atmosphere converts moisture into rain. Although a warmer future atmosphere holds more moisture, every precipitation event does not necessarily produce more rainfall. The dynamical factors that control the efficiency of how moisture is converted to precipitation will be discussed in the next subsection. In the case of future projection of Aceh, the intensification of extreme intensity suggests that the localized convective process is more efficient. This changing feature implies that future adaptation strategies must prioritize resilience against concentrated, high-magnitude bursts that can trigger devastating flash floods and landslides, even within a smaller total disaster footprint.
+
+\subsection{Anthropogenic influences on the physical drivers of extreme rainfall}
+
+In understanding changes in extreme precipitation, it is common to decompose the contributions from thermodynamics and dynamics \citep{pfahl2017understanding} while both interact in a feedback especially in the tropics \citep{neelin2022precipitation}. Thus, to explain the physical mechanisms behind the 2025 Sumatra disaster, this subsection analyzes the anthropogenic influences in the thermodynamic and dynamical drivers that control the extreme rainfall. By quantifying changes in moisture supply, atmospheric instability, and convective strength, we can identify how human-caused warming has intensified the extreme rainfall associated with TC Senyar and how it changes in the future.
+
+\paragraph{Changes in moisture supply: Evaporation and IVT}
+The intensification of the 2025 extreme rainfall begins with an increased supply of moisture from the surrounding oceans. Analysis of evaporation flux in Figure \ref{fig:compare_evaporation} shows a consistent median increase of +4\% in both the historical attribution (past-to-present) and future projection scenarios (present-to-future). This steady increase in surface moisture is complemented by significant changes in low-level integrated vapor transport (IVT) over the Malacca Strait. The IVT spatial maps and exceedance probability distributions (Figure \ref{fig:compare_ivt}) reveal a critical shift in moisture dynamics.
+
+In a warmer climate, the extreme tail of IVT (values exceeding 800 kg m$^{-1}$ s$^{-1}$) increases substantially at a rate of 5\% to 12\% per degree of warming, closely aligning with Clausius-Clapeyron scaling. This intensification is concentrated specifically within the storm’s core moisture corridor over the Malacca Strait, while surrounding areas experience a decrease in weak moisture transport. This suggests that anthropogenic warming converges more extreme moisture directly into the cyclone’s circulation.
+
+\begin{figure}[ht]
+    \centering
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_evs.png}
+        % \caption{} % optional individual caption
+    }
+
+    % \vspace{1em} % optional spacing
+
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_evs.png}
+        % \caption{} % optional individual caption
+    }
+
+    \caption{(Top) Spatial map of time-mean evaporation flux during peak days. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled hourly values from whole shown domain.}
+    \label{fig:compare_evaporation}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_ivt.png}
+        % \caption{} % optional individual caption
+    }
+
+    % \vspace{1em} % optional spacing
+
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_ivt.png}
+        % \caption{} % optional individual caption
+    }
+
+    \caption{(Top) Spatial map of time-mean low-level IVT during peak days. Low-level IVT is obtained by integration between surface and 700 hPa. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled six-hourly values from whole shown domain.}
+    \label{fig:compare_ivt}
+\end{figure}
+
+\paragraph{Changes in atmospheric instability and potential energy}
+The increased moisture supply is coupled with a dramatic rise in convective available potential energy (CAPE), the primary measure of atmospheric instability, seen in Figure \ref{fig:compare_cape}. Across both climate scenarios, median CAPE values increase by +23\%--28\%, with high-CAPE regions (>1000 J/kg) expanding significantly in both spatial area and intensity along the storm corridor (the Malacca Strait). These findings support previous research \citep{seeley2015does}, showing that CAPE increases as the climate warms, providing the potential required for severe convective storms. This surge in potential energy ensures that when moisture is lifted within the cyclone's core, the resulting convection is significantly more violent than it would have been in a cooler climate.
+
+\begin{figure}[ht]
+    \centering
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_cape.png}
+        % \caption{} % optional individual caption
+    }
+
+    % \vspace{1em} % optional spacing
+
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_cape.png}
+        % \caption{} % optional individual caption
+    }
+
+    \caption{(Top) Spatial map of time-mean CAPE during peak days. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled hourly values from whole shown domain.}
+    \label{fig:compare_cape}
+\end{figure}
+
+\paragraph{Changes in physical mechanisms: Latent Heating and Updrafts}
+The final link in the convective process is the conversion of potential energy into vertical motion and intense rainfall through dynamical feedbacks. As moisture condenses within the storm's core, it releases more latent heat, which further amplifies the peak diabatic heating rates, up to 17\% per degree of warming in future scenarios (Figure \ref{fig:compare_diab}). This localized release of energy increases in-cloud buoyancy, which directly accelerates vertical motion (Figure \ref{fig:compare_wa}).
+
+Consequently, the 99.9th percentile of maximum updraft velocity shows an increase of +12\% in the present climate and +15\% future. This dynamical intensification explains the complex intensity-area change: even as the broader regional rainfall area contracts, the intensified convective core becomes more efficient at converting moisture to concentrated, high-magnitude bursts.
+
+
+\begin{figure}[ht]
+    \centering
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_diab.png}
+        % \caption{} % optional individual caption
+    }
+
+    % \vspace{1em} % optional spacing
+
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_diab.png}
+        % \caption{} % optional individual caption
+    }
+
+    \caption{(Top) Spatial map of time-maximum of maximum temperature tendency due to latent heat exchange during peak days. Maximum temperature tendency is obtained by taking vertical maxima over each time step. Ensemble mean is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
+    \label{fig:compare_diab}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_wa_max.png}
+        % \caption{} % optional individual caption
+    }
+
+    % \vspace{1em} % optional spacing
+
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_wa.png}
+        % \caption{} % optional individual caption
+    }
+
+    \caption{(Top) Spatial map of time-maximum of maximum vertical velocity during peak days. Maximum vertical velocity is obtained by taking vertical maxima over each time step. Ensemble maxima is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
+    \label{fig:compare_wa}
+\end{figure}
+
+\conclusions  %% \conclusions[modified heading if necessary]
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../figs/schematic.png}
+\caption{Summary of changes in physical drivers and outcomes of the 2025 Sumatra extreme rainfall. Values indicate the relative change for the historical attribution (past-to-present) and future projection (present-to-future) scenarios. Blue boxes highlight localized impacts within the Aceh Province, while gray boxes show regional changes across the Malacca Strait, Sumatra, and Malay Peninsula. Heavy rainfall intensity and high updraft is defined by the 99.9th percentile of the variables in factual simulation, and the rainfall area represents the geographic extent exceeding the 300 mm threshold over the peak two-day period. Similary, latent heating area and high-IVT area represent the geographic extend exceeding its 99th percentile threshold in the factual simulation over the peak period. Evaporation and CAPE changes are from the distribution median change.}
+\label{fig:schematic}.
+\end{figure}
+
+This study employed a high-resolution, convection-permitting RegCM5 model and the pseudo-global warming (PGW) framework to attribute the influence of anthropogenic climate change (ACC) to the rare equatorial Tropical Cyclone (TC) Senyar and the resulting 2025 Sumatra flash floods. Our reconstruction of the event confirms that the high-resolution model provides significant value over coarse ERA5 reanalysis data, particularly in capturing the spatial distribution of extreme accumulated rainfall across northern Sumatra. While the presented attribution focuses on Aceh Province, similar findings are found in the other affected provinces, such as we argue that the findings are applicable for Sumatra in general.
+
+The attribution analysis reveals a distinct change in the hazard's character across three different climate (past, present, and future):
+\begin{itemize}
+    \item Historical warming has intensified the 2025 event. While the total rainfall in Aceh increased by 10\%, the most striking finding is a 64\% expansion in the rainfall area exceeding 300 mm. This indicates that climate change has drastically increased the geographic exposure to extreme hydrological triggers compared to a pre-industrial climate.
+    \item In a +1.5$^\circ$ warmer world, the hazard may become more spatially concentrated but significantly more violent. While heavy rainfall intensity continues to increase (+17\%), exceeding Clausius-Clapeyron scaling, the total rainfall and total rainfall area are projected to contract by 9\% and 15\%, respectively.
+    \item These changes are underpinned by a robust increase in atmospheric energy and moisture transport. We identify more than 20\% increase in CAPE across scenarios and an intensification of extreme IVT (+5\%–12\% per degree) specifically within the moisture corridor of the Malacca Strait. As shown in the summary schematic (Figure \ref{fig:schematic}), the release of increased latent heat within the storm core accelerates high updraft velocities (more than 10\% of increase), effectively converting moisture to concentrated bursts even as the broader storm footprint shrinks.
+\end{itemize}
+
+Finally, while TC Senyar’s trajectory remains generally robust across all experiments, the projection of increased peak wind intensity in the future scenario suggests that Sumatra may face an emerging threat of compounding wind and hydrological hazards as the climate continues to warm.
+
+To further advance the attribution of the 2025 Sumatra disaster, future research should address several things. On the atmospheric side, resolving sub-daily timing discrepancies at individual meteorological stations, arising from UTC-to-local time offsets and convective-scale initiation dynamics, requires future validation against high-resolution hourly rainfall observations once it is available. On the terrestrial side, because the disaster was amplified by severe deforestation and complex hilly topography \citep{wu2026analysis, wwa}, future work should explicitly couple these regional climate projections with land-use and hydrological models to quantify the compounding feedback between extreme precipitation, land cover degradation, and flood-landslide risk.
+
+%% The following commands are for the statements about the availability of data sets and/or software code corresponding to the manuscript.
+%% It is strongly recommended to make use of these sections in case data sets and/or software code have been part of your research the article is based on.
+
+% \codeavailability{TEXT} %% use this section when having only software code available
+
+
+\dataavailability{ERA5 data can be accessed through \url{https://10.24381/cds.adbb2d47} and \url{https://doi.org/10.24381/cds.bd0915c6}. Daily rainfall from local stations can be accessed through \url{https://dataonline.bmkg.go.id/}, a website managed by Indonesian Meteorology, Climatology, and Geophysical Agency (BMKG).} %% use this section when having only data sets available
+
+
+% \codedataavailability{TEXT} %% use this section when having data sets and software code available
+
+
+% \sampleavailability{TEXT} %% use this section when having geoscientific samples available
+
+
+% \videosupplement{TEXT} %% use this section when having video supplements available
+
+
+\appendix
+\section{RegCM Experiments for Tropical Cyclone Senyar}
+\label{appendix:exp}
+
+In this appendix, findings from different configurations of the model are summarized. The aim of these experiments are to find the best configuration to perform hindcast or factual simulation of Tropical Cyclone (TC) Senyar.
+
+\subsection*{Different intialization time and domain center}
+
+We first focus on using the same physical schemes as CORDEX SEA-25 simulation \citep{coppola20255th}, but with different domain center and extent (Figure \ref{fig:domain}). Different centers and initialization dates are done to find the best choice to perform convection-permitting simulation of the event. The findings are summarized in the Table \ref{table:diff_init} in which we conclude to use "South-to-Center" domain and initialization date of 25 November 2025 00:00 UTC, which gives spin-up time of 12 hours. This best experiment result can be seen in Figure \ref{fig:track_base}. The main weakness of this experiment is the fact that the low-pressure system weakens too quickly after the landfall in Sumatra, unable to represent the tropical depression track towards Malay Peninsula.
+
+\begin{table}[h] 
+\centering
+\caption{Different experiments by varying initialization date. South-to-Center domain is centered at (100°E, 6°S), while Centered domain is centered at (100°E, 1°S) which is around the Malacca Strait. Initial date is always on November 2025.}
+\begin{tabular}{p{3cm} p{2cm} p{2cm} p{7cm}}
+\hline
+\textbf{Domain Center} & \textbf{Resolution (km)} & \textbf{Initial Date} & \textbf{Findings} \\
+\hline
+South-to-Center & 12  & 21, 22, 23, 24, 25 & Weak intensity in general (but still comparable with ERA5 intensity) with better track with less spin-up time. Intensity is increased (closed vortex is more observed) as more spin-up time is given, but the track is highly off. \\
+South-to-Center & 3 & 22, 23, 24, 25 & Track and intensity are better with less spin-up time. TC is not represented at all with longer spin-up time. With the best experiment with 12-hour spin-up time, low pressure system dies too quickly after hitting land for the first time. \\
+Centered & 3 & 24, 25 & Similar result to the other 3 km domain, but the system dies even earlier. It might be caused by other stronger low pressure system in the South China Sea\\
+\hline
+\end{tabular}
+\label{table:diff_init}
+\end{table}
+
+\subsection*{Different physical schemes}
+
+Different physical schemes are tested, especially for planetary boundary layer (PBL) and parameters for Zeng ocean flux scheme, summarized in Table \ref{table:scheme_exp}. By switching from Holstag to UW PBL, it is found that the system is better represented after landfall, improving the previous stated problem (Figure \ref{fig:track_different_schemes}, experiment 0, color green). Different parameters for Zeng ocean flux scheme are checked, that is the roughness and factors, while keeping PBL scheme to UW. The best configuration that represents the most accurate track, with realistic tropical depression after the first landfall, is to keep the default schemes while setting \texttt{iocnrough=2} and \texttt{iocnzoq=2} (Figure \ref{fig:track_different_schemes}, experiment 3, color brown). Furthermore, for this experiment, the maximum near-surface wind speed downgrades to tropical depression reasonably, while others stay longer as tropical storm.
+
+\begin{table}[h] 
+\centering
+\caption{Experiments to test different ocean roughness models}
+\begin{tabular}{m{3cm} m{3cm} m{3cm} m{3cm}} 
+\hline
+Experiment	&PBL ({\texttt{ibltyp}})&	Ocean roughness model (\texttt{iocnrough}) & Ocean roughness factor (\texttt{iocnzoq}) \\
+\hline
+0	&2	&3	&1 \\
+1	&2	&3	&2 \\
+2	&2	&2	&1 \\
+3	&2	&2	&2 \\
+\hline
+\end{tabular}
+\label{table:scheme_exp}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../../figs/track/regcm_track_base_2.png}
+\caption{Track for best experiment with default physical schemes, also best spin-up time and domain}
+\label{fig:track_base}.
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../../figs/track/regcm_track_roll_3.png}
+\caption{Tracks for different physical schemes}
+\label{fig:track_different_schemes}.
+\end{figure}
+
+\section{Comparison of Simulated and Observed Daily Rainfall}
+\label{appendix:daily_evolution}
+
+\begin{figure}[h]
+    \centering
+    \subfloat[]{%
+        \includegraphics[width=0.4\textwidth]{../../figs/station_codes.png}
+        % \caption{} % optional individual caption
+    }
+
+    % \vspace{1em} % optional spacing
+
+    \subfloat[]{%
+        \includegraphics[width=0.8\textwidth]{../../figs/daily_pr_with_station.png}
+        % \caption{} % optional individual caption
+    }
+
+    \caption{(Top) Accumulated rainfall during TC Senyar lifetime from MSWEP and local stations with station codes. (Bottom) Comparison of daily precipitation between local station, MSWEP, and factual simulation. Total precipitation of four days are labelled in legend. Factual simulation could not represent observed daily rainfall evolution very well. Note that there are time zone difference between local station and both MSWEP and factual (UTC).}
+    \label{fig:daily_evolution}
+\end{figure}
+
+\noappendix       %% use this to mark the end of the appendix section. Otherwise the figures might be numbered incorrectly (e.g. 10 instead of 1).
+
+%% Regarding figures and tables in appendices, the following two options are possible depending on your general handling of figures and tables in the manuscript environment:
+
+%% Option 1: If you sorted all figures and tables into the sections of the text, please also sort the appendix figures and appendix tables into the respective appendix sections.
+%% They will be correctly named automatically.
+
+%% Option 2: If you put all figures after the reference list, please insert appendix tables and figures after the normal tables and figures.
+%% To rename them correctly to A1, A2, etc., please add the following commands in front of them:
+
+\appendixfigures  %% needs to be added in front of appendix figures
+
+\appendixtables   %% needs to be added in front of appendix tables
+
+%% Please add \clearpage between each table and/or figure. Further guidelines on figures and tables can be found below.
+
+
+
+\authorcontribution{TEXT} %% this section is mandatory
+
+\competinginterests{TEXT} %% this section is mandatory even if you declare that no competing interests are present
+
+% \disclaimer{TEXT} %% optional section
+
+\begin{acknowledgements}
+TEXT
+\end{acknowledgements}
+
+
+%% REFERENCES
+
+%% The reference list is compiled as follows:
+
+% \begin{thebibliography}{}
+
+% \bibitem[AUTHOR(YEAR)]{LABEL1}
+% REFERENCE 1
+
+% \bibitem[AUTHOR(YEAR)]{LABEL2}
+% REFERENCE 2
+
+% \end{thebibliography}
+\bibliographystyle{copernicus}
+\bibliography{references.bib}
+
+%% Since the Copernicus LaTeX package includes the BibTeX style file copernicus.bst,
+%% authors experienced with BibTeX only have to include the following two lines:
+%%
+%% \bibliographystyle{copernicus}
+%% \bibliography{example.bib}
+%%
+%% URLs and DOIs can be entered in your BibTeX file as:
+%%
+%% URL = {http://www.xyz.org/~jones/idx_g.htm}
+%% DOI = {10.5194/xyz}
+
+
+%% LITERATURE CITATIONS
+%%
+%% command                        & example result
+%% \citet{jones90}|               & Jones et al. (1990)
+%% \citep{jones90}|               & (Jones et al., 1990)
+%% \citep{jones90,jones93}|       & (Jones et al., 1990, 1993)
+%% \citep[p.~32]{jones90}|        & (Jones et al., 1990, p.~32)
+%% \citep[e.g.,][]{jones90}|      & (e.g., Jones et al., 1990)
+%% \citep[e.g.,][p.~32]{jones90}| & (e.g., Jones et al., 1990, p.~32)
+%% \citeauthor{jones90}|          & Jones et al.
+%% \citeyear{jones90}|            & 1990
+
+
+
+%% FIGURES
+
+%% When figures and tables are placed at the end of the MS (article in one-column style), please add \clearpage
+%% between bibliography and first table and/or figure as well as between each table and/or figure.
+
+% The figure files should be labelled correctly with Arabic numerals (e.g. fig01.jpg, fig02.png).
+
+
+%% ONE-COLUMN FIGURES
+
+%%f
+%\begin{figure}[t]
+%\includegraphics[width=8.3cm]{FILE NAME}
+%\caption{TEXT}
+%\end{figure}
+%
+%%% TWO-COLUMN FIGURES
+%
+%%f
+%\begin{figure*}[t]
+%\includegraphics[width=12cm]{FILE NAME}
+%\caption{TEXT}
+%\end{figure*}
+%
+%
+%%% TABLES
+%%%
+%%% The different columns must be seperated with a & command and should
+%%% end with \\ to identify the column brake.
+%
+%%% ONE-COLUMN TABLE
+%
+%%t
+%\begin{table}[t]
+%\caption{TEXT}
+%\begin{tabular}{column = lcr}
+%\tophline
+%
+%\middlehline
+%
+%\bottomhline
+%\end{tabular}
+%\belowtable{} % Table Footnotes
+%\end{table}
+%
+%%% TWO-COLUMN TABLE
+%
+%%t
+%\begin{table*}[t]
+%\caption{TEXT}
+%\begin{tabular}{column = lcr}
+%\tophline
+%
+%\middlehline
+%
+%\bottomhline
+%\end{tabular}
+%\belowtable{} % Table Footnotes
+%\end{table*}
+%
+%%% LANDSCAPE TABLE
+%
+%%t
+%\begin{sidewaystable*}[t]
+%\caption{TEXT}
+%\begin{tabular}{column = lcr}
+%\tophline
+%
+%\middlehline
+%
+%\bottomhline
+%\end{tabular}
+%\belowtable{} % Table Footnotes
+%\end{sidewaystable*}
+%
+%
+%%% MATHEMATICAL EXPRESSIONS
+%
+%%% All papers typeset by Copernicus Publications follow the math typesetting regulations
+%%% given by the IUPAC Green Book (IUPAC: Quantities, Units and Symbols in Physical Chemistry,
+%%% 2nd Edn., Blackwell Science, available at: http://old.iupac.org/publications/books/gbook/green_book_2ed.pdf, 1993).
+%%%
+%%% Physical quantities/variables are typeset in italic font (t for time, T for Temperature)
+%%% Indices which are not defined are typeset in italic font (x, y, z, a, b, c)
+%%% Items/objects which are defined are typeset in roman font (Car A, Car B)
+%%% Descriptions/specifications which are defined by itself are typeset in roman font (abs, rel, ref, tot, net, ice)
+%%% Abbreviations from 2 letters are typeset in roman font (RH, LAI)
+%%% Vectors are identified in bold italic font using \vec{x}
+%%% Matrices are identified in bold roman font
+%%% Multiplication signs are typeset using the LaTeX commands \times (for vector products, grids, and exponential notations) or \cdot
+%%% The character * should not be applied as mutliplication sign
+%
+%
+%%% EQUATIONS
+%
+%%% Single-row equation
+%
+%\begin{equation}
+%
+%\end{equation}
+%
+%%% Multiline equation
+%
+%\begin{align}
+%& 3 + 5 = 8\\
+%& 3 + 5 = 8\\
+%& 3 + 5 = 8
+%\end{align}
+%
+%
+%%% MATRICES
+%
+%\begin{matrix}
+%x & y & z\\
+%x & y & z\\
+%x & y & z\\
+%\end{matrix}
+%
+%
+%%% ALGORITHM
+%
+%\begin{algorithm}
+%\caption{...}
+%\label{a1}
+%\begin{algorithmic}
+%...
+%\end{algorithmic}
+%\end{algorithm}
+%
+%
+%%% CHEMICAL FORMULAS AND REACTIONS
+%
+%%% For formulas embedded in the text, please use \chem{}
+%
+%%% The reaction environment creates labels including the letter R, i.e. (R1), (R2), etc.
+%
+%\begin{reaction}
+%%% \rightarrow should be used for normal (one-way) chemical reactions
+%%% \rightleftharpoons should be used for equilibria
+%%% \leftrightarrow should be used for resonance structures
+%\end{reaction}
+%
+%
+%%% PHYSICAL UNITS
+%%%
+%%% Please use \unit{} and apply the exponential notation (e.g. 20\,\unit{W\,m^{-2}})
+
+
+\end{document}
