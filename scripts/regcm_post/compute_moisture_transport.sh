@@ -1,5 +1,5 @@
 EXP_LIST="EC-Earth3-Veg  MPI-ESM1-2-HR  NorESM2-MM  tweak"
-# EXP_LIST="factual"
+#EXP_LIST="factual"
 
 levels=(1000 925 850 700)
 
@@ -10,8 +10,8 @@ echo
 echo "1. Select variable"
 for EXP in ${EXP_LIST[@]}; do
 
-	DIR_IN="/home/nathasya/Documents/diploma_thesis/data/final_exp/counterfactual/GWL+1.5/${EXP}"
-    # DIR_IN="/home/nathasya/Documents/diploma_thesis/data/final_exp/${EXP}"
+	DIR_IN="/leonardo/home/userexternal/nchristi/post/cfac/GWL+3.0/${EXP}"
+	#DIR_IN="/leonardo/home/userexternal/nchristi/post/fac"
 
 	echo
 	cd ${DIR_IN}

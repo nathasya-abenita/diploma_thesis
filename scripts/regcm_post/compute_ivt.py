@@ -7,9 +7,9 @@ def complete_path(filename, folder_path):
 
 if __name__ == '__main__':
     exp_list = ['tweak', 'EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
-    folder_path_list = ['./data/final_exp/factual']
-    folder_path_list += [f'./data/final_exp/counterfactual/GWL+1.5/{exp}' for exp in exp_list]
-    folder_path_list += [f'./data/final_exp/counterfactual/GWL-1.5/{exp}' for exp in exp_list]
+    folder_path_list = ['/leonardo/home/userexternal/nchristi/post/fac']
+    folder_path_list += [f'/leonardo/home/userexternal/nchristi/post/cfac/GWL+3.0/{exp}' for exp in exp_list]
+    #folder_path_list += [f'./data/final_exp/counterfactual/GWL-1.5/{exp}' for exp in exp_list]
 
     for folder_path in folder_path_list:
         # Pressure levels (Pa)

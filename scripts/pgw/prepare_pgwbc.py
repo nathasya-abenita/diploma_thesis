@@ -3,9 +3,9 @@ import re
 
 # 1.1 Path to your template namelist and output directory for .in files
 GWL_LABEL = '+3.0'
-TEMPLATE_FILE = "./test/template.in"
-NAMELIST_DIR = f"./test/regcm_exp/cfac/GWL{GWL_LABEL}" # to save namelists (regcm_exp folder)
-SCRATCH_DIR = f"./test/scratch/final/fac/GWL{GWL_LABEL}" # input folder in scratch
+TEMPLATE_FILE = "/leonardo/home/userexternal/nchristi/diploma_thesis/regcm_exp/cfac/template/RegCM5-ERA5.in"
+NAMELIST_DIR = f"/leonardo/home/userexternal/nchristi/diploma_thesis/regcm_exp/cfac/GWL{GWL_LABEL}" # to save namelists (regcm_exp folder)
+SCRATCH_DIR = f"/leonardo/home/userexternal/nchristi/scratch/final/cfac/GWL{GWL_LABEL}" # input folder in scratch
 
 # 1.2 Define GHG tweak ratios
 '''
@@ -40,7 +40,7 @@ diag_mode = {
 cordex_mode = {
     "atmfrq"    : 1,
     "ifatm"     : True,
-    "atmfrq"    : 1,
+    "atmfrq"    : 3,
     "ifrad"     : True,
     "ifsts"     : True,
     "ifshf"     : True,
@@ -52,9 +52,9 @@ cordex_mode = {
 cmip6_namelists = []
 for model in cmip6_models:
     nl = {
-        "dirter" : os.path.join(SCRATCH_DIR, 'input'),
-        "dirglob" : os.path.join(SCRATCH_DIR, 'input'),
-        "dirout" : os.path.join(SCRATCH_DIR, 'output')
+        "dirter" : os.path.join(SCRATCH_DIR, model, 'input'),
+        "dirglob" : os.path.join(SCRATCH_DIR, model, 'input'),
+        "dirout" : os.path.join(SCRATCH_DIR, model, 'output')
     }
     cmip6_namelists.append(nl)
 
@@ -114,14 +114,16 @@ def main():
 
         # Create output directories if they don't exist
         os.makedirs(m["dirglob"], exist_ok=True)
-        os.makedirs(m["dirout"], exist_ok=True)
-        os.makedirs(os.path.join(NAMELIST_DIR, model_name, 'cordex'))
-        os.makedirs(os.path.join(NAMELIST_DIR, model_name, 'diag'))
+        os.makedirs(os.path.join(m["dirout"], 'cordex'), exist_ok=True)
+        os.makedirs(os.path.join(m["dirout"], 'diag'), exist_ok=True)
+        os.makedirs(os.path.join(NAMELIST_DIR, model_name, 'cordex', 'logs'), exist_ok=True)
+        os.makedirs(os.path.join(NAMELIST_DIR, model_name, 'diag', 'logs'), exist_ok=True)
 
         # Replace GHG tweak
         content = replace_namelist_val(content, 'gas_tweak_factors', ghg_tweak_ratio)
 
         # Replace output for diagnostic mode
+        content = replace_namelist_val(content, "dirout", os.path.join(m["dirout"], 'diag'))
         for parameter, value in diag_mode.items():
             content = replace_namelist_val(content, parameter, value)
 
@@ -131,6 +133,7 @@ def main():
             f.write(content)
 
         # Replace output for cordex mode
+        content = replace_namelist_val(content, "dirout", os.path.join(m["dirout"], 'cordex'))
         for parameter, value in cordex_mode.items():
             content = replace_namelist_val(content, parameter, value)
 

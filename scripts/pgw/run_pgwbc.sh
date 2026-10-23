@@ -15,14 +15,26 @@
 set -eo pipefail
 source /leonardo/home/userexternal/nchristi/modules_new
 
-INPUT=/leonardo_work/ICT26_ESP/RCMDATA/
+FAC_INP_PATH=/leonardo/home/userexternal/nchristi/scratch/final/fac/input
+INPUT=/leonardo_work/ICT26_ESP/RCMDATA/PGW
 NAMELIST=RegCM5-ERA5.in
 BINARIES=/leonardo/home/userexternal/nchristi/RegCM/bin
-MODELS=("EC-Earth3-Veg") #("EC-Earth3-Veg"  "MPI-ESM1-2-HR"  "NorESM2-MM")
+MODELS="MPI-ESM1-2-HR NorESM2-MM"
+#"EC-Earth3-Veg MPI-ESM1-2-HR NorESM2-MM"
+GWL="GWL+3.0"
+CFAC_PATH="/leonardo/home/userexternal/nchristi/scratch/final/cfac/$GWL"
 
-for MODEL in "${MODELS[@]}"; do
-	NAMELIST=/leonardo/home/userexternal/nchristi/diploma_thesis/regcm_exp/counterfactual/
-	$BINARIES/pgwbcCLM45 $NAMELIST $INPUT/$MODEL
-	$BINARIES/pgw_icbcCLM45 $ICBC 
+for MODEL in ${MODELS[@]}; do
+	# Change directory and copy ICBC from factual
+	echo $CFAC_PATH/$MODEL/input
+	cd $CFAC_PATH/$MODEL/input
+	cp -rn $FAC_INP_PATH/* .
+
+	# Define counterfactual namelist (cordex mode)  path
+	CFAC_IN=/leonardo/home/userexternal/nchristi/diploma_thesis/regcm_exp/cfac/$GWL/$MODEL/cordex/RegCM5-ERA5.in
+	# Execute PGW method from RegCM5
+	echo $CFAC_IN
+	$BINARIES/pgwbcCLM45 $CFAC_IN $INPUT/$MODEL/*GWL3.0*
+	$BINARIES/pgw_icbcCLM45 *ICBC*.nc *PGWBC*.nc 
 done
 }
