@@ -10,7 +10,7 @@ echo
 echo "1. Select variable"
 for EXP in ${EXP_LIST[@]}; do
 
-	DIR_IN="/leonardo/home/userexternal/nchristi/post/cfac/GWL+3.0/${EXP}"
+	DIR_IN="/leonardo/home/userexternal/nchristi/post_temp/cfac/GWL-1.5/${EXP}"
 	#DIR_IN="/leonardo/home/userexternal/nchristi/post/fac"
 
 	echo

@@ -29,7 +29,7 @@ def setup(ax):
 
 def read_data(path, selected_time):
     # Open dataset
-    ds_zg = xr.open_dataset(path).sel(time=selected_time)
+    ds_zg = xr.open_dataset(path).isel(time=selected_time)
     
     # Read coordinates for plotting
     lon, lat = ds_zg['lon'], ds_zg['lat']
@@ -51,36 +51,38 @@ fontsize=14
 if __name__ == '__main__':
 
     #%% Parameters    
-    selected_time = "2025-11-25T09:00:00"
+
+    # Index of time
+    selected_time = 0 # "2025-11-25T09:00:00"
 
     # Output file
-    path_out = './figs/dynamical'
+    path_out = '/leonardo/home/userexternal/nchristi/diploma_thesis/figs'
     name_out = rf'zg500_all_model.png'
 
     # Input file
-    path_in = './data/final_exp'
+    path_in = '~/post_temp'
 
     # Set up figure
-    fig = plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=(15, 9))
+    gs = fig.add_gridspec(2, 6)
+
     axs = [
-        fig.add_subplot(2, 2, 1, projection=ccrs.PlateCarree()),
-        fig.add_subplot(2, 2, 2, projection=ccrs.PlateCarree()),
-        fig.add_subplot(2, 2, 3, projection=ccrs.PlateCarree()),
-        fig.add_subplot(2, 2, 4, projection=ccrs.PlateCarree()),
-        ]
+        fig.add_subplot(s, projection=ccrs.PlateCarree())
+        for s in [gs[0, :3], gs[0, 3:], gs[1, :2], gs[1, 2:4], gs[1, 4:]]
+    ]
 
     # Plot parameter
-    zg_levels  = np.arange(5750, 5910, 10)   # hPa
+    zg_levels  = np.arange(5750, 5960, 10)   # hPa
 
     # Plot ERA5
-    ds_era5 = xr.open_dataset('./data/era5/z500_daily.nc').sel(valid_time=selected_time).isel(pressure_level=0)
+    ds_era5 = xr.open_dataset('~/diploma_thesis/data/era5/z500_daily.nc').isel(valid_time=selected_time).isel(pressure_level=0)
     zg_era5 = ds_era5['z'] / 9.8
     plot_zg(axs[0], zg_era5['longitude'], zg_era5['latitude'], zg_era5, zg_levels=zg_levels, title='ERA5')
 
     # Plot each scenario
-    name_in_list = ['counterfactual/GWL-1.5', 'factual', 'counterfactual/GWL+1.5']
-    file_name_list = ['zg500_ensmean_daily.nc', 'zg500_daily.nc', 'zg500_ensmean_daily.nc']
-    title_list = ['past -1.5K', 'present', 'fut. +1.5K']
+    name_in_list = ['fac', 'cfac/GWL-1.5', 'cfac/GWL+1.5', 'cfac/GWL+3.0']
+    file_name_list = ['zg500_daily.nc', 'zg500_ensmean_daily.nc','zg500_ensmean_daily.nc',  'zg500_ensmean_daily.nc']
+    title_list = ['present', 'past -1.5K', 'fut. +1.5K', 'fut. +3K']
 
     for name_in, title, ax, file_name in zip(name_in_list, title_list, axs[1:], file_name_list):
         lon, lat, zg = read_data(os.path.join(path_in, name_in, file_name), selected_time)
@@ -88,6 +90,7 @@ if __name__ == '__main__':
 
     cbar = fig.colorbar(cf, ax=axs, orientation='horizontal', pad=0.08, fraction=0.06, aspect=40)
     cbar.set_label("500 hPa Geopotential Height (m)", fontsize=fontsize, fontweight='bold')
+    cbar.ax.set_xticks(zg_levels[::2])
     cbar.ax.tick_params(labelsize=fontsize)
 
     # Path out to save figure

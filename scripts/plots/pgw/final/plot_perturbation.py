@@ -31,29 +31,37 @@ def setup(ax):
 
 if __name__ == '__main__':
     # Define paths
-    outfile = r'./figs/compare/ts_complete.png'
-    basefile = lambda x : rf'./data/final_exp/counterfactual/GWL{x}1.5'
+    outfile = r'/leonardo/home/userexternal/nchristi/diploma_thesis/figs/ts_complete.png'
+    basefile = lambda x : rf'/leonardo/home/userexternal/nchristi/post_temp/cfac/GWL{x}'
     model_list = ['past -1.5K (tweak)', 'past -1.5K (EC-Earth3-Veg)', 'past -1.5K (MPI-ESM1-2-HR)', 'past -1.5K (NorESM2-MM)',
-                  'fut. +1.5K (tweak)', 'fut. +1.5K (EC-Earth3-Veg)', 'fut. +1.5K (MPI-ESM1-2-HR)', 'fut. +1.5K (NorESM2-MM)'] # for title
+                  'fut. +1.5K (tweak)', 'fut. +1.5K (EC-Earth3-Veg)', 'fut. +1.5K (MPI-ESM1-2-HR)', 'fut. +1.5K (NorESM2-MM)', 'fut. +3K (tweak)', 'fut. +3K (EC-Earth3-Veg)', 'fut. +3K (MPI-ESM1-2-HR)', 'fut. +3K (NorESM2-MM)'] # for title
     model_list_ori = ['EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
     varfile = r'delta_ts.nc'
-    filenames = [os.path.join(basefile('-'), model, varfile) for model in model_list_ori]
-    filenames += [os.path.join(basefile('+'), model, varfile) for model in model_list_ori]
+    filenames = [os.path.join(basefile('-1.5'), model, varfile) for model in model_list_ori]
+    filenames += [os.path.join(basefile('+1.5'), model, varfile) for model in model_list_ori]
+    filenames += [os.path.join(basefile('+3.0'), model, varfile) for model in model_list_ori]
 
     # Read file
     ds_list_temp = [xr.open_dataset(file) for file in filenames]
-
+    
+    # tweak -1.5K
     ds_past = ds_list_temp[-1].copy()
     ds_past["ts"] = xr.full_like(ds_past["ts"], -1.5)
+    # tweak +1.5K
     ds_fut = ds_list_temp[-1].copy()
     ds_fut["ts"] = xr.full_like(ds_fut["ts"], 1.5)
-    ds_list = [ds_past] + ds_list_temp[:3] + [ds_fut] + ds_list_temp[3:]
+    # tweak +3.0K
+    ds_fut_ = ds_list_temp[-1].copy()
+    ds_fut_["ts"] = xr.full_like(ds_fut["ts"], 3.0)
+    # save all ds to one list
+    ds_list = [ds_past] + ds_list_temp[:3] + [ds_fut] + ds_list_temp[3:6] + [ds_fut_] + ds_list_temp[-3:]
+    
 
     # print(ds_fut['ts'])
     
     # Set up plot
     fig = plt.figure(figsize=(18,9))
-    axs = [fig.add_subplot(2, 4, i, projection=ccrs.PlateCarree()) for i in range (1, 8+1)]
+    axs = [fig.add_subplot(3, 4, i, projection=ccrs.PlateCarree()) for i in range (1, 12+1)]
 
     # Color and variable setting
     delta_level = np.arange(-3, 3.5, 0.5)  # K

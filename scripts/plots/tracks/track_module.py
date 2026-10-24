@@ -298,7 +298,7 @@ def plot_time_series_comparison(tracker, var_name, experiments=None, nhc_data=No
     # Plot NHC data if provided
     if nhc_data is not None and var_name in nhc_data.columns:
         ax.plot(nhc_data['time'], nhc_data[var_name], 'o-', 
-                label='IBTrACS', color="tab:orange", linewidth=2)
+                label='IBTrACS', color="tab:brown", linewidth=2)
     
     
     if experiments is None:
@@ -397,7 +397,7 @@ def plot_cyclone_tracks(tracker, experiments=None, nhc_data=None, era5_included=
     # Plot best track
     if nhc_data is not None:
         print(nhc_data)
-        ax.plot(nhc_data['lon'], nhc_data['lat'], 's-', color="tab:orange",
+        ax.plot(nhc_data['lon'], nhc_data['lat'], 's-', color="tab:brown",
                 linewidth=1, markersize=3, label='IBTrACS', alpha=0.8)
         ax.scatter(nhc_data['lon'].iloc[0], nhc_data['lat'].iloc[0],
                     marker='*', s=75, color="r", edgecolor='black', zorder=5)
@@ -480,7 +480,7 @@ def plot_max_sfc_wind(tracker, nhc_data=None, ax=None, smooth_window=1, era5_inc
     # Add NHC wind data
     if nhc_data is not None:
         ax.plot(nhc_data['time'], nhc_data['wind'] * 0.514444, 
-                'o-', label='IBTrACS', color="tab:orange", linewidth=2)
+                'o-', label='IBTrACS', color="tab:brown", linewidth=2)
 
 
     if not clean:

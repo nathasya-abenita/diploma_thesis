@@ -1,11 +1,12 @@
 from track_module import CycloneTracker, load_best_track_data, font_size, plot_cyclone_tracks, plot_time_series_comparison, plot_max_sfc_wind
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
+import os
 
 def plot_case(axs, experiments, color, label, roll, nhc_data):
     track_extent = [97, 105, 2, 5]    # Used for track detection
     map_extent =[94, 107, 0, 8]
-    data_dir = f"./data/final_exp"
+    data_dir = "/leonardo/home/userexternal/nchristi/post_temp"
 
     # Initialize tracker
     tracker = CycloneTracker(data_dir, experiments, track_extent, era5=False)
@@ -37,12 +38,12 @@ def plot_case(axs, experiments, color, label, roll, nhc_data):
 
 if __name__ == '__main__':
     # Configuration
-    output_path = "./figs/track/"
+    output_path = "/leonardo/home/userexternal/nchristi/diploma_thesis/figs"
     roll = 0 # no roll apply to keep all timestep complete
     outfile = f"regcm_track_final_{roll}_3hr.png" # f'regcm_track_best_{roll}_new.png'
 
     # Load best track data
-    best_track_dir = r"./data/IBTrACS.last3years.v04r01.nc"
+    best_track_dir = "~/diploma_thesis/data/IBTrACS.last3years.v04r01.nc"
     nhc_data = load_best_track_data(best_track_dir, time_res='3hr')
 
     # Create figure with 1 row and 3 columns
@@ -62,25 +63,25 @@ if __name__ == '__main__':
 
     # Scenario: past
     gwl_path = 'GWL-1.5'
-    experiments = [ f'counterfactual/{gwl_path}/tweak', 
-                    f'counterfactual/{gwl_path}/EC-Earth3-Veg', 
-                    f'counterfactual/{gwl_path}/MPI-ESM1-2-HR', 
-                    f'counterfactual/{gwl_path}/NorESM2-MM']
-    plot_case(axs, experiments, color='tab:blue', label='past -1.5K', roll=roll, nhc_data=nhc_data)
+    create_exp = lambda gwl_path : [ f'cfac/{gwl_path}/tweak', 
+                    f'cfac/{gwl_path}/EC-Earth3-Veg', 
+                    f'cfac/{gwl_path}/MPI-ESM1-2-HR', 
+                    f'cfac/{gwl_path}/NorESM2-MM']
+    plot_case(axs, create_exp(gwl_path), color='tab:blue', label='past -1.5K', roll=roll, nhc_data=nhc_data)
 
     # Scenario: present
-    experiments = ['factual']
+    experiments = ['fac']
     plot_case(axs, experiments, color='k', label='present', roll=roll, nhc_data=None)
 
-    # Scenario: past
+    # Scenario: future +1.5K
     gwl_path = 'GWL+1.5'
-    experiments = [ f'counterfactual/{gwl_path}/tweak', 
-                    f'counterfactual/{gwl_path}/EC-Earth3-Veg', 
-                    f'counterfactual/{gwl_path}/MPI-ESM1-2-HR', 
-                    f'counterfactual/{gwl_path}/NorESM2-MM']
-    plot_case(axs, experiments, color='tab:red', label='fut. +1.5K', roll=roll, nhc_data=None)
+    plot_case(axs, create_exp(gwl_path), color='tab:orange', label='fut. +1.5K', roll=roll, nhc_data=None)
+
+    # Scenario: future +1.5K
+    gwl_path = 'GWL+3.0'
+    plot_case(axs, create_exp(gwl_path), color='tab:red', label='fut. +3K', roll=roll, nhc_data=None)
 
     plt.tight_layout()
-    plt.savefig(output_path + outfile, dpi=400, bbox_inches='tight')
+    plt.savefig(os.path.join(output_path, outfile), dpi=400, bbox_inches='tight')
     plt.show()
 
