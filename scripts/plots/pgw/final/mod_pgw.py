@@ -30,7 +30,9 @@ event_lat_min, event_lat_max = -1.5, 7.5
 
 def read_data(path, time1, time2, rename=False, print_time=False, remove_spin_up=True): 
     ds = xr.open_dataset(path).sel(time=slice(time1, time2))
-
+    
+    # This is to delete the first time step because I noticed that for some atmospheric variables,
+    # we might obtain coarse output - perhaps an artifact of initial condition
     if remove_spin_up:
         ds = ds.sel(time=~(
             (ds.time.dt.date == np.datetime64("2025-11-25")) &
@@ -64,7 +66,7 @@ def fix_longitude(ds):
 
     return ds
 
-def plot_polygon(ax, polygon_path='./data/shp/Aceh.geojson'):
+def plot_polygon(ax, polygon_path='~/diploma_thesis/data/Aceh.geojson'):
     gdf = gpd.read_file(polygon_path)
     gdf = gdf.to_crs(epsg=4326)
     gdf.boundary.plot(ax=ax, linestyle='-', color='tab:orange', zorder=5)
@@ -261,23 +263,20 @@ class PGW:
             self.mask = False
 
         self.model_list = ['tweak', 'EC-Earth3-Veg', 'MPI-ESM1-2-HR', 'NorESM2-MM']
+        self.data_folder = "/leonardo/home/userexternal/nchristi/post_temp"
 
-    def cfac_past_path(self, exp):
-        return rf'./data/final_exp/counterfactual/GWL-1.5/{exp}/{self.filename}'
-
-    def cfac_fut_path(self, exp):
-        return rf'./data/final_exp/counterfactual/GWL+1.5/{exp}/{self.filename}'
-
+    def cfac_path(self, gwl, exp):
+        gwl_list = ['-1.5', '+1.5', '+3.0']
+        if gwl in gwl_list:
+            return rf'{self.data_folder}/cfac/GWL{gwl}/{exp}/{self.filename}'
+        else:
+            raise ValueError ('Available scenario or GWL:', gwl_list)
     def compute_ens(self, scenario):
         tp_cfac_list = []
         for exp in self.model_list:
-            # Define path
-            if scenario == 'past':
-                path_cfac = self.cfac_past_path(exp)
-            elif scenario == 'fut.':
-                path_cfac = self.cfac_fut_path(exp)
-            else:
-                raise ValueError (r'check scenario input (choices: "past" or "fut.")')
+            # Define path 
+            path_cfac = self.cfac_path(scenario, exp)
+            
             # Read file
             tp_cfac = self.prepare_data(path_cfac)
             tp_cfac_list.append(tp_cfac)
@@ -346,26 +345,27 @@ class PGW:
 
         # Prepare plot
         fig = plt.figure(figsize=(12, 5))
-        axs =[fig.add_subplot(1, 3, 1, projection=ccrs.PlateCarree()),
-            fig.add_subplot(1, 3, 2, projection=ccrs.PlateCarree()),
-            fig.add_subplot(1, 3, 3, projection=ccrs.PlateCarree())]
+        axs = [fig.add_subplot(1, 4, i, projection=ccrs.PlateCarree()) for i in range (1, 4+1)]
         
         # Plot for factual
-        path_fac = rf'./data/final_exp/factual/{self.filename}'
+        path_fac = rf'{self.data_folder}/fac/{self.filename}'
         tp_fac = self.prepare_data(path_fac)
 
         pcm = self.plot_colormesh(axs[1], tp_fac.xlon, tp_fac.xlat, tp_fac, cmap, norm)
 
         # Plot for other scenarios
-        ens_val = self.compute_ens(scenario='past')
+        ens_val = self.compute_ens(scenario='-1.5')
         self.plot_colormesh(axs[0], ens_val.xlon, ens_val.xlat, ens_val, cmap, norm)
-        ens_val = self.compute_ens(scenario='fut.')
+        ens_val = self.compute_ens(scenario='+1.5')
         self.plot_colormesh(axs[2], ens_val.xlon, ens_val.xlat, ens_val, cmap, norm)
+        ens_val = self.compute_ens(scenario='+3.0')
+        self.plot_colormesh(axs[3], ens_val.xlon, ens_val.xlat, ens_val, cmap, norm)
 
         # Add title
         axs[1].set_title('present')
         axs[0].set_title('past -1.5K')
         axs[2].set_title('fut. +1.5K')
+        axs[3].set_title('fut. +3K')
 
         # Activate boundaries and set extent
         for ax in axs:
@@ -404,31 +404,23 @@ class PGW:
         for exp in self.model_list:
             
             # Read data
-            if scenario == 'past':
-                path_cfac = self.cfac_past_path(exp)
-            elif scenario == 'fut.':
-                path_cfac = self.cfac_fut_path(exp)
-            else:
-                raise ValueError (r'check scenario input (choices: "past" or "fut.")')
+            path_cfac = self.cfac_path(scenario, exp)
             val_cfac = self.prepare_data(path_cfac)
             values_cfac_collection += val_cfac.values.tolist()
 
         excd_prob, values, dens_prob, bin_edges = compute_exceedance_prob(np.array(values_cfac_collection), bins=bins)
 
-        # p = np.linspace(1e-6, 1-1e-6, 50_000)
+        return excd_prob, values, dens_prob, bin_edges
+
+    def compute_dist_change (self, values_1, values_2):
+        """ evaluate the relative change from values_1 to values_2  """
         exc = np.logspace(-7, 0, 750)
         p = (1 - exc) * 100
-        values_p = np.percentile(values, p)
-        values_fac_p = np.percentile(values_fac, p)
-
-        if scenario == 'past':
-            change = (values_fac_p - values_p) / values_p * 100 / 1.5
-        elif scenario == 'fut.':
-            change = (values_p - values_fac_p) / values_fac_p * 100 / 1.5
-        else:
-            raise ValueError (r'check scenario input (choices: "past" or "fut.")')
+        values_p1 = np.percentile(values_1, p)
+        values_p2 = np.percentile(values_2, p)
         
-        return excd_prob, values, (values_fac_p, values_p, change), dens_prob, bin_edges
+        change = (values_p2 - values_p1) / values_p1 * 100 / 1.5
+        return values_p1, values_p2, change       
 
     def plot_dist_change(self, change_val_min, change_val_max, change_min=0, change_max=20, outfile=None, add_cc_limit=False, pct=99, bins='auto', ylim_pdf=(1e-6, 1)):
         # Set up plot
@@ -437,15 +429,16 @@ class PGW:
         fig, axs = plt.subplots(1, 3, figsize=(12, 4))
 
         # Compute factual
-        path_fac = rf'./data/final_exp/factual/{self.filename}'
+        path_fac = rf'{self.data_folder}/fac/{self.filename}'
         val_fac = self.prepare_data(path_fac)
         excd_prob_fac, values_fac, dens_prob_fac, bin_edges_fac = compute_exceedance_prob(val_fac.values, bins=bins)
 
         # Plot counterfactuals (past/1)
         print('plotting counterfactuals of past dist')
-        excd_prob, values1, change_list1, dens_prob1, bin_edges1 = self.compute_exceedance_prob_ens(values_fac, scenario='past', bins=bins)
+        excd_prob, values1, dens_prob1, bin_edges1 = self.compute_exceedance_prob_ens(values_fac, scenario='-1.5', bins=bins)
+        change_list1 = self.compute_dist_change(values1, values_fac)
         self.plot_exceedance_prob(axs[0], excd_prob, values1, linewidth=lw, color='tab:blue', label='past -1.5K')
-        self.plot_normal(axs[1], change_list1[1], change_list1[2], linewidth=lw, color='tab:blue', label='past to present')
+        self.plot_normal(axs[1], change_list1[0], change_list1[2], linewidth=lw, color='tab:blue', label='past to present')
         self.plot_pdf(axs[2], bin_edges1, dens_prob1, color='tab:blue', label='past -1.5K', alpha=alpha_cf)
 
         # Plot factual
@@ -453,12 +446,21 @@ class PGW:
         plot_exceedance_prob_simple(axs[0], excd_prob_fac, values_fac, linewidth=lw, color='k', label='present')
         self.plot_pdf(axs[2], bin_edges_fac, dens_prob_fac, color='k', label='present', alpha=1)
 
-        # Plot counterfactuals (future/2)
-        print('plotting counterfactuals of future dist')
-        excd_prob, values2, change_list2, dens_prob2, bin_edges2 = self.compute_exceedance_prob_ens(values_fac, scenario='fut.', bins=bins)
-        self.plot_exceedance_prob(axs[0], excd_prob, values2, linewidth=lw, color='tab:red', label='fut. +1.5K')
-        self.plot_normal(axs[1], change_list2[0], change_list2[2], linewidth=lw, color='tab:red', label='present to fut.')
-        self.plot_pdf(axs[2], bin_edges2, dens_prob2, color='tab:red', label='fut. +1.5K', alpha=alpha_cf)
+        # Plot counterfactuals (future +1.5K labelled as 2)
+        print('plotting counterfactuals of future +1.5K  dist')
+        excd_prob, values2, dens_prob2, bin_edges2 = self.compute_exceedance_prob_ens(values_fac, scenario='+1.5', bins=bins)
+        change_list2 = self.compute_dist_change(values_fac, values2)
+        self.plot_exceedance_prob(axs[0], excd_prob, values2, linewidth=lw, color='tab:orange', label='fut. +1.5K')
+        self.plot_normal(axs[1], change_list2[0], change_list2[2], linewidth=lw, color='tab:orange', label='present to fut. +1.5K')
+        self.plot_pdf(axs[2], bin_edges2, dens_prob2, color='tab:orange', label='fut. +1.5K', alpha=alpha_cf)
+
+        # Plot counterfactuals (future +3K labelled as 3)
+        print('plotting counterfactuals of future +3K dist')
+        excd_prob, values3, dens_prob3, bin_edges3 = self.compute_exceedance_prob_ens(values_fac, scenario='+3.0', bins=bins)
+        change_list3 = self.compute_dist_change(values2, values3)
+        self.plot_exceedance_prob(axs[0], excd_prob, values3, linewidth=lw, color='tab:red', label='fut. +3.0K')
+        self.plot_normal(axs[1], change_list3[0], change_list3[2], linewidth=lw, color='tab:red', label='fut. +1.5K to fut. +3K')
+        self.plot_pdf(axs[2], bin_edges3, dens_prob3, color='tab:red', label='fut. +3K', alpha=alpha_cf)
         
         # Change per degree warming plot
         # # combined mean
@@ -482,7 +484,7 @@ class PGW:
         axs[0].legend(loc='upper left')
 
         if add_cc_limit:
-            axs[1].legend(ncols=2, loc='upper center')
+            axs[1].legend(ncols=2, loc='upper left')
         else:
             axs[1].legend(ncols=1, loc='upper center')
         axs[1].set_ylabel('Change per degree global\nwarming (% K$^{-1}$)')
@@ -500,14 +502,16 @@ class PGW:
         # Extract percentile
         pct_present = np.percentile(values_fac, pct)
         pct_past = np.percentile(values1, pct)
-        pct_fut = np.percentile(values2, pct)
-        med_present, med_past, med_fut = np.median(values_fac), np.median(values1), np.median(values2)
+        pct_fut_2 = np.percentile(values2, pct)
+        pct_fut_3 = np.percentile(values3, pct)
+        med_present, med_past, med_fut_2, med_fut_3 = np.median(values_fac), np.median(values1), np.median(values2), np.median(values3)
         pct_past_present_change = (pct_present - pct_past) / pct_past * 100
-        pct_present_fut_change = (pct_fut - pct_present) / pct_present * 100
+        pct_present_fut_change = (pct_fut_2 - pct_present) / pct_present * 100
+        pct_fut_fut_change = (pct_fut_3 - pct_fut_2 ) / pct_fut_2 * 100
 
         with open(f"{outfile}.txt", "w") as f:
             f.write(f"pct: {pct}\n")
-            f.write(f"pct: {pct_past: .3f}, {pct_present: .3f}, {pct_fut: .3f}\n")
-            f.write(f"pct_change: {pct_past_present_change : .1f}, {pct_present_fut_change : .1f}\n")
-            f.write(f"median_change: {(med_present - med_past)/med_past * 100}, {(med_fut - med_present)/med_present * 100}")
+            f.write(f"pct: {pct_past: .3f}, {pct_present: .3f}, {pct_fut_2: .3f}, {pct_fut_3: .3f}\n")
+            f.write(f"pct_change: {pct_past_present_change : .1f}, {pct_present_fut_change : .1f}, {pct_fut_fut_change: .1f}\n")
+            f.write(f"median_change: {(med_present - med_past)/med_past * 100}, {(med_fut_2 - med_present)/med_present * 100}, {(med_fut_3 - med_fut_2)/med_fut_2 * 100}")
         return fig, axs
