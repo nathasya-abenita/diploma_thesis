@@ -144,7 +144,7 @@ In general, under the PGW approach, we are asking: \textit{"If an event like the
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.5\linewidth]{../../figs/event_view.png}
+\includegraphics[width=0.5\linewidth]{figures/event_view.png}
 \caption{Accumulated rainfall during TC Senyar lifetime from MSWEP and the TC track from IBTrACS with impact markers}
 \label{fig:impact_marker}.
 \end{figure}
@@ -156,7 +156,7 @@ This study consists of two stages. First, factual simulation of Tropical Cyclone
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.5\linewidth]{./../../figs/domain_elev.png}
+\includegraphics[width=0.5\linewidth]{figures/domain_elev.png}
 \caption{Simulation domain with TC Senyar track from IBTrACS and elevation from GMTED2010 \citep{danielson2011global}}
 \label{fig:domain}.
 \end{figure}
@@ -262,7 +262,7 @@ To conclude, we define simulation name conclusions in Table \ref{tab:name_conven
     present	& \textbf{Factual} simulation, driven by \textbf{ERA5} \\
     past -1.5K	& \textbf{Counterfactual} simulation to represent \textbf{pre-industrial} climate, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
     fut. +1.5K	& \textbf{Counterfactual} simulation to represent \textbf{future} climate with $+1.5\,\unit{^\circ C}$ warming, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
-    fut. +3.0K	& \textbf{Counterfactual} simulation to represent \textbf{future} climate with $+3.0\,\unit{^\circ C}$ warming, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
+    fut. +3K	& \textbf{Counterfactual} simulation to represent \textbf{future} climate with $+3.0\,\unit{^\circ C}$ warming, driven by ERA5 perturbed by CMIP6 model or tweak experiment \\
     \hline
     \end{tabular}
     \label{tab:name_convention}
@@ -270,7 +270,7 @@ To conclude, we define simulation name conclusions in Table \ref{tab:name_conven
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{../../figs/compare/ts_complete.png}
+\includegraphics[width=\linewidth]{figures/ts_complete.png}
 \caption{Time-mean (25--28 November 2025) of surface temperature perturbation applied to control simulation}
 \label{fig:surface_temperature_perturbation}.
 \end{figure}
@@ -280,59 +280,57 @@ In this study, we analyze rainfall intensity and area, changes in the moisture c
 
 Data is sorted and presented as exceedance probability plot (equivalent to $1-\text{PCTL}/100$ where $\text{PCTL}$ is percentile). Relative change from a distribution to another distribution is assessed on a given percentile.
 
-To evaluate anthropogenic influence, the rate of increase of variable $X$ from past to present is computed by
-\begin{equation} \label{eq:increase-1}
-    X_{\text{increase}} = \frac{X_\text{present} - X_{\text{past}}}{X_{\text{past}}} \cdot 100.
-\end{equation} 
-Similarly, the rate of increase from present to future is computed by
-\begin{equation} \label{eq:increase-2}
-    X_{\text{increase}} = \frac{X_{\text{fut.}} - X_\text{present}}{X_\text{present}} \cdot 100.
+To evaluate changes across climate scenarios, the relative change ($\Delta X_{A \to B}$) of variable $X$ from scenario $A$ to scenario $B$ is defined as:
+\begin{equation} \label{eq:relative-change}
+    \Delta X_{A \to B} = \frac{X_B - X_A}{X_A} \times 100\%,
 \end{equation}
+where $(A, B)$ represents consecutive global warming intervals: Past-to-Present ($-1.5\,\unit{^\circ} \to 0\,\unit{^\circ}$), Present-to-Future $+1.5\,\unit{^\circ}$, and Future $+1.5\,\unit{^\circ} \to +3\,\unit{^\circ}$.
 
 Some postprocessed variables are used to study the physical drivers of extreme rainfall. With pycordex, we extract specific humidty, horizontal wind velocity, vertical wind velocity, and geopotential height at different pressure levels. In our analysis, we derive low-level integrated vapor transport (IVT) using specific humidity and horizontal wind velocity from pressure levels between surface and 700 hPa. This is because moisture transport associated with TCs is primarily concentrated in the lower troposphere \citep{li2024western}.
 
-The Clausius-Clapeyron scaling analysis is done to study the response of the variables to global warming level change between the factual and counterfactual simulation. We divide $X_{\text{increase}}$ in Eq. \eqref{eq:increase-1} and \eqref{eq:increase-2} with $+1.5\,\unit{^\circ C}$ which corresponds to the experiment design.
+The Clausius-Clapeyron scaling analysis is done to study the response of the variables to global warming level change between the factual and counterfactual simulation. We divide $\Delta X_{A \to B}$ in Eq. \eqref{eq:relative-change} with $1.5\,\unit{^\circ}$  which corresponds to the experiment design.
 
 \section{Results}
 
 \subsection{Factual simulation of Tropical Cyclone (TC) Senyar with RegCM5} \label{subsec:factual_sim}
-In Figure \ref{fig:factual_track}, we present the best factual simulation to represent TC Senyar from experiments summarized in Appendix \ref{appendix:exp}. The convection-permitting model (CPM) adds a significant value over the ERA5 reanalysis, which failed to represent the cyclone's trajectory and intensity as accurately as the IBTrACS observation.
+In Figure \ref{fig:factual_track}, we present the best factual simulation to represent TC Senyar from experiments by varying initialization time, physical schemes, and domain center as summarized in Appendix \ref{appendix:exp}. It can be seen that ERA5 reanalysis is able to represent the big pattern of the event evolution with weaker intensities, in agreement with other assessment \citep{dulac2024assessing}. On the other hand, the convection-permitting model (CPM) adds a significant value over the ERA5 reanalysis with improved cyclone's trajectory and intensity.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{../../figs/track/regcm_track_best_2_new.png}
+\includegraphics[width=\textwidth]{figures/regcm_track_best_2_new.png}
 \caption{Track comparison between ERA5, observation (IBTrACS), and factual simulation}
 \label{fig:factual_track}
 \end{figure}
 
-\subsection{Anthropogenic influences on Tropical Cyclone Senyar}
+\subsection{Verifying counterfactuals' response}
 
-%\paragraph{Thermodynamic Baseline and Synoptic Fidelity}
-We first verify the experimental design through near-surface air temperature and geopotential height responses. Time-mean near-surface temperature plots for the counterfactual simulations (Figure \ref{fig:t2m_change}) confirm the successful application of the warming and cooling signals. These simulations reveal model-specific climate sensitivities. For instance, the NorESM2-MM model exhibits stronger land-based warming/cooling anomalies than other models, implying the importance of local feedback mechanisms.
+We first verify the experimental design through near-surface air temperature and geopotential height responses. Time-mean near-surface temperature plots for the counterfactual simulations (Figure \ref{fig:t2m_change}) confirm the successful application of the warming and cooling signals. These simulations also reveal model-specific climate sensitivities. For instance, the NorESM2-MM model exhibits stronger land-based warming or cooling anomalies than other models, implying the importance of local feedback mechanisms.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{../../figs/compare/tas_complete.png}
+\includegraphics[width=\linewidth]{figures/tas_complete.png}
 \caption{Difference of time-mean (25--28 November 2025) near-surface temperature between counterfactual and factual simulation}
 \label{fig:t2m_change}
 \end{figure}
 
-This thermodynamic shift is further reflected in the 500 hPa geopotential height plots (Figure \ref{fig:geop_change}), which serve as a proxy for synoptic consistency. In the present-day simulation, the RegCM5 model faithfully reproduces the ERA5 reanalysis baseline, maintaining spatial structures around 5,840--5,870 meters. Under the +1.5$^\circ$ future scenario, widespread thermal expansion elevates the entire 500 hPa surface above the 5,870-meter threshold, while the -1.5$^\circ$ past scenario depresses it below 5,820 meters. Critically, the PGW framework succeeds in preserving the core synoptic features—specifically the cyclone vortex—while correctly adjusting the hydrostatic pressure heights and atmospheric column temperatures.
+This thermodynamic shift is further reflected in the 500 hPa geopotential height plots (Figure \ref{fig:geop_change}), which serve as a proxy for synoptic consistency. In the present-day simulation, the RegCM5 model faithfully reproduces the ERA5 reanalysis baseline, maintaining spatial structures around 5,840--5,870 meters and improving the representation of the cyclone's core. Under the $+1.5\,\unit{^\circ C}$ and $+3\,\unit{^\circ C}$ future scenario, widespread thermal expansion elevates the entire 500 hPa surface above the 5,870-meter threshold, while the $-1.5\,\unit{^\circ C}$ past scenario depresses it below 5,820 meters. Critically, the PGW framework succeeds in preserving the synoptic features, specifically the cyclone vortex, while correctly adjusting the hydrostatic pressure heights and atmospheric column temperatures.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\linewidth]{../../figs/dynamical/zg500_all_model.png}
+\includegraphics[width=0.8\linewidth]{figures/zg500_all_model.png}
 \caption{Time-mean of 500 hPa geopotential height at 25 November 2025. Ensemble mean is used for counterfactuals.}
 \label{fig:geop_change}
 \end{figure}
 
-Next, we evaluate the representation of Tropical Cyclone Senyar across all experiments. Across all climate scenarios—past, present, and future—the trajectory of TC Senyar remains robust, confirming that the storm's path is not significantly altered by background warming. While some counterfactuals fail to represent proper track after landfall in Sumatra, each still shows reasonable sea level pressure of the tropical cyclone lifetime and maximum wind speed.
+\subsection{Anthropogenic influences on Tropical Cyclone Senyar}
+
+Next, we evaluate the representation of Tropical Cyclone Senyar across all experiments. Across all climate scenarios, the trajectory of TC Senyar remains robust, confirming that the storm's path is not significantly altered by imposed thermodynamic and dynamical perturbations. While some counterfactuals fail to represent proper track after landfall in Sumatra, each still shows reasonable sea level pressure of the tropical cyclone lifetime and maximum wind speed.
 
 While the general track and overall intensity (in terms of minimum sea level pressure) do not show significant shifts, a distinct anthropogenic influence can be identified in the wind intensity. In the warmer future climate, the results indicate that wind intensity consistently increases at peak times. This is consistent with previous study that found robust increase in wind speed of TCs \citep{patricola2018anthropogenic}. This suggests that while the 2025 event was primarily a hydrological disaster, similar equatorial cyclones in a warmer world may evolve into compounding hazards with more destructive wind profiles upon landfall.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{../../figs/track/regcm_track_final_0_3hr.png}
+\includegraphics[width=\linewidth]{figures/regcm_track_final_0_3hr.png}
 \caption{Simulated TC Senyar track and intensity. (a) For track, ensemble median of counterfactuals track is used. Tracks from each experiment are plotted as shaded lines. (b, c) For intensity, ensemble mean $\pm$ standard deviation of the counterfactuals is used.}
 \label{fig:track_exp_all}
 \end{figure}
@@ -343,7 +341,7 @@ Before assessing the human fingerprint on the disaster, it is essential to verif
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\linewidth]{../../figs/compare/finals/observed_pr.png}
+\includegraphics[width=0.8\linewidth]{figures/observed_pr.png}
 \caption{Comparison of accumulated precipitation during TC Senyar lifetime between factual (present), MSWEP, and ERA5. Corresponding values from local stations are plotted as scatter points. Factual simulation with RegCM improves spatial distribution of extremes compared to ERA5.}
 \label{fig:compare_observed_pr}
 \end{figure}
@@ -352,29 +350,22 @@ Comparing the present-day simulation to the pre-industrial counterfactual reveal
 
 \begin{figure}[ht]
     \centering
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_pr_mean_with_impact.png}
-        % \caption{} % optional individual caption
-    }
+    \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/map_pr_mean.png}}
 
-    % \vspace{1em} % optional spacing
-
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_pr_mean.png}
-        % \caption{} % optional individual caption
-    }
-
-    \caption{(Top) Spatial map of accumulated precipitation between peak days. Ensemble mean is used for counterfactuals. Triangles are impact markers. (Bottom) Distribution change based on pooled hourly intensity from Aceh Province during peak days (orange line).}
+    \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/dist_pr_mean.png}}
+    \caption{(Top) Spatial map of accumulated precipitation between peak days. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled hourly intensity from Aceh Province during peak days (orange line).}
     \label{fig:compare_pr}
 \end{figure}
 
-Projecting the 2025 event into a +1.5$^\circ$ warmer future introduces a more complex changes. While heavy rainfall intensity is projected to continue its increase (+17\%), this intensification does not lead to a larger total rainfall volume or a broader impact zone. Instead, the results indicate a reversal of the historical trend: total rainfall is projected to decrease by 9\%, and the rainfall area is expected to contract by 15\%. This suggests that in a warmer future, atmospheric moisture is not distributed equally across all events; rather, rainfall becomes increasingly concentrated into fewer but more violent bursts. While the overall footprint of the storm may shrink, the localized core of the disaster becomes more dangerous as extreme intensity begins to exceed Clausius-Clapeyron scaling, even as lighter rainfall events decrease in frequency.
+Projecting the 2025 event into a $+1.5\,\unit{^\circ}$ warmer future introduces a more complex changes. While heavy rainfall intensity is projected to continue its increase (+17\%), this intensification does not lead to a larger total rainfall volume or a broader impact zone. Instead, the results indicate a reversal of the historical trend: total rainfall is projected to decrease by 9\%, and the rainfall area is expected to contract by 15\%. This suggests that in a warmer future, atmospheric moisture is not distributed equally across all events; rather, rainfall becomes increasingly concentrated into fewer but more violent bursts. While the overall footprint of the storm may shrink, the localized core of the disaster becomes more dangerous as extreme intensity begins to exceed Clausius-Clapeyron scaling, even as lighter rainfall events decrease in frequency.
+
+A similar finding is found by comparing the $+1.5\,\unit{^\circ}$ scenario to $+3\,\unit{^\circ}$. Heavy rainfall keeps increasing close to CC scaling (+7\%). 
 
 The evolution of area-averaged hourly rainfall and its corresponding cumulative totals in Aceh Province provide visual confirmation of the discussed changes. The cumulative hyetograph (Figure \ref{fig:hyetograph}) shows that with present-day totals ending higher than those in the pre-industrial (-1.5$^\circ$) scenario. In contrast, the future (+1.5$^\circ$) cumulative trajectory eventually falls below present-day levels, supporting the projected 9\% decrease in total rainfall. %Physically, this indicates that while a warmer future atmosphere holds more moisture, the lack of consistently favorable lifting mechanisms—such as atmospheric circulation or storm dynamics—results in a less efficient conversion of that moisture into surface precipitation over the storm's duration
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.6\linewidth]{../../figs/compare/finals/hyetograph_event.png}
+\includegraphics[width=0.6\linewidth]{figures/hyetograph_event.png}
 \caption{(a) Evolution of area-averaged hourly rainfall in Aceh Province with its ensemble mean $\pm$ standard deviation for counterfactuals, while (b) shows the corresponding cumulative rainfall.}
 \label{fig:hyetograph}
 \end{figure}
@@ -386,41 +377,23 @@ The physical basis for these changes lies in the efficiency with which the atmos
 In understanding changes in extreme precipitation, it is common to decompose the contributions from thermodynamics and dynamics \citep{pfahl2017understanding} while both interact in a feedback especially in the tropics \citep{neelin2022precipitation}. Thus, to explain the physical mechanisms behind the 2025 Sumatra disaster, this subsection analyzes the anthropogenic influences in the thermodynamic and dynamical drivers that control the extreme rainfall. By quantifying changes in moisture supply, atmospheric instability, and convective strength, we can identify how human-caused warming has intensified the extreme rainfall associated with TC Senyar and how it changes in the future.
 
 \paragraph{Changes in moisture supply: Evaporation and IVT}
-The intensification of the 2025 extreme rainfall begins with an increased supply of moisture from the surrounding oceans. Analysis of evaporation flux in Figure \ref{fig:compare_evaporation} shows a consistent median increase of +4\% in both the historical attribution (past-to-present) and future projection scenarios (present-to-future). This steady increase in surface moisture is complemented by significant changes in low-level integrated vapor transport (IVT) over the Malacca Strait. The IVT spatial maps and exceedance probability distributions (Figure \ref{fig:compare_ivt}) reveal a critical shift in moisture dynamics.
+The intensification of the 2025 extreme rainfall begins with an increased supply of moisture from the surrounding oceans. Analysis of evaporation flux in Figure X shows a consistent median increase of +4\% in both the historical attribution (past-to-present) and future projection scenarios (present-to-future). This steady increase in surface moisture is complemented by significant changes in low-level integrated vapor transport (IVT) over the Malacca Strait. The IVT spatial maps and exceedance probability distributions (Figure \ref{fig:compare_ivt}) reveal a critical shift in moisture dynamics.
 
 In a warmer climate, the extreme tail of IVT (values exceeding 800 kg m$^{-1}$ s$^{-1}$) increases substantially at a rate of 5\% to 12\% per degree of warming, closely aligning with Clausius-Clapeyron scaling. This intensification is concentrated specifically within the storm’s core moisture corridor over the Malacca Strait, while surrounding areas experience a decrease in weak moisture transport. This suggests that anthropogenic warming converges more extreme moisture directly into the cyclone’s circulation.
 
-\begin{figure}[ht]
-    \centering
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_evs.png}
-        % \caption{} % optional individual caption
-    }
-
-    % \vspace{1em} % optional spacing
-
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_evs.png}
-        % \caption{} % optional individual caption
-    }
-
-    \caption{(Top) Spatial map of time-mean evaporation flux during peak days. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled hourly values from whole shown domain.}
-    \label{fig:compare_evaporation}
-\end{figure}
+% \begin{figure}[ht]
+%     \centering
+%     \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/map_evs.png}}
+%     \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/dist_evs.png}}
+%     \caption{(Top) Spatial map of time-mean evaporation flux during peak days. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled hourly values from whole shown domain.}
+%     \label{fig:compare_evaporation}
+% \end{figure}
 
 \begin{figure}[ht]
     \centering
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_ivt.png}
-        % \caption{} % optional individual caption
-    }
+    \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/map_ivt.png}}
 
-    % \vspace{1em} % optional spacing
-
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_ivt.png}
-        % \caption{} % optional individual caption
-    }
+    \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/dist_ivt.png}}
 
     \caption{(Top) Spatial map of time-mean low-level IVT during peak days. Low-level IVT is obtained by integration between surface and 700 hPa. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled six-hourly values from whole shown domain.}
     \label{fig:compare_ivt}
@@ -431,17 +404,9 @@ The increased moisture supply is coupled with a dramatic rise in convective avai
 
 \begin{figure}[ht]
     \centering
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_cape.png}
-        % \caption{} % optional individual caption
-    }
+    \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/map_cape.png}}
 
-    % \vspace{1em} % optional spacing
-
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_cape.png}
-        % \caption{} % optional individual caption
-    }
+    \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/dist_cape.png}}
 
     \caption{(Top) Spatial map of time-mean CAPE during peak days. Ensemble mean is used for counterfactuals. (Bottom) Distribution change based on pooled hourly values from whole shown domain.}
     \label{fig:compare_cape}
@@ -452,20 +417,11 @@ The final link in the convective process is the conversion of potential energy i
 
 Consequently, the 99.9th percentile of maximum updraft velocity shows an increase of +12\% in the present climate and +15\% future. This dynamical intensification explains the complex intensity-area change: even as the broader regional rainfall area contracts, the intensified convective core becomes more efficient at converting moisture to concentrated, high-magnitude bursts.
 
-
 \begin{figure}[ht]
     \centering
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_diab.png}
-        % \caption{} % optional individual caption
-    }
+    \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/map_diab.png}}
 
-    % \vspace{1em} % optional spacing
-
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_diab.png}
-        % \caption{} % optional individual caption
-    }
+    \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/dist_diab.png}}
 
     \caption{(Top) Spatial map of time-maximum of maximum temperature tendency due to latent heat exchange during peak days. Maximum temperature tendency is obtained by taking vertical maxima over each time step. Ensemble mean is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
     \label{fig:compare_diab}
@@ -473,17 +429,9 @@ Consequently, the 99.9th percentile of maximum updraft velocity shows an increas
 
 \begin{figure}[ht]
     \centering
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/map_wa_max.png}
-        % \caption{} % optional individual caption
-    }
-
-    % \vspace{1em} % optional spacing
-
-    \subfloat[]{%
-        \includegraphics[width=0.8\textwidth]{../../figs/compare/finals/dist_wa.png}
-        % \caption{} % optional individual caption
-    }
+    \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/map_wa_max.png}}
+    
+    \subfloat[]{\includegraphics[width=0.8\textwidth]{figures/dist_wa.png}}
 
     \caption{(Top) Spatial map of time-maximum of maximum vertical velocity during peak days. Maximum vertical velocity is obtained by taking vertical maxima over each time step. Ensemble maxima is used for counterfactuals. (Bottom) Distribution change is based on pooled six-hourly values from whole shown domain.}
     \label{fig:compare_wa}
