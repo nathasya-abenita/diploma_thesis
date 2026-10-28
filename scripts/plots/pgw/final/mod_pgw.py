@@ -458,7 +458,7 @@ class PGW:
         print('plotting counterfactuals of future +3K dist')
         excd_prob, values3, dens_prob3, bin_edges3 = self.compute_exceedance_prob_ens(values_fac, scenario='+3.0', bins=bins)
         change_list3 = self.compute_dist_change(values2, values3)
-        self.plot_exceedance_prob(axs[0], excd_prob, values3, linewidth=lw, color='tab:red', label='fut. +3.0K')
+        self.plot_exceedance_prob(axs[0], excd_prob, values3, linewidth=lw, color='tab:red', label='fut. +3K')
         self.plot_normal(axs[1], change_list3[0], change_list3[2], linewidth=lw, color='tab:red', label='fut. +1.5K to fut. +3K')
         self.plot_pdf(axs[2], bin_edges3, dens_prob3, color='tab:red', label='fut. +3K', alpha=alpha_cf)
         

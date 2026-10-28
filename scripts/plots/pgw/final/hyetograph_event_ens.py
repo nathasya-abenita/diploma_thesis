@@ -1,10 +1,27 @@
 from mod_pgw import *
 
-def cfac_past_path(exp):
-    return rf'./data/final_exp/counterfactual/GWL-1.5/{exp}/pr_SRF.nc'
+def compute_ens_pr (gwl, exp_list):
+    pr_cfac_list = []
+    for exp in exp_list:
+        path_cfac = cfac_path(gwl, exp)
+        ds_cfac = read_data(path_cfac, time1, time2)
+        ds_cfac = mask_data(ds_cfac, ds_mask)
+        pr_cfac = ds_cfac['pr'] * 3600
+        pr_cfac_list.append(compute_fldmean(pr_cfac))
+    if ens_stat == 'mean':
+        ens_pr_mean, ens_pr_std = compute_ens_mean_std(pr_cfac_list)
+    elif ens_stat == 'median':
+        ens_pr_mean, ens_pr_std = compute_ens_med_std(pr_cfac_list)
+    else:
+        raise ValueError ('check `ens_stat` option!')
+    return ens_pr_mean, ens_pr_std
 
-def cfac_fut_path(exp):
-    return rf'./data/final_exp/counterfactual/GWL+1.5/{exp}/pr_SRF.nc'
+def cfac_path(gwl, exp):
+    gwl_list = ['-1.5', '+1.5', '+3.0']
+    if gwl in gwl_list:
+        return rf'~/post_temp/cfac/GWL{gwl}/{exp}/pr_SRF.nc'
+    else:
+        raise ValueError ('Available scenario or GWL:', gwl_list)
 
 def compute_fldmean(pr : xr.DataArray):
     return np.nanmean(pr.values, axis=(1, 2)) # axis of lon and lat
@@ -30,9 +47,9 @@ if __name__ == '__main__':
     time1, time2 = '2025-11-25', '2025-11-26'
 
     # Define paths
-    outpath = './figs/compare/finals/hyetograph_event.png'
-    path_fac = r'./data/final_exp/factual/pr_SRF.nc'
-    path_mask = r'./data/shp/mask_aceh.nc' 
+    outpath = '/leonardo/home/userexternal/nchristi/diploma_thesis/figs/hyetograph_event.png'
+    path_fac = r'~/post_temp/fac/pr_SRF.nc'
+    path_mask = r'~/diploma_thesis/data/mask_aceh.nc' 
     unit = r'Precipitation (mm h$^{-1}$)'
     ens_stat = 'mean' # 'median' or 'mean'
 
@@ -53,28 +70,15 @@ if __name__ == '__main__':
     lw = 2
 
     # Compute counterfactual (past)
-    pr_cfac_list = []
-    for exp in exp_list:
-        path_cfac = cfac_past_path(exp)
-        ds_cfac = read_data(path_cfac, time1, time2)
-        ds_cfac = mask_data(ds_cfac, ds_mask)
-        pr_cfac = ds_cfac['pr'] * 3600
-        pr_cfac_list.append(compute_fldmean(pr_cfac))
-    if ens_stat == 'mean':
-        ens_pr_mean, ens_pr_std = compute_ens_mean_std(pr_cfac_list)
-    elif ens_stat == 'median':
-        ens_pr_mean, ens_pr_std = compute_ens_med_std(pr_cfac_list)
-    else:
-        raise ValueError ('check `ens_stat` option!')
-
-    plot_hyetograph(axs[0], pr_cfac.time, ens_pr_mean,
+    ens_pr_mean, ens_pr_std = compute_ens_pr(gwl='-1.5', exp_list=exp_list)
+    plot_hyetograph(axs[0], pr_fac.time, ens_pr_mean,
                     color='tab:blue', label='past -1.5K')
-    plot_cum_hyetograph(axs[1], pr_cfac.time, ens_pr_mean,
+    plot_cum_hyetograph(axs[1], pr_fac.time, ens_pr_mean,
                         color='tab:blue', label='past -1.5K')
 
-    plot_hyetograph(axs[0], pr_cfac.time, ens_pr_mean, std_array=ens_pr_std,
+    plot_hyetograph(axs[0], pr_fac.time, ens_pr_mean, std_array=ens_pr_std,
                     color='tab:blue', alpha=0.2)
-    plot_cum_hyetograph(axs[1], pr_cfac.time, ens_pr_mean, std_array=ens_pr_std,
+    plot_cum_hyetograph(axs[1], pr_fac.time, ens_pr_mean, std_array=ens_pr_std,
                         color='tab:blue', alpha=0.2)
 
     # Plot factual and ensemble of counterfactual
@@ -84,23 +88,27 @@ if __name__ == '__main__':
                         linewidth=lw, color='k', label='present')
 
     # Compute counterfactual (future)
-    pr_cfac_list = []
-    for exp in exp_list:
-        path_cfac = cfac_fut_path(exp)
-        ds_cfac = read_data(path_cfac, time1, time2)
-        ds_cfac = mask_data(ds_cfac, ds_mask)
-        pr_cfac = ds_cfac['pr'] * 3600
-        pr_cfac_list.append(compute_fldmean(pr_cfac))
-    ens_pr_mean, ens_pr_std = compute_ens_mean_std(pr_cfac_list)
+    ens_pr_mean, ens_pr_std = compute_ens_pr(gwl='+1.5', exp_list=exp_list)
+    plot_hyetograph(axs[0], pr_fac.time, ens_pr_mean,
+                    color='tab:orange', label='fut. +1.5K')
+    plot_cum_hyetograph(axs[1], pr_fac.time, ens_pr_mean,
+                        color='tab:orange', label='fut. +1.5K')
 
-    plot_hyetograph(axs[0], pr_cfac.time, ens_pr_mean,
-                    color='tab:red', label='fut. +1.5K')
-    plot_cum_hyetograph(axs[1], pr_cfac.time, ens_pr_mean,
-                        color='tab:red', label='fut. +1.5K')
+    plot_hyetograph(axs[0], pr_fac.time, ens_pr_mean, std_array=ens_pr_std,
+                    color='tab:orange', alpha=0.2)
+    plot_cum_hyetograph(axs[1], pr_fac.time, ens_pr_mean, std_array=ens_pr_std,
+                        color='tab:orange', alpha=0.2)
+    
+    # Compute counterfactual (future +3K)
+    ens_pr_mean, ens_pr_std = compute_ens_pr(gwl='+3.0', exp_list=exp_list)
+    plot_hyetograph(axs[0], pr_fac.time, ens_pr_mean,
+                    color='tab:red', label='fut. +3K')
+    plot_cum_hyetograph(axs[1], pr_fac.time, ens_pr_mean,
+                        color='tab:red', label='fut. +3K')
 
-    plot_hyetograph(axs[0], pr_cfac.time, ens_pr_mean, std_array=ens_pr_std,
+    plot_hyetograph(axs[0], pr_fac.time, ens_pr_mean, std_array=ens_pr_std,
                     color='tab:red', alpha=0.2)
-    plot_cum_hyetograph(axs[1], pr_cfac.time, ens_pr_mean, std_array=ens_pr_std,
+    plot_cum_hyetograph(axs[1], pr_fac.time, ens_pr_mean, std_array=ens_pr_std,
                         color='tab:red', alpha=0.2)
 
     # Decorate plots
